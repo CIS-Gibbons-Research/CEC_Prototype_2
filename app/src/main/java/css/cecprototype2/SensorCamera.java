@@ -26,6 +26,7 @@ import android.media.Image;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -69,7 +70,7 @@ public class SensorCamera {
         }, ContextCompat.getMainExecutor(context));
     }
 
-    void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
+    private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
         //Camera Selector Use Case
         cameraProvider.unbind();
         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -96,12 +97,25 @@ public class SensorCamera {
         //cameraProvider.bindToLifecycle(context, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
-    public void capturePhoto() {
+    public Image capturePhotoImage() {
         // public abstraction to take photo.
         // Currently calls analyze photo, but could capture photo to save to disk later...
         // The UI should call this through the MainViewModel
         analyzePhotoProvider();
+        return image;
     }
+
+    public Bitmap capturePhotoBitmap() {
+        // public abstraction to take photo.
+        // Currently calls analyze photo, but could capture photo to save to disk later...
+        // The UI should call this through the MainViewModel
+        analyzePhotoProvider();
+        return bitmap;
+    }
+
+    /**
+     *  Use the camera analyze method to get an image from the camera without saving it to a file
+     */
     private void analyzePhotoProvider() {
         Log.i("CIS4444","Trying to Analyze Photo --- 111");
         executor = Executors.newSingleThreadExecutor();
@@ -136,5 +150,42 @@ public class SensorCamera {
             }
         });
     }
+
+
+    /**
+     *  Use the camera Capture method to save an image from the camera to a file
+     */
+    private void capturePhotoProvider() {
+        //Toast.makeText(getApplicationContext(), "Trying to Capture Photo", Toast.LENGTH_SHORT );
+        Log.i("TEG","Trying to Capture Photo");
+
+        //SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
+        //File file = new File(getBatchDirectoryName(), mDateFormat.format(new Date())+ ".jpg");
+        File file = new File(context.getExternalCacheDir() + File.separator + System.currentTimeMillis() + ".png");
+
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();
+        Log.i("TEG","Trying to Capture Photo 222");
+
+        executor = Executors.newSingleThreadExecutor();
+        Log.i("TEG","Trying to Capture Photo 333");
+
+        imageCapture.takePicture(
+                outputFileOptions,
+                executor,
+                new ImageCapture.OnImageSavedCallback () {
+                    @Override
+                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                        Log.i("TEG","onImageSaved -- Photo has been taken and saved");
+                        //Toast.makeText(getApplicationContext(), "Photo has been taken and saved", Toast.LENGTH_SHORT );
+                    }
+                    @Override
+                    public void onError(@NonNull ImageCaptureException error) {
+                        //Toast.makeText(getApplicationContext(), "Error taking and saving photo", Toast.LENGTH_SHORT );
+                        error.printStackTrace();
+                    }
+                });
+
+    }
+
 
 }
