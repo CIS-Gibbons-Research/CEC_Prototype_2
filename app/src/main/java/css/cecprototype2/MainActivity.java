@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         imageViewCamera = findViewById(R.id.imageView);
         // set up modelView
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.initializeCamera(previewView);
+        mainViewModel.initializeCamera(this, previewView);
         // set up buttons
         setupButtonUpdate();
     }

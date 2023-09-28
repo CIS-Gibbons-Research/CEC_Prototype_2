@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.view.PreviewView;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModel;
 
 import java.nio.ByteBuffer;
@@ -17,6 +18,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private SensorCamera cam;       // our camera object
     Context appContext;             // the context from the app to be used by the camera
+    Lifecycle lifecycle;
     Image image;                    // most recent captured image
     Bitmap bitMap;
 
@@ -25,8 +27,8 @@ public class MainViewModel extends AndroidViewModel {
         appContext = application;
     }
 
-    public void initializeCamera(PreviewView previewView) {
-        cam = new SensorCamera(appContext,previewView);
+    public void initializeCamera(Context actContext, PreviewView previewView) {
+        cam = new SensorCamera(appContext, previewView);
     }
 
     public void takePhoto() {

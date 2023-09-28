@@ -19,6 +19,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.LifecycleCameraController;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -35,11 +38,11 @@ import java.util.concurrent.Executors;
 public class SensorCamera {
 
     // Constructor: initialize camera
-    SensorCamera(Context context, PreviewView previewView) {
+    SensorCamera(Context actContext, PreviewView previewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
-
+        context = actContext;
         startCameraProvider( context,  previewView);
     }
 
@@ -94,7 +97,7 @@ public class SensorCamera {
                 .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
         // TODO fix line below
-        //cameraProvider.bindToLifecycle(context, cameraSelector, imageAnalysis, imageCapture, imagePreview);
+        cameraProvider.bindToLifecycle((LifecycleOwner) context, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
     public Image capturePhotoImage() {
@@ -133,7 +136,9 @@ public class SensorCamera {
                 ByteBuffer buffer = planes[0].getBuffer();
                 // Create a blank bitmap
                 Log.i("CIS4444","analyze callback 2");
-                bitmap = imageProxy.toBitmap();
+                // bitmap = imageProxy.toBitmap();
+                // TODO: find out why this no loger works to get the bitmap
+
                 image = imageProxy.getImage();
                 //bitmap = Bitmap.createBitmap(imageProxy.getWidth(),imageProxy.getHeight(),Bitmap.Config.ARGB_8888);
                 // copy the image proxy plane into the bitmap
