@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonUpdate;
     ImageView imageViewCamera;
     PreviewView previewView;
+    private SensorCamera cam;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
         imageViewCamera = findViewById(R.id.imageView);
         // set up modelView
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-        mainViewModel.initializeCamera(this, previewView);
         // set up buttons
         setupButtonUpdate();
+        // set up camera
+        setupCamera();
     }
 
     private void setupButtonUpdate() {
@@ -44,5 +46,11 @@ public class MainActivity extends AppCompatActivity {
                 tvStatus.setText("The pixel value at 50, 60 is "+pixel);
             }
         });
+    }
+
+    private void setupCamera() {
+        cam = new SensorCamera(this, previewView);
+        mainViewModel.initializeCamera(cam);
+
     }
 }

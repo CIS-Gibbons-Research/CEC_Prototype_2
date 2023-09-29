@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.content.ContextCompat;
@@ -38,17 +39,18 @@ import java.util.concurrent.Executors;
 public class SensorCamera {
 
     // Constructor: initialize camera
-    SensorCamera(Context actContext, PreviewView previewView) {
+    SensorCamera(AppCompatActivity mainActivity, PreviewView previewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
-        context = actContext;
-        startCameraProvider( context,  previewView);
+        activity = mainActivity;
+        startCameraProvider( activity,  previewView);
     }
 
     private Executor executor = Executors.newSingleThreadExecutor();
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    Context context;        // the app context we are running in
+    //Context context;        // the app context we are running in
+    AppCompatActivity activity;
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
     Preview imagePreview;
@@ -97,7 +99,7 @@ public class SensorCamera {
                 .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
         // TODO fix line below
-        cameraProvider.bindToLifecycle((LifecycleOwner) context, cameraSelector, imageAnalysis, imageCapture, imagePreview);
+        cameraProvider.bindToLifecycle(activity, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
     public Image capturePhotoImage() {
@@ -166,7 +168,7 @@ public class SensorCamera {
 
         //SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
         //File file = new File(getBatchDirectoryName(), mDateFormat.format(new Date())+ ".jpg");
-        File file = new File(context.getExternalCacheDir() + File.separator + System.currentTimeMillis() + ".png");
+        File file = new File(activity.getExternalCacheDir() + File.separator + System.currentTimeMillis() + ".png");
 
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();
         Log.i("TEG","Trying to Capture Photo 222");

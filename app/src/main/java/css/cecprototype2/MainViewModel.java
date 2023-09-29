@@ -17,18 +17,15 @@ import java.nio.ByteBuffer;
 public class MainViewModel extends AndroidViewModel {
 
     private SensorCamera cam;       // our camera object
-    Context appContext;             // the context from the app to be used by the camera
-    Lifecycle lifecycle;
     Image image;                    // most recent captured image
     Bitmap bitMap;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        appContext = application;
     }
 
-    public void initializeCamera(Context actContext, PreviewView previewView) {
-        cam = new SensorCamera(appContext, previewView);
+    public void initializeCamera(SensorCamera sensorCamera) {
+        cam = sensorCamera;
     }
 
     public void takePhoto() {
