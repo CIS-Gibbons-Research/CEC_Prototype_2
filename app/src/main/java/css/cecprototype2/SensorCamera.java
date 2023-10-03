@@ -3,6 +3,7 @@ package css.cecprototype2;
 import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
 
 
@@ -21,7 +22,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import android.graphics.Bitmap;
 import android.media.Image;
-import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
 public class SensorCamera {
 
     // Constructor: initialize camera
-    SensorCamera(AppCompatActivity mainActivity, PreviewView mainActivityPreviewView) {
+    SensorCamera(MainActivity mainActivity, PreviewView mainActivityPreviewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
@@ -46,7 +46,7 @@ public class SensorCamera {
     private Executor executor = Executors.newSingleThreadExecutor();
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     //Context context;        // the app context we are running in
-    AppCompatActivity activity;
+    MainActivity activity;
     PreviewView previewView;
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
@@ -54,9 +54,9 @@ public class SensorCamera {
     Bitmap cuttentBitmap;      // Bitmap from the image proxy
     Image currentImage;        // Image from the image proxy
 
-    private void startCameraProvider(Context context, PreviewView previewView) {
+    private void startCameraProvider(Context activityContext, PreviewView previewView) {
 
-        cameraProviderFuture = ProcessCameraProvider.getInstance(context);
+        cameraProviderFuture = ProcessCameraProvider.getInstance(activityContext);
         //cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
         //cameraProviderFuture = ProcessCameraProvider.getInstance(context).get();
 
@@ -70,7 +70,7 @@ public class SensorCamera {
                 // This should never be reached.
                 Log.i("CIS4444","startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
             }
-        }, ContextCompat.getMainExecutor(context));
+        }, ContextCompat.getMainExecutor(activityContext));
     }
 
     private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
@@ -133,11 +133,8 @@ public class SensorCamera {
             public void analyze(@NonNull ImageProxy imageProxy) {
                 Log.i("CIS4444","Trying to Analyze Photo --- analyze callback 1");
                 int rotationDegrees = imageProxy.getImageInfo().getRotationDegrees();
-                Log.i("CIS4444","analyze callback 1 --- rotationDegrees = "+rotationDegrees);
                 // Get the image proxy plane's buffer which is where the pixels are
                 ImageProxy.PlaneProxy[] planes = imageProxy.getPlanes();
-                Log.i("CIS4444","analyze callback 1 --- planes = "+planes.length);
-
                 ByteBuffer buffer = planes[0].getBuffer();
                 // Create a blank bitmap
                 Log.i("CIS4444","analyze callback 2");
@@ -168,18 +165,25 @@ public class SensorCamera {
      *  Use the camera Capture method to save an image from the camera to a file
      */
     private void capturePhotoProvider() {
-        Toast.makeText(activity, "Trying to Capture Photo", Toast.LENGTH_SHORT );
-        Log.i("TEG","Trying to Capture Photo");
+        Log.i("CIS4444","Trying to Capture Photo");
 
         //SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
         //File file = new File(getBatchDirectoryName(), mDateFormat.format(new Date())+ ".jpg");
-        File file = new File(activity.getExternalCacheDir() + File.separator + System.currentTimeMillis() + ".png");
+        //File file = new File(activity.getExternalCacheDir() + File.separator + System.currentTimeMillis() + ".png");
+        File photoDir = new File(Environment.getExternalStorageDirectory() + "/DCIM/ChemTests/");
+        if (!photoDir.exists()) {
+            Log.i("CIS4444","capturePhotoProvider -- Creating /DCIM/ChemTests/ folder");
+            photoDir.mkdir();
+        }
+        String fileName = System.currentTimeMillis() + ".jpg";
+        File file = new File(photoDir, fileName);
+        Log.i("CIS4444","capturePhotoProvider -- File name = "+file.getAbsoluteFile());
 
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();
-        Log.i("TEG","Trying to Capture Photo 222");
+        Log.i("CIS4444","Trying to Capture Photo 222");
 
         executor = Executors.newSingleThreadExecutor();
-        Log.i("TEG","Trying to Capture Photo 333");
+        Log.i("CIS4444","Trying to Capture Photo 333");
 
         imageCapture.takePicture(
                 outputFileOptions,
@@ -187,12 +191,10 @@ public class SensorCamera {
                 new ImageCapture.OnImageSavedCallback () {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Log.i("TEG","onImageSaved -- Photo has been taken and saved");
-                        Toast.makeText(activity, "Photo has been taken and saved", Toast.LENGTH_SHORT );
+                        Log.i("CIS4444","onImageSaved -- Photo has been taken and saved");
                     }
                     @Override
                     public void onError(@NonNull ImageCaptureException error) {
-                        Toast.makeText(activity, "Error taking and saving photo", Toast.LENGTH_SHORT );
                         error.printStackTrace();
                     }
                 });
