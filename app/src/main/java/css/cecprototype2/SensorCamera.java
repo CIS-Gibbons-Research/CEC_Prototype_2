@@ -5,6 +5,7 @@ import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 import android.content.Context;
 import android.util.Log;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,16 +18,10 @@ import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.LifecycleCameraController;
 import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.Image;
+import android.widget.Toast;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -39,11 +34,12 @@ import java.util.concurrent.Executors;
 public class SensorCamera {
 
     // Constructor: initialize camera
-    SensorCamera(AppCompatActivity mainActivity, PreviewView previewView) {
+    SensorCamera(AppCompatActivity mainActivity, PreviewView mainActivityPreviewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
         activity = mainActivity;
+        previewView = mainActivityPreviewView;
         startCameraProvider( activity,  previewView);
     }
 
@@ -51,11 +47,12 @@ public class SensorCamera {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     //Context context;        // the app context we are running in
     AppCompatActivity activity;
+    PreviewView previewView;
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
     Preview imagePreview;
-    Bitmap bitmap;      // Bitmap from the image proxy
-    Image image;        // Image from the image proxy
+    Bitmap cuttentBitmap;      // Bitmap from the image proxy
+    Image currentImage;        // Image from the image proxy
 
     private void startCameraProvider(Context context, PreviewView previewView) {
 
@@ -71,6 +68,7 @@ public class SensorCamera {
             } catch (ExecutionException | InterruptedException e) {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
+                Log.i("CIS4444","startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
             }
         }, ContextCompat.getMainExecutor(context));
     }
@@ -98,7 +96,8 @@ public class SensorCamera {
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
-        // TODO fix line below
+
+        // Now bind all these item to the camera
         cameraProvider.bindToLifecycle(activity, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
@@ -106,16 +105,20 @@ public class SensorCamera {
         // public abstraction to take photo.
         // Currently calls analyze photo, but could capture photo to save to disk later...
         // The UI should call this through the MainViewModel
-        analyzePhotoProvider();
-        return image;
+
+        //analyzePhotoProvider();
+        capturePhotoProvider();
+        return currentImage;
     }
 
     public Bitmap capturePhotoBitmap() {
         // public abstraction to take photo.
         // Currently calls analyze photo, but could capture photo to save to disk later...
         // The UI should call this through the MainViewModel
-        analyzePhotoProvider();
-        return bitmap;
+
+        //analyzePhotoProvider();
+        capturePhotoProvider();
+        return cuttentBitmap;
     }
 
     /**
@@ -138,14 +141,16 @@ public class SensorCamera {
                 ByteBuffer buffer = planes[0].getBuffer();
                 // Create a blank bitmap
                 Log.i("CIS4444","analyze callback 2");
-                // bitmap = imageProxy.toBitmap();
+                // cuttentBitmap = imageProxy.toBitmap();
+
                 // TODO: find out why this no loger works to get the bitmap
 
-                image = imageProxy.getImage();
+                currentImage = imageProxy.getImage();
+
                 //bitmap = Bitmap.createBitmap(imageProxy.getWidth(),imageProxy.getHeight(),Bitmap.Config.ARGB_8888);
                 // copy the image proxy plane into the bitmap
                 //bitmap.copyPixelsFromBuffer(buffer);
-                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+bitmap.getHeight());
+                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+cuttentBitmap.getHeight());
 
                 // TODO: add code to crop to just the needed area of the photo
                 //bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height())
@@ -163,7 +168,7 @@ public class SensorCamera {
      *  Use the camera Capture method to save an image from the camera to a file
      */
     private void capturePhotoProvider() {
-        //Toast.makeText(getApplicationContext(), "Trying to Capture Photo", Toast.LENGTH_SHORT );
+        Toast.makeText(activity, "Trying to Capture Photo", Toast.LENGTH_SHORT );
         Log.i("TEG","Trying to Capture Photo");
 
         //SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
@@ -183,16 +188,15 @@ public class SensorCamera {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         Log.i("TEG","onImageSaved -- Photo has been taken and saved");
-                        //Toast.makeText(getApplicationContext(), "Photo has been taken and saved", Toast.LENGTH_SHORT );
+                        Toast.makeText(activity, "Photo has been taken and saved", Toast.LENGTH_SHORT );
                     }
                     @Override
                     public void onError(@NonNull ImageCaptureException error) {
-                        //Toast.makeText(getApplicationContext(), "Error taking and saving photo", Toast.LENGTH_SHORT );
+                        Toast.makeText(activity, "Error taking and saving photo", Toast.LENGTH_SHORT );
                         error.printStackTrace();
                     }
                 });
 
     }
-
 
 }

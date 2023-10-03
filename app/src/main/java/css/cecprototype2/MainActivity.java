@@ -5,6 +5,7 @@ import androidx.camera.view.PreviewView;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,10 +38,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtonUpdate() {
-        buttonUpdate = findViewById(R.id.button1);
+        buttonUpdate = findViewById(R.id.buttonUpdate);
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("CIS4444","Update Button onClick");
                 mainViewModel.takePhoto();
                 int pixel = mainViewModel.getPixel(50,60);
                 tvStatus.setText("The pixel value at 50, 60 is "+pixel);
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupCamera() {
+        Log.i("CIS4444","Main Activity --- setupCamera");
         cam = new SensorCamera(this, previewView);
         mainViewModel.initializeCamera(cam);
 

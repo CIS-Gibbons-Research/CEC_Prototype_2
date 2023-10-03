@@ -29,11 +29,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/buttonUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
-        android:text="Button1"
+        android:text="Update"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -47,7 +47,7 @@
         app:layout_constraintEnd_toStartOf="@+id/tvStatus"
         app:layout_constraintHorizontal_bias="0.0"
 
-        app:layout_constraintStart_toEndOf="@+id/button1"
+        app:layout_constraintStart_toEndOf="@+id/buttonUpdate"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <androidx.camera.view.PreviewView
