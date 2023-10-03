@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("CIS4444","Update Button onClick");
                 mainViewModel.takePhoto();
-                int pixel = mainViewModel.getPixel(50,60);
+                imageViewCamera.setImageBitmap(mainViewModel.bitMap);
+                Double pixel = mainViewModel.analyzePixel(50,60);
                 tvStatus.setText("The pixel value at 50, 60 is "+pixel);
             }
         });

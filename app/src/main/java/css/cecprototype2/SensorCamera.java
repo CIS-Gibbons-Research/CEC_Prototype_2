@@ -106,8 +106,8 @@ public class SensorCamera {
         // Currently calls analyze photo, but could capture photo to save to disk later...
         // The UI should call this through the MainViewModel
 
-        //analyzePhotoProvider();
         capturePhotoProvider();
+        analyzePhotoProvider();
         return currentImage;
     }
 
@@ -116,8 +116,8 @@ public class SensorCamera {
         // Currently calls analyze photo, but could capture photo to save to disk later...
         // The UI should call this through the MainViewModel
 
-        //analyzePhotoProvider();
         capturePhotoProvider();
+        analyzePhotoProvider();
         return cuttentBitmap;
     }
 

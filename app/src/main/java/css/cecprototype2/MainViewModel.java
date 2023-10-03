@@ -2,6 +2,7 @@ package css.cecprototype2;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Color;
 import android.media.Image;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -40,21 +41,28 @@ public class MainViewModel extends AndroidViewModel {
         bitMap = cam.capturePhotoBitmap();
     }
 
-    public int getPixel(int x, int y) {
+    public Double analyzePixel(int x, int y) {
         int pixel;
-        // getting the pixel values from an Image seems hard
-        //Image.Plane[] planes = image.getPlanes();
-        //ByteBuffer buffer = planes[0].getBuffer();
-        if (bitMap!=null) {
-            pixel = bitMap.getPixel(x,y);
+        ChemicalAnalysis chemAnalysis = new ChemicalAnalysis();
+
+        if (bitMap != null) {
+            pixel = bitMap.getPixel(x, y);
+
+            // Extract RGB values from the pixel
+            int red = Color.red(pixel);
+            int green = Color.green(pixel);
+            int blue = Color.blue(pixel);
+
+
+            // Get the chemical reading
+            double chemicalReading = chemAnalysis.runAnalysis(red, green, blue);
+
+            return chemicalReading;
         } else {
-            pixel = -1;
+            // Handle the case when bitMap is null
+            return -1.0;
         }
-
-        return pixel;
     }
-
-
 
 
 }
