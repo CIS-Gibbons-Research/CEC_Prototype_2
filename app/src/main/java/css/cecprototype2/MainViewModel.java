@@ -46,18 +46,10 @@ public class MainViewModel extends AndroidViewModel {
         ChemicalAnalysis chemAnalysis = new ChemicalAnalysis();
 
         if (bitMap != null) {
-            pixel = bitMap.getPixel(x, y);
+            pixel = bitMap.getPixel(x, y); //temp variable for incoming pixel
 
-            // Extract RGB values from the pixel
-            int red = Color.red(pixel);
-            int green = Color.green(pixel);
-            int blue = Color.blue(pixel);
-
-
-            // Get the chemical reading
-            double chemicalReading = chemAnalysis.runAnalysis(red, green, blue);
-
-            return chemicalReading;
+            // Get the RGB values from the pixel and analyze using ChemicalAnalysis class and return as a double
+            return chemAnalysis.runAnalysis(Color.red(pixel), Color.green(pixel), Color.blue(pixel));
         } else {
             // Handle the case when bitMap is null
             return -1.0;
