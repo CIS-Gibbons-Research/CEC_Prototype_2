@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupButtonUpdate() {
-        buttonUpdate = findViewById(R.id.buttonUpdate);
+        buttonUpdate = findViewById(R.id.buttonTakePhoto);
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
