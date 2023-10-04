@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
     Button buttonUpdate;
     ImageView imageViewCamera;
     PreviewView previewView;
-    CircleIntensityExtractor circleIntensityExtractor;
     private SensorCamera cam;
     Map<String, Integer> map;
+    ChemicalAnalysis chemicalAnalysis;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 map = mainViewModel.getRegionMap();
                 // Update UI with circle intensities
                 tvStatus.setText(mainViewModel.updateUIWithCircleIntensities(map));
+                //start chemical analysis with map
+                chemicalAnalysis = new ChemicalAnalysis(map);
+
+                tvStatus.setText(chemicalAnalysis.getChemicalReading().toString());
             }
         });
     }
@@ -63,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i("CIS4444","Main Activity --- setupCamera");
         cam = new SensorCamera(this, previewView);
         mainViewModel.initializeCamera(cam);
-
     }
-
-
 
 }
