@@ -5,22 +5,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 public class ChemicalAnalysis {
-    private Double chemicalReading;
-
+    private Map<String, Double> chemicalReading;
     private Map<String, Integer> myMap;
 
+    /**
+     * constructor -- fills map inMap by calling runSingleAnalysis for each value
+     * @param inMap
+     */
     public ChemicalAnalysis(Map<String, Integer> inMap)
     {
         myMap = inMap;
-
         //example analysis
         for (Integer i : myMap.values())
         {
-            runSingleAnalysis(i);
+            chemicalReading.put(i.toString(), runSingleAnalysis(i));
         }
     }
-
-    // Method to calculate and set the chemical reading based on RGB values
+    /**
+     * Method to calculate and set the chemical reading based on RGB values
+     * TODO: implement code processing via linear regression model
+     * @param index
+     * @return the processed analysis as a Double value.
+     */
     public Double runSingleAnalysis(int index)
     {
         //run regression here
@@ -30,11 +36,13 @@ public class ChemicalAnalysis {
         return exampleValue;
     }
 
-    // Method to get the stored chemical reading
-    public Double getChemicalReading()
+    /**
+     *
+     * @return the chemicalReading value
+     */
+    public Double getChemicalReading(String key)
     {
-        return this.chemicalReading;
+        return chemicalReading.getOrDefault(key, (Double) 0.0);
     }
-
 
 }

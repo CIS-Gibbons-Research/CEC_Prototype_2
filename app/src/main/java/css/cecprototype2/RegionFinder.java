@@ -7,6 +7,9 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Helper class to find regions given an image
+ */
 public class RegionFinder {
 
     // Constants to define the number of regions and other parameters
@@ -14,9 +17,14 @@ public class RegionFinder {
     private static final int MIN_REGION_SIZE = 50; // Minimum size for a region
     private static final int MAX_REGION_SIZE = 200; // Maximum size for a region
 
-
-    //test, assuming a 1000x1000px image. This finds the center of the image (500,500), and then gets all of
-    //the regions surrounding the center, assuming a perfect hexagonal shape.
+    /**
+     * This is a proof of concept, assuming a 1000px by 1000px image. This finds the center of the image (500,500), and then gets all of
+     * the regions surrounding the center, assuming a perfect hexagonal shape.
+     * TODO: Replace hexagonal structure with actual region placement logic
+     *
+     * @param image image to be processed
+     * @return a list of regions in the image
+     */
     public List<Region> findRegions(@NonNull Image image) {
         List<Region> regions = new ArrayList<>();
 

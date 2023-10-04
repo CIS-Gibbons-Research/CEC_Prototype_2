@@ -41,6 +41,11 @@ public class MainViewModel extends AndroidViewModel {
         return this.image;
     }
 
+    /**
+     *
+     * @param circleIntensityMap map to display
+     * @return a formatted String that can be displayed to UI
+     */
     public String updateUIWithCircleIntensities(Map<String, Integer> circleIntensityMap) //update UI with region map
     {
         StringBuilder sb = new StringBuilder();
@@ -51,7 +56,10 @@ public class MainViewModel extends AndroidViewModel {
         return sb.toString();
     }
 
-    //get region map for given image
+    /**
+     * populates a map of all regions with their index as a key and returns it
+     * @return a map of all regions
+     */
     public Map<String, Integer> getRegionMap()
     {
         List<Region> regions = analyzeCapturedImage(image); // initialize list of regions
@@ -65,9 +73,14 @@ public class MainViewModel extends AndroidViewModel {
         return intensityMap;
     }
 
+    /**
+     * calls regionFinder.findRegions to get all regions in a given image
+     * @param image image to be analyzed
+     * @return a list of regions in the image
+     */
     public List<Region> analyzeCapturedImage(Image image) //convert image into a list of regions
     {
-        List<Region> regions = analyzeImage(image);
+        List<Region> regions = regionFinder.findRegions(image);
         return regions;
     }
 
@@ -82,12 +95,5 @@ public class MainViewModel extends AndroidViewModel {
         image = cam.capturePhotoImage();
         bitMap = cam.capturePhotoBitmap();
     }
-
-    //convert image into a list of regions
-    public List<Region> analyzeImage(Image img)
-    {
-        return regionFinder.findRegions(img);
-    }
-
 
 }
