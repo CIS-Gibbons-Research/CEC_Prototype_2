@@ -1,10 +1,8 @@
 package css.cecprototype2;
 
 import android.media.Image;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 public class CircleIntensityExtractor
 {
@@ -19,7 +17,7 @@ public class CircleIntensityExtractor
 
     public Integer getRegionIntensity(Region inRegion) {
         int sumIntensity = 0;
-        int numPixels = 0;
+        int numPixels = inRegion.getHeight() * inRegion.getWidth();
 
         for (int x = inRegion.getX(); x < inRegion.getX() + inRegion.getWidth(); x++) //iterate columns
         {
@@ -27,10 +25,8 @@ public class CircleIntensityExtractor
             {
                 int pixelIntensity = 0;
                 sumIntensity += pixelIntensity;
-                numPixels++;
             }
         }
-
         if (numPixels > 0) {
             // Calculate and return the average intensity
             int averageIntensity = sumIntensity / numPixels;
@@ -40,6 +36,5 @@ public class CircleIntensityExtractor
             return 0;
         }
     }
-
 
 }

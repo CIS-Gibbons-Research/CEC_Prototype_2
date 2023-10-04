@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     PreviewView previewView;
     CircleIntensityExtractor circleIntensityExtractor;
     private SensorCamera cam;
+    Map<String, Integer> map;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,42 +50,22 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("CIS4444","Update Button onClick");
                 mainViewModel.takePhoto();
                 imageViewCamera.setImageBitmap(mainViewModel.bitMap);
-                Double pixel = mainViewModel.analyzePixel(50,60);
-                tvStatus.setText("The pixel value at 50, 60 is "+pixel);
-
-                List<Region> regions = analyzeCapturedImage(mainViewModel.getImage()); //list of regions
-
-                // Calculate average intensities for each region
-                Map<String, Double> circleIntensityMap = circleIntensityExtractor.extractCircleIntensities(regions);
-
+                //populate map
+                map = mainViewModel.getRegionMap();
                 // Update UI with circle intensities
-                updateUIWithCircleIntensities(circleIntensityMap);
+                tvStatus.setText(mainViewModel.updateUIWithCircleIntensities(map));
             }
         });
     }
 
-    private void setupCamera() {
+    private void setupCamera()
+    {
         Log.i("CIS4444","Main Activity --- setupCamera");
         cam = new SensorCamera(this, previewView);
         mainViewModel.initializeCamera(cam);
 
     }
 
-    private List<Region> analyzeCapturedImage(Image image) //convert image into a list of regions
-    {
-        List<Region> regions = mainViewModel.analyzeImage(image);
-        return regions;
-    }
 
-    private void updateUIWithCircleIntensities(Map<String, Double> circleIntensityMap) {
-        // Update your UI components (e.g., TextView) with circle intensity information
-        // Use the `circleIntensityMap` to display or further process the data.
-        // Example:
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Double> entry : circleIntensityMap.entrySet())
-        {
-            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
-        tvStatus.setText(sb.toString());
-    }
+
 }

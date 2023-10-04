@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainViewModel extends AndroidViewModel {
 
@@ -27,6 +28,7 @@ public class MainViewModel extends AndroidViewModel {
     Application application;
 
     RegionFinder regionFinder;
+    CircleIntensityExtractor circleIntensityExtractor;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -37,6 +39,36 @@ public class MainViewModel extends AndroidViewModel {
     public Image getImage()
     {
         return this.image;
+    }
+
+    public String updateUIWithCircleIntensities(Map<String, Integer> circleIntensityMap) //update UI with region map
+    {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, Integer> entry : circleIntensityMap.entrySet())
+        {
+            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    //get region map for given image
+    public Map<String, Integer> getRegionMap()
+    {
+        List<Region> regions = analyzeCapturedImage(image); // initialize list of regions
+        Map<String, Integer> intensityMap = null; //reset regions map
+
+        // Calculate average intensities for each region and place in intensity map
+        for (int i = 0; i < regions.size(); i++)
+        {
+            intensityMap.put("Region " + i + ": ", circleIntensityExtractor.getRegionIntensity(regions.get(i)));
+        }
+        return intensityMap;
+    }
+
+    public List<Region> analyzeCapturedImage(Image image) //convert image into a list of regions
+    {
+        List<Region> regions = analyzeImage(image);
+        return regions;
     }
 
     public void initializeCamera(SensorCamera sensorCamera) {
@@ -50,21 +82,6 @@ public class MainViewModel extends AndroidViewModel {
         image = cam.capturePhotoImage();
         bitMap = cam.capturePhotoBitmap();
     }
-
-//    public Double analyzePixel(int x, int y) {
-//        int pixel;
-//        ChemicalAnalysis chemAnalysis = new ChemicalAnalysis();
-//
-//        if (bitMap != null) {
-//            pixel = bitMap.getPixel(x, y); //temp variable for incoming pixel
-//
-//            // Get the RGB values from the pixel and analyze using ChemicalAnalysis class and return as a double
-//            return chemAnalysis.runAnalysis(Color.red(pixel), Color.green(pixel), Color.blue(pixel));
-//        } else {
-//            // Handle the case when bitMap is null
-//            return -1.0;
-//        }
-//    }
 
     //convert image into a list of regions
     public List<Region> analyzeImage(Image img)
