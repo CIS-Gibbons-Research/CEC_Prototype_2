@@ -59,6 +59,7 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * populates a map of all regions with their index as a key and returns it
      * @return a map of all regions
+     * FIXME update map key values with index or other useful information
      */
     public Map<String, Integer> getRegionMap()
     {
