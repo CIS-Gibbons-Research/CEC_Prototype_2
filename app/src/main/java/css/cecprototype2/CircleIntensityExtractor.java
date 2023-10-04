@@ -9,71 +9,37 @@ import java.util.Map;
 public class CircleIntensityExtractor
 {
     private Image image;
-    private List<Region> circleRegions;
+    private List<Region> regions;
 
-    public CircleIntensityExtractor(Image image, List<Region> circleRegions)
+    public CircleIntensityExtractor(Image image, List<Region> regions)
     {
         this.image = image;
-        this.circleRegions = circleRegions;
+        this.regions = regions;
     }
 
-    public Map<String, Double> extractCircleIntensities() {
-        Map<String, Double> circleIntensityMap = new HashMap<>();
+    public Integer getRegionIntensity(Region inRegion) {
+        int sumIntensity = 0;
+        int numPixels = 0;
 
-        for (int i = 0; i < circleRegions.size(); i++) {
-            Region region = circleRegions.get(i);
-            Image circleMask = createCircularMask(region);
-            double circleIntensity = calculateAverageIntensity(image, circleMask);
-            circleIntensityMap.put("Circle " + (i + 1), circleIntensity);
-        }
-
-        return circleIntensityMap;
-    }
-
-    private Image createCircularMask(Region region) {
-
-        return null;
-    }
-
-    private double calculateAverageIntensity(Image image, Image mask) {
-
-        return 0.0;
-    }
-
-    private Image loadImage(String filePath)
-    {
-        return null;
-    }
-
-    private class Region
-    {
-        private int x;
-        private int y;
-        private int width;
-        private int height;
-
-        public Region(int x, int y, int width, int height)
+        for (int x = inRegion.getX(); x < inRegion.getX() + inRegion.getWidth(); x++) //iterate columns
         {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
+            for (int y = inRegion.getY(); y < inRegion.getY() + inRegion.getHeight(); y++) //iterate rows
+            {
+                int pixelIntensity = 0;
+                sumIntensity += pixelIntensity;
+                numPixels++;
+            }
         }
 
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getHeight() {
-            return height;
+        if (numPixels > 0) {
+            // Calculate and return the average intensity
+            int averageIntensity = sumIntensity / numPixels;
+            return averageIntensity;
+        } else {
+            // No pixels in the region, return a default value (e.g., 0)
+            return 0;
         }
     }
+
+
 }
