@@ -13,6 +13,7 @@ public class ChemicalAnalysis {
     {
         myMap = inMap;
 
+        //example analysis
         for (Integer i : myMap.values())
         {
             runSingleAnalysis(i);

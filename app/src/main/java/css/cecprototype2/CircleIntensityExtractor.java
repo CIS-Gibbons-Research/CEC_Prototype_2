@@ -3,7 +3,6 @@ package css.cecprototype2;
 import android.media.Image;
 import java.util.List;
 
-
 public class CircleIntensityExtractor
 {
     private Image image;
