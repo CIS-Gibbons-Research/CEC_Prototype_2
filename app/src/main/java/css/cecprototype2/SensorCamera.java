@@ -2,8 +2,11 @@ package css.cecprototype2;
 
 import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 
@@ -27,6 +30,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -167,23 +173,22 @@ public class SensorCamera {
     private void capturePhotoProvider() {
         Log.i("CIS4444","Trying to Capture Photo");
 
-        //SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US);
-        //File file = new File(getBatchDirectoryName(), mDateFormat.format(new Date())+ ".jpg");
-        //File file = new File(activity.getExternalCacheDir() + File.separator + System.currentTimeMillis() + ".png");
-        File photoDir = new File(Environment.getExternalStorageDirectory() + "/DCIM/ChemTests/");
-        if (!photoDir.exists()) {
-            Log.i("CIS4444","capturePhotoProvider -- Creating /DCIM/ChemTests/ folder");
-            photoDir.mkdir();
+        String name = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(new Date());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
         }
-        String fileName = System.currentTimeMillis() + ".jpg";
-        File file = new File(photoDir, fileName);
-        Log.i("CIS4444","capturePhotoProvider -- File name = "+file.getAbsoluteFile());
 
-        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(file).build();
-        Log.i("CIS4444","Trying to Capture Photo 222");
+        // Create output options object which contains file + metadata
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
+                .Builder(activity.getContentResolver(),
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues).build();
 
         executor = Executors.newSingleThreadExecutor();
-        Log.i("CIS4444","Trying to Capture Photo 333");
+        Log.i("CIS4444","Trying to Capture Photo 2");
 
         imageCapture.takePicture(
                 outputFileOptions,
@@ -195,6 +200,7 @@ public class SensorCamera {
                     }
                     @Override
                     public void onError(@NonNull ImageCaptureException error) {
+                        Log.i("CIS4444","onImageSaved -- onError");
                         error.printStackTrace();
                     }
                 });
