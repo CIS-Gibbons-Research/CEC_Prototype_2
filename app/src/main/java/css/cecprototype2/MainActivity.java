@@ -2,6 +2,7 @@ package css.cecprototype2;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.media.Image;
 import android.os.Bundle;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     private SensorCamera cam;
     Map<String, Integer> map;
     ChemicalAnalysis chemicalAnalysis;
+    private boolean bitmapAvailable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setupButtonUpdate();
         // set up camera
         setupCamera();
+        // set up the LiveData observer
+        setupLiveDataObservers();
     }
 
     private void setupButtonUpdate() {
@@ -70,6 +75,22 @@ public class MainActivity extends AppCompatActivity {
         Log.i("CIS4444","Main Activity --- setupCamera");
         cam = new SensorCamera(this, previewView);
         mainViewModel.initializeCamera(cam);
+    }
+
+    private void setupLiveDataObservers() {
+        // Observe the LiveData for bitmapAvailable
+        mainViewModel.getBitmapAvailableLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAvailable) {
+                bitmapAvailable = isAvailable;
+                if (bitmapAvailable) {
+                    int pixelValue = mainViewModel.analyzePixel(50,60);
+                    tvStatus.setText("The pixel value at 50, 60 is "+pixelValue);
+                } else {
+                    tvStatus.setText("Bitmap not available");
+                }
+            }
+        });
     }
 
 }

@@ -23,6 +23,9 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import android.graphics.Bitmap;
 import android.media.Image;
 
@@ -205,7 +208,8 @@ public class SensorCamera {
                             // Use BitmapFactory to open the image as a Bitmap
                             InputStream inputStream = activity.getContentResolver().openInputStream(savedUri);
                             currentBitmap = BitmapFactory.decodeStream(inputStream);
-                            Log.i("CIS4444","Bitmap opened sucessfully ---- pixel 100,100 = "+currentBitmap.getPixel(100,100));
+                            setBitmapAvailable(true);
+                            Log.i("CIS4444","Bitmap opened sucessfully");
                         } catch (IOException e) {
                             Log.i("CIS4444","Bitmap opened FAILED");
                             e.printStackTrace();
@@ -218,6 +222,17 @@ public class SensorCamera {
                     }
                 });
 
+    }
+
+    // Use LiveData to store whether the a bitmap from a photo is available. This can then update the MainActivity
+    private MutableLiveData<Boolean> bitmapAvailable = new MutableLiveData<>();
+    // This method should be called when the bitmap is available.
+    public void setBitmapAvailable(boolean isAvailable) {
+        bitmapAvailable.postValue(isAvailable);
+    }
+    // This method is used to get access the the LiveData version of bitmapAvailable
+    public LiveData<Boolean> getBitmapAvailableLiveData() {
+        return bitmapAvailable;
     }
 
 }

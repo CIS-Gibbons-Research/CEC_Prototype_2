@@ -1,7 +1,6 @@
 package css.cecprototype2;
 
 import android.app.Application;
-import android.content.Context;
 import android.graphics.Color;
 import android.media.Image;
 import android.graphics.Bitmap;
@@ -9,14 +8,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.view.PreviewView;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
 
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -95,6 +89,24 @@ public class MainViewModel extends AndroidViewModel {
 
         //image = cam.capturePhotoImage();
         bitMap = cam.capturePhotoBitmap();
+    }
+
+    public int analyzePixel(int x, int y) {
+        int pixel;
+        //ChemicalAnalysis chemAnalysis = new ChemicalAnalysis();
+        if (bitMap != null) {
+            pixel = bitMap.getPixel(x, y); //temp variable for incoming pixel
+           return Color.red(pixel) + Color.green(pixel) + Color.blue(pixel);
+        } else {
+            // Handle the case when bitMap is null
+            Log.e("CIS4444","MainViewModel --- analyzePixel -- error with null bitmap");
+            return -1;
+        }
+    }
+
+
+    public LiveData<Boolean> getBitmapAvailableLiveData() {
+        return cam.getBitmapAvailableLiveData();
     }
 
 }
