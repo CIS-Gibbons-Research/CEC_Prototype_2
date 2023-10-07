@@ -54,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
                 //analysis logic
 
                 //populate map of regions from viewModel
-                map = mainViewModel.getRegionMap();
+                //map = mainViewModel.getRegionMap();
                 // Update UI with intensities -- mainViewModel.updateUIWithCircleIntensities formats String for us
-                tvStatus.setText(mainViewModel.updateUIWithCircleIntensities(map));
+                //tvStatus.setText(mainViewModel.updateUIWithCircleIntensities(map));
                 //start chemical analysis with map as param
-                chemicalAnalysis = new ChemicalAnalysis(map);
+                //chemicalAnalysis = new ChemicalAnalysis(map);
                 //FIXME: Replace with UI Display logic -- chemicalAnalysis.getChemicalReading() needs a param (0-6) as an index key
                 //tvStatus.setText(chemicalAnalysis.getChemicalReading().toString());
             }

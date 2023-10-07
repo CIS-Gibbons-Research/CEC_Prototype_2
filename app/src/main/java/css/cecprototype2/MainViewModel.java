@@ -93,7 +93,7 @@ public class MainViewModel extends AndroidViewModel {
         Log.i("CIS4444","MainViewModel --- takePhoto");
         Toast.makeText(application, "MainViewModel --- takePhoto", Toast.LENGTH_SHORT );
 
-        image = cam.capturePhotoImage();
+        //image = cam.capturePhotoImage();
         bitMap = cam.capturePhotoBitmap();
     }
 

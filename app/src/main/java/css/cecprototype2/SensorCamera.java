@@ -4,15 +4,15 @@ import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.content.ContextCompat;
@@ -28,7 +28,8 @@ import android.media.Image;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -57,7 +58,7 @@ public class SensorCamera {
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
     Preview imagePreview;
-    Bitmap cuttentBitmap;      // Bitmap from the image proxy
+    Bitmap currentBitmap;      // Bitmap from the image proxy
     Image currentImage;        // Image from the image proxy
 
     private void startCameraProvider(Context activityContext, PreviewView previewView) {
@@ -107,15 +108,16 @@ public class SensorCamera {
         cameraProvider.bindToLifecycle(activity, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
-    public Image capturePhotoImage() {
-        // public abstraction to take photo.
-        // Currently calls analyze photo, but could capture photo to save to disk later...
-        // The UI should call this through the MainViewModel
-
-        capturePhotoProvider();
-        analyzePhotoProvider();
-        return currentImage;
-    }
+      // Use Bitmap instead of Image for easier access to pixels
+//    public Image capturePhotoImage() {
+//        // public abstraction to take photo.
+//        // Currently calls analyze photo, but could capture photo to save to disk later...
+//        // The UI should call this through the MainViewModel
+//
+//        capturePhotoProvider();
+//        //analyzePhotoProvider();   // Use capture instead of analyze since we want to save to photo to a jpg file
+//        return currentImage;
+//    }
 
     public Bitmap capturePhotoBitmap() {
         // public abstraction to take photo.
@@ -123,8 +125,8 @@ public class SensorCamera {
         // The UI should call this through the MainViewModel
 
         capturePhotoProvider();
-        analyzePhotoProvider();
-        return cuttentBitmap;
+        //analyzePhotoProvider();   // Use capture instead of analyze since we want to save to photo to a jpg file
+        return currentBitmap;
     }
 
     /**
@@ -153,7 +155,7 @@ public class SensorCamera {
                 //bitmap = Bitmap.createBitmap(imageProxy.getWidth(),imageProxy.getHeight(),Bitmap.Config.ARGB_8888);
                 // copy the image proxy plane into the bitmap
                 //bitmap.copyPixelsFromBuffer(buffer);
-                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+cuttentBitmap.getHeight());
+                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+ currentBitmap.getHeight());
 
                 // TODO: add code to crop to just the needed area of the photo
                 //bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height())
@@ -172,13 +174,13 @@ public class SensorCamera {
      */
     private void capturePhotoProvider() {
         Log.i("CIS4444","Trying to Capture Photo");
-
+        String photoPath = "Pictures/ChemTest";
         String name = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(new Date());
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ChemTest");
         }
 
         // Create output options object which contains file + metadata
@@ -196,7 +198,18 @@ public class SensorCamera {
                 new ImageCapture.OnImageSavedCallback () {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Log.i("CIS4444","onImageSaved -- Photo has been taken and saved");
+                        Log.i("CIS4444","onImageSaved -- Photo taken and saved to "+outputFileResults.getSavedUri());
+                        // Get the Uri of the saved image
+                        Uri savedUri = outputFileResults.getSavedUri();
+                        try {
+                            // Use BitmapFactory to open the image as a Bitmap
+                            InputStream inputStream = activity.getContentResolver().openInputStream(savedUri);
+                            currentBitmap = BitmapFactory.decodeStream(inputStream);
+                            Log.i("CIS4444","Bitmap opened sucessfully ---- pixel 100,100 = "+currentBitmap.getPixel(100,100));
+                        } catch (IOException e) {
+                            Log.i("CIS4444","Bitmap opened FAILED");
+                            e.printStackTrace();
+                        }
                     }
                     @Override
                     public void onError(@NonNull ImageCaptureException error) {
