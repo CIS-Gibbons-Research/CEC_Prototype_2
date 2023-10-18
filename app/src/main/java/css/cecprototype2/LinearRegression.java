@@ -6,15 +6,14 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 public class LinearRegression {
     // Data
-    // TODO: give the data lists more meaningful names like Florencence and Concentration
-    List<Double> xValues = Arrays.asList(0.2, 0.4, 0.6, 0.8);
-    List<Double> yValues = Arrays.asList(1200.0, 1310.0, 1430.0, 1580.0);
+    List<Double> fluorescenceValues = Arrays.asList(1200.0, 1310.0, 1430.0, 1580.0);
+    List<Double> concentrationValues = Arrays.asList(0.2, 0.4, 0.6, 0.8);
     // Create a SimpleRegression instance
     SimpleRegression regression;
 
-    public LinearRegression(List<Double> xValues, List<Double> yValues) {
-        this.xValues = xValues;
-        this.yValues = yValues;
+    public LinearRegression(List<Double> fluorescenceValues, List<Double> concentrationValues) {
+        this.fluorescenceValues = fluorescenceValues;
+        this.concentrationValues = concentrationValues;
         leastSquaresAnalysis();
     }
 
@@ -25,10 +24,10 @@ public class LinearRegression {
         // Create a SimpleRegression instance
         regression = new SimpleRegression();
         // Add data points to the regression model
-        for (int i = 0; i < xValues.size(); i++) {
-            regression.addData(xValues.get(i), yValues.get(i));
+        for (int i = 0; i < fluorescenceValues.size(); i++) {
+            regression.addData(fluorescenceValues.get(i), concentrationValues.get(i));
             //Log.d("CIS3334","Adding in x = "+xValues.get(i)+" and y = "+yValues.get(i));
-            System.out.println("Adding in x = "+xValues.get(i)+" and y = "+yValues.get(i));
+            System.out.println("Adding in x = "+ fluorescenceValues.get(i)+" and y = "+ concentrationValues.get(i));
         }
         // Perform linear regression
         m_slope = regression.getSlope();
@@ -36,10 +35,8 @@ public class LinearRegression {
     }
 
     // redict a value given a new sample using the linear regression model
-    public Double predict(Double newX) {
-        return regression.predict(newX);
+    public Double predict(Double newFluorescence) {
+        return regression.predict(newFluorescence);
     }
-
-    // TODO: add unit tests for this class
 
 }
