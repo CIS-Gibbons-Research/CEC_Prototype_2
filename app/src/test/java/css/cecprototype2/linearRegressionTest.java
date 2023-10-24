@@ -12,7 +12,7 @@ public class linearRegressionTest extends TestCase {
     @Test
     public void testTwoValueTest() {
     // Arrange
-    List<Double> x = Arrays.asList(10.0, 20.0);
+    List<Double> x = Arrays.asList(10.00, 20.0);
     List<Double> y = Arrays.asList(100.0, 150.0);
     // Act
     linearRegression lenReg = new linearRegression(x,y);
