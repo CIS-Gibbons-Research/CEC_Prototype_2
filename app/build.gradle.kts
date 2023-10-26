@@ -58,4 +58,7 @@ dependencies {
     // If you want to additionally use the CameraX Extensions library
     //implementation("androidx.camera:camera-extensions:${camerax_version}")
 
+    // needed for Simple Linear Regression
+    implementation ("org.apache.commons:commons-math3:3.6.1")
+
 }

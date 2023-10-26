@@ -1,0 +1,42 @@
+package css.cecprototype2;
+
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
+
+public class LinearRegression {
+    // Data
+    List<Double> fluorescenceValues = Arrays.asList(1200.0, 1310.0, 1430.0, 1580.0);
+    List<Double> concentrationValues = Arrays.asList(0.2, 0.4, 0.6, 0.8);
+    // Create a SimpleRegression instance
+    SimpleRegression regression;
+
+    public LinearRegression(List<Double> fluorescenceValues, List<Double> concentrationValues) {
+        this.fluorescenceValues = fluorescenceValues;
+        this.concentrationValues = concentrationValues;
+        leastSquaresAnalysis();
+    }
+
+    public Double m_slope = 0.0;        // slope of linear regression line
+    public Double b_intercept = 0.0;   // y-intercept
+
+    private void leastSquaresAnalysis() {
+        // Create a SimpleRegression instance
+        regression = new SimpleRegression();
+        // Add data points to the regression model
+        for (int i = 0; i < fluorescenceValues.size(); i++) {
+            regression.addData(fluorescenceValues.get(i), concentrationValues.get(i));
+            //Log.d("CIS3334","Adding in x = "+xValues.get(i)+" and y = "+yValues.get(i));
+            System.out.println("Adding in x = "+ fluorescenceValues.get(i)+" and y = "+ concentrationValues.get(i));
+        }
+        // Perform linear regression
+        m_slope = regression.getSlope();
+        b_intercept = regression.getIntercept();
+    }
+
+    // redict a value given a new sample using the linear regression model
+    public Double predict(Double newFluorescence) {
+        return regression.predict(newFluorescence);
+    }
+
+}
