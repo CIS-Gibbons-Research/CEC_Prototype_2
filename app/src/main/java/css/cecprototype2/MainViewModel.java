@@ -106,7 +106,8 @@ public class MainViewModel extends AndroidViewModel {
 
 
     public LiveData<Boolean> getBitmapAvailableLiveData() {
-        return cam.getBitmapAvailableLiveData();
+        //return cam.getBitmapAvailableLiveData();
+        return null;
     }
 
 }

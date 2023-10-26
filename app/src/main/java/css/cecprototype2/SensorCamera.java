@@ -4,15 +4,15 @@ import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.content.ContextCompat;
@@ -23,16 +23,12 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-
 import android.graphics.Bitmap;
 import android.media.Image;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.File;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,7 +57,7 @@ public class SensorCamera {
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
     Preview imagePreview;
-    Bitmap currentBitmap;      // Bitmap from the image proxy
+    Bitmap cuttentBitmap;      // Bitmap from the image proxy
     Image currentImage;        // Image from the image proxy
 
     private void startCameraProvider(Context activityContext, PreviewView previewView) {
@@ -111,16 +107,15 @@ public class SensorCamera {
         cameraProvider.bindToLifecycle(activity, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
-      // Use Bitmap instead of Image for easier access to pixels
-//    public Image capturePhotoImage() {
-//        // public abstraction to take photo.
-//        // Currently calls analyze photo, but could capture photo to save to disk later...
-//        // The UI should call this through the MainViewModel
-//
-//        capturePhotoProvider();
-//        //analyzePhotoProvider();   // Use capture instead of analyze since we want to save to photo to a jpg file
-//        return currentImage;
-//    }
+    public Image capturePhotoImage() {
+        // public abstraction to take photo.
+        // Currently calls analyze photo, but could capture photo to save to disk later...
+        // The UI should call this through the MainViewModel
+
+        capturePhotoProvider();
+        analyzePhotoProvider();
+        return currentImage;
+    }
 
     public Bitmap capturePhotoBitmap() {
         // public abstraction to take photo.
@@ -128,8 +123,8 @@ public class SensorCamera {
         // The UI should call this through the MainViewModel
 
         capturePhotoProvider();
-        //analyzePhotoProvider();   // Use capture instead of analyze since we want to save to photo to a jpg file
-        return currentBitmap;
+        analyzePhotoProvider();
+        return cuttentBitmap;
     }
 
     /**
@@ -158,7 +153,7 @@ public class SensorCamera {
                 //bitmap = Bitmap.createBitmap(imageProxy.getWidth(),imageProxy.getHeight(),Bitmap.Config.ARGB_8888);
                 // copy the image proxy plane into the bitmap
                 //bitmap.copyPixelsFromBuffer(buffer);
-                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+ currentBitmap.getHeight());
+                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+cuttentBitmap.getHeight());
 
                 // TODO: add code to crop to just the needed area of the photo
                 //bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height())
@@ -177,13 +172,13 @@ public class SensorCamera {
      */
     private void capturePhotoProvider() {
         Log.i("CIS4444","Trying to Capture Photo");
-        String photoPath = "Pictures/ChemTest";
+
         String name = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(new Date());
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ChemTest");
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
         }
 
         // Create output options object which contains file + metadata
@@ -201,19 +196,7 @@ public class SensorCamera {
                 new ImageCapture.OnImageSavedCallback () {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        Log.i("CIS4444","onImageSaved -- Photo taken and saved to "+outputFileResults.getSavedUri());
-                        // Get the Uri of the saved image
-                        Uri savedUri = outputFileResults.getSavedUri();
-                        try {
-                            // Use BitmapFactory to open the image as a Bitmap
-                            InputStream inputStream = activity.getContentResolver().openInputStream(savedUri);
-                            currentBitmap = BitmapFactory.decodeStream(inputStream);
-                            setBitmapAvailable(true);
-                            Log.i("CIS4444","Bitmap opened sucessfully");
-                        } catch (IOException e) {
-                            Log.i("CIS4444","Bitmap opened FAILED");
-                            e.printStackTrace();
-                        }
+                        Log.i("CIS4444","onImageSaved -- Photo has been taken and saved");
                     }
                     @Override
                     public void onError(@NonNull ImageCaptureException error) {
@@ -222,17 +205,6 @@ public class SensorCamera {
                     }
                 });
 
-    }
-
-    // Use LiveData to store whether the a bitmap from a photo is available. This can then update the MainActivity
-    private MutableLiveData<Boolean> bitmapAvailable = new MutableLiveData<>();
-    // This method should be called when the bitmap is available.
-    public void setBitmapAvailable(boolean isAvailable) {
-        bitmapAvailable.postValue(isAvailable);
-    }
-    // This method is used to get access the the LiveData version of bitmapAvailable
-    public LiveData<Boolean> getBitmapAvailableLiveData() {
-        return bitmapAvailable;
     }
 
 }
