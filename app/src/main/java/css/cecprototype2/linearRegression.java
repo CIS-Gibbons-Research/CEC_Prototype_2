@@ -17,8 +17,7 @@ public class linearRegression {
     SimpleRegression regression;
     List <Double> xValues;
     List <Double> yValues;
-//    List<Double> x = Arrays.asList(0.20, 0.4, 0.6, 0.8);
-//    List<Double> y = Arrays.asList(1200.0, 1310.0, 1430.0, 1580.0);
+
 
     public Double m_slope = 0.0;        // slope of linear regression line
     public Double b_intercept = 0.0;   // y-intercept
