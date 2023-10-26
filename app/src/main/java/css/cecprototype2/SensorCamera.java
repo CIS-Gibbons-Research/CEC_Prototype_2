@@ -57,7 +57,7 @@ public class SensorCamera {
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
     Preview imagePreview;
-    Bitmap cuttentBitmap;      // Bitmap from the image proxy
+    Bitmap currentBitmap;      // Bitmap from the image proxy
     Image currentImage;        // Image from the image proxy
 
     private void startCameraProvider(Context activityContext, PreviewView previewView) {
@@ -124,7 +124,7 @@ public class SensorCamera {
 
         capturePhotoProvider();
         analyzePhotoProvider();
-        return cuttentBitmap;
+        return currentBitmap;
     }
 
     /**
@@ -153,7 +153,7 @@ public class SensorCamera {
                 //bitmap = Bitmap.createBitmap(imageProxy.getWidth(),imageProxy.getHeight(),Bitmap.Config.ARGB_8888);
                 // copy the image proxy plane into the bitmap
                 //bitmap.copyPixelsFromBuffer(buffer);
-                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+cuttentBitmap.getHeight());
+                Log.i("CIS4444", "analyze callback 2 --- bmp height = "+ currentBitmap.getHeight());
 
                 // TODO: add code to crop to just the needed area of the photo
                 //bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height())

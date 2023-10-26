@@ -2,7 +2,6 @@ package css.cecprototype2;
 
 import android.app.Application;
 import android.graphics.Color;
-import android.media.Image;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,7 +19,7 @@ public class MainViewModel extends AndroidViewModel {
     Bitmap bitMap;
     Application application;
     RegionFinder regionFinder;
-    CircleIntensityExtractor circleIntensityExtractor;
+    RegionIntensityExtractor regionIntensityExtractor;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -60,7 +59,7 @@ public class MainViewModel extends AndroidViewModel {
         // Calculate average intensities for each region and place in intensity map
         for (int i = 0; i < regions.size(); i++)
         {
-            intensityMap.put("Region " + i + ": ", circleIntensityExtractor.getRegionIntensity(regions.get(i)));
+            intensityMap.put("Region " + i + ": ", regionIntensityExtractor.getRegionIntensity(regions.get(i)));
         }
         return intensityMap;
     }
