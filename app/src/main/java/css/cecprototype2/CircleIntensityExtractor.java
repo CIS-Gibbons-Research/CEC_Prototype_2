@@ -1,22 +1,23 @@
 package css.cecprototype2;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 import java.util.List;
 
 public class CircleIntensityExtractor
 {
-    private Image image;
+    private Bitmap bitMap;
     private List<Region> regions;
 
     /**
-     * @param image the image to be analyzed
+     * @param bitmap the image to be analyzed
      * @param regions the list of regions to be analyzed
      *
      * instantiates the image and list of regions values
      */
-    public CircleIntensityExtractor(Image image, List<Region> regions)
+    public CircleIntensityExtractor(Bitmap bitmap, List<Region> regions)
     {
-        this.image = image;
+        this.bitMap = bitmap;
         this.regions = regions;
     }
 

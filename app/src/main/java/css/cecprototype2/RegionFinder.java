@@ -1,5 +1,6 @@
 package css.cecprototype2;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import androidx.annotation.NonNull;
@@ -22,15 +23,15 @@ public class RegionFinder {
      * the regions surrounding the center, assuming a perfect hexagonal shape.
      * TODO: Replace hexagonal structure with actual region placement logic
      *
-     * @param image image to be processed
+     * @param bitmap image to be processed
      * @return a list of regions in the image
      */
-    public List<Region> findRegions(@NonNull Image image) {
+    public List<Region> findRegions(@NonNull Bitmap bitmap) {
         List<Region> regions = new ArrayList<>();
 
         // Determine the center of the image
-        int centerX = image.getWidth() / 2;
-        int centerY = image.getHeight() / 2;
+        int centerX = bitmap.getWidth() / 2;
+        int centerY = bitmap.getHeight() / 2;
 
         // Define the size and position parameters for the 7 regions
         int centerRegionSize = 200; // Adjust size as needed

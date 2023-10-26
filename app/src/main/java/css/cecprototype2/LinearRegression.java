@@ -4,10 +4,8 @@ import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 import java.util.List;
 
-public class linearRegression {
-
-
-    public linearRegression(List<Double> xValues, List<Double> yValues) {
+public class LinearRegression {
+    public LinearRegression(List<Double> xValues, List<Double> yValues) {
         this.xValues = xValues;
         this.yValues = yValues;
         System.out.println("xValues size = "+xValues.size());

@@ -16,11 +16,9 @@ import java.util.Map;
 
 public class MainViewModel extends AndroidViewModel {
 
-    private SensorCamera cam;       // our camera object
-    Image image;                    // most recent captured image
+    private SensorCamera cam;
     Bitmap bitMap;
     Application application;
-
     RegionFinder regionFinder;
     CircleIntensityExtractor circleIntensityExtractor;
 
@@ -29,10 +27,9 @@ public class MainViewModel extends AndroidViewModel {
         this.application = application;
         regionFinder = new RegionFinder();
     }
-
-    public Image getImage()
+    public Bitmap getBitmap()
     {
-        return this.image;
+        return this.bitMap;
     }
 
     /**
@@ -57,7 +54,7 @@ public class MainViewModel extends AndroidViewModel {
      */
     public Map<String, Integer> getRegionMap()
     {
-        List<Region> regions = analyzeCapturedImage(image); // initialize list of regions
+        List<Region> regions = analyzeCapturedImage(bitMap); // initialize list of regions
         Map<String, Integer> intensityMap = null; //reset regions map
 
         // Calculate average intensities for each region and place in intensity map
@@ -70,12 +67,12 @@ public class MainViewModel extends AndroidViewModel {
 
     /**
      * calls regionFinder.findRegions to get all regions in a given image
-     * @param image image to be analyzed
+     * @param bitmap image to be analyzed
      * @return a list of regions in the image
      */
-    public List<Region> analyzeCapturedImage(Image image) //convert image into a list of regions
+    public List<Region> analyzeCapturedImage(Bitmap bitmap) //convert image into a list of regions
     {
-        List<Region> regions = regionFinder.findRegions(image);
+        List<Region> regions = regionFinder.findRegions(bitmap);
         return regions;
     }
 
