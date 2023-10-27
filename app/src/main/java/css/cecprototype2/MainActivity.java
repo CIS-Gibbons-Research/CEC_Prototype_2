@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         imageViewCamera = findViewById(R.id.imageView);
         // set up modelView
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
         // set up buttons
         setupButtonUpdate();
         // set up camera
@@ -86,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(Boolean isAvailable) {
                 bitmapAvailable = isAvailable;
                 if (bitmapAvailable) {
-                    int pixelValue = mainViewModel.analyzePixel(50,60);
-                    tvStatus.setText("The pixel value at 50, 60 is "+pixelValue);
+                    //int pixelValue = mainViewModel.analyzePixel(50,60);
+                    //tvStatus.setText("The pixel value at 50, 60 is "+pixelValue);
                 } else {
                     tvStatus.setText("Bitmap not available");
                 }

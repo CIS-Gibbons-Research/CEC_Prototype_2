@@ -1,26 +1,40 @@
 package css.cecprototype2;
 
+import android.graphics.Bitmap;
+
 public class Region
 {
-    private int x;
-    private int y;
-    private int width;
-    private int height;
+    private int xCenter;
+    private int yCenter;
+    private int xWidth;
+    private int yHeight;
+    private int xUpperLeft, yUpperLeft;
 
     /**
      * This is currently a rectangle, not a circle
      * TODO: Replace with circular structure
-     * @param height region's height
-     * @param width region's width
-     * @param x region's x location
-     * @param y region's y location
+     * @param yHheight region's yHheight
+     * @param xWidth region's xWidth
+     * @param xCenter region's xCenter location
+     * @param yCenter region's yCenter location
     * */
-    public Region(int x, int y, int width, int height)
+    public Region(int xCenter, int yCenter, int xWidth, int yHheight)
     {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
+        this.xCenter = xCenter;
+        this.yCenter = yCenter;
+        this.xWidth = xWidth;
+        this.yHeight = yHheight;
+
+        // set the upper left coordinates
+        xUpperLeft = this.xCenter - xWidth;
+        if (xUpperLeft < 0)  xUpperLeft = 0;
+
+        yUpperLeft = this.yCenter - yHeight;
+        if (yUpperLeft < 0)  yUpperLeft = 0;
+    }
+
+    public Bitmap getBitmapRegion(Bitmap wholeImageBitmap) {
+        return Bitmap.createBitmap(wholeImageBitmap, xUpperLeft, yUpperLeft, xWidth, yHeight);
     }
 
 
@@ -30,35 +44,35 @@ public class Region
      *
      * @return this region's x value
      */
-    public int getX()
+    public int getxCenter()
     {
-        return x;
+        return xCenter;
     }
 
     /**
      *
      * @return this region's y value
      */
-    public int getY()
+    public int getyCenter()
     {
-        return y;
+        return yCenter;
     }
 
     /**
      *
      * @return this region's width value
      */
-    public int getWidth()
+    public int getxWidth()
     {
-        return width;
+        return xWidth;
     }
 
     /**
      *
      * @return this region's height value
      */
-    public int getHeight()
+    public int getyHeight()
     {
-        return height;
+        return yHeight;
     }
 }

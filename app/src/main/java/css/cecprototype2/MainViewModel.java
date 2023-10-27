@@ -21,10 +21,12 @@ public class MainViewModel extends AndroidViewModel {
     RegionFinder regionFinder;
     RegionIntensityExtractor regionIntensityExtractor;
 
-    public MainViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application, SensorCamera sensorCamera) {
         super(application);
         this.application = application;
         regionFinder = new RegionFinder();
+        cam = sensorCamera;
+
     }
     public Bitmap getBitmap()
     {
@@ -82,24 +84,8 @@ public class MainViewModel extends AndroidViewModel {
     public void takePhoto() {
         Log.i("CIS4444","MainViewModel --- takePhoto");
         Toast.makeText(application, "MainViewModel --- takePhoto", Toast.LENGTH_SHORT );
-
-        //image = cam.capturePhotoImage();
         bitMap = cam.capturePhotoBitmap();
     }
-
-    public int analyzePixel(int x, int y) {
-        int pixel;
-        //ChemicalAnalysis chemAnalysis = new ChemicalAnalysis();
-        if (bitMap != null) {
-            pixel = bitMap.getPixel(x, y); //temp variable for incoming pixel
-           return Color.red(pixel) + Color.green(pixel) + Color.blue(pixel);
-        } else {
-            // Handle the case when bitMap is null
-            Log.e("CIS4444","MainViewModel --- analyzePixel -- error with null bitmap");
-            return -1;
-        }
-    }
-
 
     public LiveData<Boolean> getBitmapAvailableLiveData() {
         //return cam.getBitmapAvailableLiveData();

@@ -18,6 +18,8 @@ public class RegionFinder {
     private static final int MIN_REGION_SIZE = 50; // Minimum size for a region
     private static final int MAX_REGION_SIZE = 200; // Maximum size for a region
 
+    private List<Region> regions;       // the list of regions found or set
+
     /**
      * This is a proof of concept, assuming a 1000px by 1000px image. This finds the center of the image (500,500), and then gets all of
      * the regions surrounding the center, assuming a perfect hexagonal shape.
@@ -27,7 +29,7 @@ public class RegionFinder {
      * @return a list of regions in the image
      */
     public List<Region> findRegions(@NonNull Bitmap bitmap) {
-        List<Region> regions = new ArrayList<>();
+        regions = new ArrayList<>();
 
         // Determine the center of the image
         int centerX = bitmap.getWidth() / 2;
@@ -51,6 +53,13 @@ public class RegionFinder {
             regions.add(new Region(outerRegionX, outerRegionY, outerRegionSize, outerRegionSize)); //add this outer region to regions list
         }
         //return list of regions as Region objects.
+        return regions;
+    }
+
+    public Region getRegion(int regionNumber) {
+        return regions.get(regionNumber);
+    }
+    public List<Region> getAllRegions() {
         return regions;
     }
 }

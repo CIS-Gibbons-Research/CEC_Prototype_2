@@ -28,11 +28,11 @@ public class RegionIntensityExtractor
      */
     public Integer getRegionIntensity(Region inRegion) {
         int sumIntensity = 0;
-        int numPixels = inRegion.getHeight() * inRegion.getWidth();
+        int numPixels = inRegion.getyHeight() * inRegion.getxWidth();
 
-        for (int x = inRegion.getX(); x < inRegion.getX() + inRegion.getWidth(); x++) //iterate columns
+        for (int x = inRegion.getxCenter(); x < inRegion.getxCenter() + inRegion.getxWidth(); x++) //iterate columns
         {
-            for (int y = inRegion.getY(); y < inRegion.getY() + inRegion.getHeight(); y++) //iterate rows
+            for (int y = inRegion.getyCenter(); y < inRegion.getyCenter() + inRegion.getyHeight(); y++) //iterate rows
             {
                 //TODO: replace with pixel intensity logic
                 int pixelIntensity = 0;
