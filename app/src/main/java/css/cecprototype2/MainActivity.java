@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.view.PreviewView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import android.media.Image;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 //import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.i("CIS4444","Update Button onClick");
                 mainViewModel.takePhoto();
-                imageViewCamera.setImageBitmap(mainViewModel.bitMap);
+                imageViewCamera.setImageBitmap(mainViewModel.calibrationBitMap);
 
                 //analysis logic
 

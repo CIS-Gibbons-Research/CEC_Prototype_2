@@ -1,7 +1,6 @@
 package css.cecprototype2;
 
 import android.app.Application;
-import android.graphics.Color;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,64 +15,49 @@ import java.util.Map;
 public class MainViewModel extends AndroidViewModel {
 
     private SensorCamera cam;
-    Bitmap bitMap;
+    Bitmap calibrationBitMap, analysisBitMap;
     Application application;
     RegionFinder regionFinder;
-    RegionIntensityExtractor regionIntensityExtractor;
+    ChemicalAnalysis chemicalAnalysis;
+    List<Region> regions;
 
-    public MainViewModel(@NonNull Application application, SensorCamera sensorCamera) {
+
+    public MainViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
         regionFinder = new RegionFinder();
-        cam = sensorCamera;
-
+        chemicalAnalysis = new ChemicalAnalysis();
     }
-    public Bitmap getBitmap()
+    public Bitmap getCalibrationBitmap()
     {
-        return this.bitMap;
+        return this.calibrationBitMap;
     }
-
-    /**
-     *
-     * @param circleIntensityMap map to display
-     * @return a formatted String that can be displayed to UI
-     */
-    public String updateUIWithCircleIntensities(Map<String, Integer> circleIntensityMap) //update UI with region map
+    public Bitmap getAnalysisBitMapBitmap()
     {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Integer> entry : circleIntensityMap.entrySet())
-        {
-            sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-        }
-        return sb.toString();
+        return this.analysisBitMap;
     }
 
-    /**
-     * populates a map of all regions with their index as a key and returns it
-     * @return a map of all regions
-     * FIXME update map key values with index or other useful information
-     */
-    public Map<String, Integer> getRegionMap()
-    {
-        List<Region> regions = analyzeCapturedImage(bitMap); // initialize list of regions
-        Map<String, Integer> intensityMap = null; //reset regions map
-
-        // Calculate average intensities for each region and place in intensity map
-        for (int i = 0; i < regions.size(); i++)
-        {
-            intensityMap.put("Region " + i + ": ", regionIntensityExtractor.getRegionIntensity(regions.get(i)));
-        }
-        return intensityMap;
+    public void doCalibration(){
+        calibrationBitMap = takePhoto();
+        setupRegions(calibrationBitMap);
+        chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
     }
+
+    public void doAnalysis(){
+        analysisBitMap = takePhoto();
+        setupRegions(analysisBitMap);
+        chemicalAnalysis.Analyze(regionFinder,analysisBitMap);
+    }
+
 
     /**
      * calls regionFinder.findRegions to get all regions in a given image
      * @param bitmap image to be analyzed
      * @return a list of regions in the image
      */
-    public List<Region> analyzeCapturedImage(Bitmap bitmap) //convert image into a list of regions
+    public List<Region> setupRegions(Bitmap bitmap) //convert image into a list of regions
     {
-        List<Region> regions = regionFinder.findRegions(bitmap);
+        regions = regionFinder.findRegions(bitmap);
         return regions;
     }
 
@@ -81,10 +65,10 @@ public class MainViewModel extends AndroidViewModel {
         cam = sensorCamera;
     }
 
-    public void takePhoto() {
+    public Bitmap takePhoto() {
         Log.i("CIS4444","MainViewModel --- takePhoto");
-        Toast.makeText(application, "MainViewModel --- takePhoto", Toast.LENGTH_SHORT );
-        bitMap = cam.capturePhotoBitmap();
+        Bitmap bitmap = cam.capturePhotoBitmap();
+        return bitmap;
     }
 
     public LiveData<Boolean> getBitmapAvailableLiveData() {
