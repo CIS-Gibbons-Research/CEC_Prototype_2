@@ -28,15 +28,16 @@ public class RegionIntensityExtractor
      */
     public Integer getRegionIntensity(Region inRegion) {
         int sumIntensity = 0;
-        int numPixels = inRegion.getyHeight() * inRegion.getxWidth();
+        //square size =
+        int numPixels = inRegion.getBitmapRegion(bitMap).getHeight() * inRegion.getBitmapRegion(bitMap).getWidth();
 
-        for (int x = inRegion.getxCenter(); x < inRegion.getxCenter() + inRegion.getxWidth(); x++) //iterate columns
+        for (int x = 0; x < numPixels; x++) //iterate columns
         {
-            for (int y = inRegion.getyCenter(); y < inRegion.getyCenter() + inRegion.getyHeight(); y++) //iterate rows
+            for (int y = 0; y < numPixels; y++) //iterate rows
             {
                 //TODO: replace with pixel intensity logic
-                int pixelIntensity = 0;
-                sumIntensity += pixelIntensity;
+                //float pixelIntensity = bitMap.getColor().green();
+                //sumIntensity += pixelIntensity;
             }
         }
         if (numPixels > 0) {

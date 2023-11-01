@@ -53,7 +53,7 @@ public class ChemicalAnalysis {
      */
     public void Calibrate(RegionFinder regions, Bitmap fullCalibrationImage)
     {
-        for (Region region : regions.getAllRegions())
+        for (Region region : regions.getStandardRegions())
         {
             Bitmap bitmapRegion = region.getBitmapRegion(fullCalibrationImage);
             calibrationReadings.add( runSingleAnalysis(bitmapRegion));
@@ -70,7 +70,7 @@ public class ChemicalAnalysis {
      */
     public void Analyze(RegionFinder regions, Bitmap fullAnalysisImage)
     {
-        for (Region region : regions.getAllRegions())
+        for (Region region : regions.getStandardRegions())
         {
             Bitmap bitmapRegion = region.getBitmapRegion(fullAnalysisImage);
             Double currentAnalysisFluorescence = runSingleAnalysis(bitmapRegion);
