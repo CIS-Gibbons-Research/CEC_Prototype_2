@@ -4,75 +4,47 @@ import android.graphics.Bitmap;
 
 public class Region
 {
-    private int xCenter;
-    private int yCenter;
-    private int xWidth;
-    private int yHeight;
-    private int xUpperLeft, yUpperLeft;
+    private int x,y,rad;
 
-    /**
-     * This is currently a rectangle, not a circle
-     * TODO: Replace with circular structure
-     * @param yHeight region's yHeight
-     * @param xWidth region's xWidth
-     * @param xCenter region's xCenter location
-     * @param yCenter region's yCenter location
-    * */
-    public Region(int xCenter, int yCenter, int xWidth, int yHeight)
-    {
-        this.xCenter = xCenter;
-        this.yCenter = yCenter;
-        this.xWidth = xWidth;
-        this.yHeight = yHeight;
+    public Region(int x, int y, int rad) {
+        this.x = x;
+        this.y = y;
+        this.rad = rad;
+    }
 
-        // set the upper left coordinates
-        xUpperLeft = this.xCenter - xWidth;
-        if (xUpperLeft < 0)  xUpperLeft = 0;
+    public int getX() {
+        return x;
+    }
 
-        yUpperLeft = this.yCenter - yHeight;
-        if (yUpperLeft < 0)  yUpperLeft = 0;
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getRad() {
+        return rad;
+    }
+
+    public void setRad(int rad) {
+        this.rad = rad;
     }
 
     public Bitmap getBitmapRegion(Bitmap wholeImageBitmap) {
+        //convert circle dimensions to square shape
+        int xUpperLeft = x - rad;
+        int yUpperLeft = y - rad;
+        int xWidth = 2*rad;
+        int yHeight = 2*rad;
+
         return Bitmap.createBitmap(wholeImageBitmap, xUpperLeft, yUpperLeft, xWidth, yHeight);
     }
 
 
-    //getters
-
-    /**
-     *
-     * @return this region's x value
-     */
-    public int getxCenter()
-    {
-        return xCenter;
-    }
-
-    /**
-     *
-     * @return this region's y value
-     */
-    public int getyCenter()
-    {
-        return yCenter;
-    }
-
-    /**
-     *
-     * @return this region's width value
-     */
-    public int getxWidth()
-    {
-        return xWidth;
-    }
-
-    /**
-     *
-     * @return this region's height value
-     */
-    public int getyHeight()
-    {
-        return yHeight;
-    }
 }

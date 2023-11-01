@@ -1,65 +1,51 @@
 package css.cecprototype2;
 
 import android.graphics.Bitmap;
-import android.media.Image;
-
-import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
- * Helper class to find regions given an image
+ * Helper class to find regions given an image.
+ * Uses standard region set from Takudzwa Majaraunga 10/31/2023
  */
-public class RegionFinder {
+public class RegionFinder
+{
+    private List<Region> standardRegions;
+    public RegionFinder()
+    {
+        standardRegions = new ArrayList<>();
+        populateStandardRegionsList();
+    }
 
-    // Constants to define the number of regions and other parameters
-    private static final int NUM_REGIONS = 7;
-    private static final int MIN_REGION_SIZE = 50; // Minimum size for a region
-    private static final int MAX_REGION_SIZE = 200; // Maximum size for a region
+    public List<Region> getStandardRegions()
+    {
+        return this.standardRegions;
+    }
 
-    private List<Region> regions;       // the list of regions found or set
+    public List<Region> getCustomRegions(Bitmap bitmap)
+    {
+        //TODO: implement custom region logic
+        return null;
+    }
 
-    /**
-     * This is a proof of concept, assuming a 1000px by 1000px image. This finds the center of the image (500,500), and then gets all of
-     * the regions surrounding the center, assuming a perfect hexagonal shape.
-     * TODO: Replace hexagonal structure with actual region placement logic
-     *
-     * @param bitmap image to be processed
-     * @return a list of regions in the image
-     */
-    public List<Region> findRegions(@NonNull Bitmap bitmap) {
-        regions = new ArrayList<>();
-
-        // Determine the center of the image
-        int centerX = bitmap.getWidth() / 2;
-        int centerY = bitmap.getHeight() / 2;
-
-        // Define the size and position parameters for the 7 regions
-        int centerRegionSize = 200; // Adjust size as needed
-        int outerRegionSize = 100;  // Adjust size as needed
-        int angleIncrement = 60;    // Angle increment for the hexagon
-
-        // Create the central region
-        int centerRegionX = centerX - centerRegionSize / 2;
-        int centerRegionY = centerY - centerRegionSize / 2;
-        regions.add(new Region(centerRegionX, centerRegionY, centerRegionSize, centerRegionSize));//add central region to list of regions
-
-        // Create the 6 outer regions forming a hexagon
-        for (int i = 0; i < 6; i++) {
-            double angle = Math.toRadians(i * angleIncrement);
-            int outerRegionX = (int) (centerX + Math.cos(angle) * outerRegionSize) - outerRegionSize / 2;
-            int outerRegionY = (int) (centerY + Math.sin(angle) * outerRegionSize) - outerRegionSize / 2;
-            regions.add(new Region(outerRegionX, outerRegionY, outerRegionSize, outerRegionSize)); //add this outer region to regions list
+    public void populateStandardRegionsList() {
+        //x values
+        Integer[] xResources = {R.integer.region1_x, R.integer.region2_x, R.integer.region3_x, R.integer.region4_x, R.integer.region5_x, R.integer.region6_x};
+        //y values
+        Integer[] yResources ={R.integer.region1_y, R.integer.region2_y, R.integer.region3_y, R.integer.region4_y, R.integer.region5_y, R.integer.region6_y};
+        //radius values
+        Integer[] radResources = {R.integer.region1_rad, R.integer.region2_rad, R.integer.region3_rad, R.integer.region4_rad, R.integer.region5_rad, R.integer.region6_rad};
+        for (int i = 0; i < 6; i++)
+        {
+            Region region = new Region(xResources[i], yResources[i], radResources[i]);
+            standardRegions.add(region);
         }
-        //return list of regions as Region objects.
-        return regions;
     }
 
-    public Region getRegion(int regionNumber) {
-        return regions.get(regionNumber);
-    }
-    public List<Region> getAllRegions() {
-        return regions;
+    public Region getStandardRegion(int regionNumber)
+    {
+        return standardRegions.get(regionNumber);
     }
 }

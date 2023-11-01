@@ -3,14 +3,13 @@ package css.cecprototype2;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MainViewModel extends AndroidViewModel {
 
@@ -25,6 +24,7 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
+        regions = new ArrayList<>();
         regionFinder = new RegionFinder();
         chemicalAnalysis = new ChemicalAnalysis();
     }
@@ -39,27 +39,29 @@ public class MainViewModel extends AndroidViewModel {
 
     public void doCalibration(){
         calibrationBitMap = takePhoto();
-        setupRegions(calibrationBitMap);
+        //setupRegions(calibrationBitMap);
+        setupStandardRegions();
         chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
     }
 
     public void doAnalysis(){
         analysisBitMap = takePhoto();
-        setupRegions(analysisBitMap);
+        //setupRegions(analysisBitMap);
+        setupStandardRegions();
         chemicalAnalysis.Analyze(regionFinder,analysisBitMap);
     }
 
 
     /**
      * calls regionFinder.findRegions to get all regions in a given image
-     * @param bitmap image to be analyzed
      * @return a list of regions in the image
      */
-    public List<Region> setupRegions(Bitmap bitmap) //convert image into a list of regions
+    public List<Region> setupStandardRegions() //convert image into a list of regions
     {
-        regions = regionFinder.findRegions(bitmap);
+        regions = regionFinder.getStandardRegions();
         return regions;
     }
+
 
     public void initializeCamera(SensorCamera sensorCamera) {
         cam = sensorCamera;
