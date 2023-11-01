@@ -13,17 +13,17 @@ public class Region
     /**
      * This is currently a rectangle, not a circle
      * TODO: Replace with circular structure
-     * @param yHheight region's yHheight
+     * @param yHeight region's yHeight
      * @param xWidth region's xWidth
      * @param xCenter region's xCenter location
      * @param yCenter region's yCenter location
     * */
-    public Region(int xCenter, int yCenter, int xWidth, int yHheight)
+    public Region(int xCenter, int yCenter, int xWidth, int yHeight)
     {
         this.xCenter = xCenter;
         this.yCenter = yCenter;
         this.xWidth = xWidth;
-        this.yHeight = yHheight;
+        this.yHeight = yHeight;
 
         // set the upper left coordinates
         xUpperLeft = this.xCenter - xWidth;
