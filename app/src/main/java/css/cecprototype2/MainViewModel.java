@@ -39,7 +39,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public void doCalibration(){
         calibrationBitMap = takePhoto();
-        //setupRegions(calibrationBitMap);
         setupStandardRegions();
         chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
     }

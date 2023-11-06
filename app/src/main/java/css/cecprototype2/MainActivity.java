@@ -18,58 +18,30 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    MainViewModel mainViewModel;   // View Model for the main activity
+    MainViewModel mainViewModel;
     TextView tvStatus;
-    Button buttonUpdate;
+    Button buttonTakePhoto;
     ImageView imageViewCamera;
     PreviewView previewView;
     private SensorCamera cam;
-    Map<String, Integer> map;
-    ChemicalAnalysis chemicalAnalysis;
     private boolean bitmapAvailable;
+    private boolean isPreviewVisible = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // set up UI components
         tvStatus = findViewById(R.id.tvStatus);
         imageViewCamera = findViewById(R.id.imageView);
         previewView = findViewById(R.id.previewView);
-        imageViewCamera = findViewById(R.id.imageView);
-        // set up modelView
+        buttonTakePhoto = findViewById(R.id.buttonTakePhoto);
+
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        // set up buttons
-        setupButtonUpdate();
-        // set up camera
+        setupButtonTakePhoto();
         setupCamera();
-        // set up the LiveData observer
         setupLiveDataObservers();
-    }
-
-    private void setupButtonUpdate() {
-        buttonUpdate = findViewById(R.id.buttonTakePhoto);
-        buttonUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("CIS4444","Update Button onClick");
-                mainViewModel.takePhoto();
-                imageViewCamera.setImageBitmap(mainViewModel.calibrationBitMap);
-
-                //analysis logic
-
-                //populate map of regions from viewModel
-                //map = mainViewModel.getRegionMap();
-                // Update UI with intensities -- mainViewModel.updateUIWithCircleIntensities formats String for us
-                //tvStatus.setText(mainViewModel.updateUIWithCircleIntensities(map));
-                //start chemical analysis with map as param
-                //chemicalAnalysis = new ChemicalAnalysis(map);
-                //FIXME: Replace with UI Display logic -- chemicalAnalysis.getChemicalReading() needs a param (0-6) as an index key
-                //tvStatus.setText(chemicalAnalysis.getChemicalReading().toString());
-            }
-        });
     }
 
     private void setupCamera()
@@ -90,6 +62,45 @@ public class MainActivity extends AppCompatActivity {
                     //tvStatus.setText("The pixel value at 50, 60 is "+pixelValue);
                 } else {
                     tvStatus.setText("Bitmap not available");
+                }
+            }
+        });
+    }
+
+    private void setupButtonTakePhoto() {
+        buttonTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPreviewVisible) {
+                    mainViewModel.takePhoto();
+                    imageViewCamera.setImageBitmap(mainViewModel.calibrationBitMap);
+
+                    // Run calibration logic when taking the first photo
+                    mainViewModel.doCalibration();
+
+                    // Change the button text and disable it
+                    buttonTakePhoto.setText("Next Reading");
+                    buttonTakePhoto.setEnabled(false);
+
+                    // Make the previewView invisible and imageViewCamera visible
+                    previewView.setVisibility(View.INVISIBLE);
+                    imageViewCamera.setVisibility(View.VISIBLE);
+
+                    isPreviewVisible = false;
+                } else {
+                    // When "Next Reading" is clicked
+                    // Make the previewView visible and imageViewCamera invisible
+                    previewView.setVisibility(View.VISIBLE);
+                    imageViewCamera.setVisibility(View.INVISIBLE);
+
+                    // Change the button text back to "Take Photo" and enable it
+                    buttonTakePhoto.setText("Take Photo");
+                    buttonTakePhoto.setEnabled(true);
+
+                    // Run analysis logic when taking the second photo
+                    mainViewModel.doAnalysis();
+
+                    isPreviewVisible = true;
                 }
             }
         });
