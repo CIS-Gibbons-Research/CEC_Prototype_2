@@ -7,8 +7,11 @@ import java.util.List;
 
 public class LinearRegression {
     // Data
-    List<Double> fluorescenceValues = Arrays.asList(1200.0, 1310.0, 1430.0, 1580.0);
-    List<Double> concentrationValues = Arrays.asList(0.2, 0.4, 0.6, 0.8);
+    List<Double> fluorescenceValues; // = Arrays.asList(1200.0, 1310.0, 1430.0, 1580.0);
+    List<Double> concentrationValues; // = Arrays.asList(0.2, 0.4, 0.6, 0.8);
+    public Double m_slope = 0.0;        // slope of linear regression line
+    public Double b_intercept = 0.0;   // y-intercept
+
     // Create a SimpleRegression instance
     SimpleRegression regression;
 
@@ -17,9 +20,6 @@ public class LinearRegression {
         this.concentrationValues = concentrationValues;
         leastSquaresAnalysis();
     }
-
-    public Double m_slope = 0.0;        // slope of linear regression line
-    public Double b_intercept = 0.0;   // y-intercept
 
     private void leastSquaresAnalysis() {
         // Create a SimpleRegression instance

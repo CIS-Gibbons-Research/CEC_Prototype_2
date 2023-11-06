@@ -7,19 +7,12 @@ import java.util.List;
 
 public class RegionIntensityExtractor
 {
-    private Bitmap bitMap;
-    private List<Region> regions;
-
     /**
-     * @param bitmap the image to be analyzed
-     * @param regions the list of regions to be analyzed
-     *
      * instantiates the image and list of regions values
      */
-    public RegionIntensityExtractor(Bitmap bitmap, List<Region> regions)
+    public RegionIntensityExtractor()
     {
-        this.bitMap = bitmap;
-        this.regions = regions;
+
     }
 
     /**
@@ -28,7 +21,7 @@ public class RegionIntensityExtractor
      * @param inRegion
      * @return average intensity of RGB pixels for the given region.
      */
-    public Integer getRegionIntensity(Region inRegion) {
+    public Double getRegionIntensity(Region inRegion, Bitmap bitMap) {
         int sumIntensity = 0;
         int numPixels = 0;
 
@@ -54,14 +47,14 @@ public class RegionIntensityExtractor
         if (numPixels > 0) {
             // Calculate and return the average intensity
             int averageIntensity = sumIntensity / numPixels;
-            return averageIntensity;
+            return averageIntensity + 0.0;
         } else {
             // No pixels in the region, return a default value
-            return 0;
+            return 0.0;
         }
     }
 
-    public Integer getAlterntiveRegionIntensity(Region inRegion) {
+    public Integer getAlterntiveRegionIntensity(Region inRegion, Bitmap bitMap) {
         int sumIntensity = 0;
         int numPixels = 0;
         final int GREEN_THRESHOLD = 10; // Minimum green value threshold
