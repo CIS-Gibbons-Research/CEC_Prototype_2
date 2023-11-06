@@ -1,6 +1,8 @@
 package css.cecprototype2;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+
 import java.util.List;
 
 public class RegionIntensityExtractor
@@ -28,24 +30,32 @@ public class RegionIntensityExtractor
      */
     public Integer getRegionIntensity(Region inRegion) {
         int sumIntensity = 0;
-        //square size =
-        int numPixels = inRegion.getBitmapRegion(bitMap).getHeight() * inRegion.getBitmapRegion(bitMap).getWidth();
+        int numPixels = 0;
 
-        for (int x = 0; x < numPixels; x++) //iterate columns
-        {
-            for (int y = 0; y < numPixels; y++) //iterate rows
-            {
-                //TODO: replace with pixel intensity logic
-                //float pixelIntensity = bitMap.getColor().green();
-                //sumIntensity += pixelIntensity;
+        // Get the Bitmap region for the given region
+        Bitmap regionBitmap = inRegion.getBitmapRegion(bitMap);
+
+        if (regionBitmap != null) {
+            int width = regionBitmap.getWidth();
+            int height = regionBitmap.getHeight();
+
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    int pixelColor = regionBitmap.getPixel(x, y);
+                    int green = Color.green(pixelColor);
+
+                    // Calculate pixel intensity using the green component
+                    sumIntensity += green;
+                    numPixels++;
+                }
             }
         }
+
         if (numPixels > 0) {
             // Calculate and return the average intensity
             int averageIntensity = sumIntensity / numPixels;
             return averageIntensity;
-        } else
-        {
+        } else {
             // No pixels in the region, return a default value
             return 0;
         }
