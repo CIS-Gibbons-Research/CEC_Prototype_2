@@ -5,6 +5,7 @@ import androidx.camera.view.PreviewView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     MainViewModel mainViewModel;
     TextView tvStatus;
     Button buttonTakePhoto;
-    ImageView imageViewCamera;
+    ImageView imageView;
     PreviewView previewView;
     private SensorCamera cam;
     private boolean bitmapAvailable;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvStatus = findViewById(R.id.tvStatus);
-        imageViewCamera = findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
         previewView = findViewById(R.id.previewView);
         buttonTakePhoto = findViewById(R.id.buttonTakePhoto);
 
@@ -58,8 +59,11 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(Boolean isAvailable) {
                 bitmapAvailable = isAvailable;
                 if (bitmapAvailable) {
-                    //int pixelValue = mainViewModel.analyzePixel(50,60);
-                    //tvStatus.setText("The pixel value at 50, 60 is "+pixelValue);
+                    // Get the bitmap from the ViewModel
+                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
+
+                    // Display the photo bitmap in the imageView
+                    imageView.setImageBitmap(photoBitmap);
                 } else {
                     tvStatus.setText("Bitmap not available");
                 }
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isPreviewVisible) {
                     mainViewModel.takePhoto();
-                    imageViewCamera.setImageBitmap(mainViewModel.calibrationBitMap);
+                    imageView.setImageBitmap(mainViewModel.calibrationBitMap);
 
                     // Run calibration logic when taking the first photo
                     mainViewModel.doCalibration();
@@ -84,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
 
                     // Make the previewView invisible and imageViewCamera visible
                     previewView.setVisibility(View.INVISIBLE);
-                    imageViewCamera.setVisibility(View.VISIBLE);
+                    imageView.setVisibility(View.VISIBLE);
 
                     isPreviewVisible = false;
                 } else {
                     // When "Next Reading" is clicked
                     // Make the previewView visible and imageViewCamera invisible
                     previewView.setVisibility(View.VISIBLE);
-                    imageViewCamera.setVisibility(View.INVISIBLE);
+                    imageView.setVisibility(View.INVISIBLE);
 
                     // Change the button text back to "Take Photo" and enable it
                     buttonTakePhoto.setText("Take Photo");
