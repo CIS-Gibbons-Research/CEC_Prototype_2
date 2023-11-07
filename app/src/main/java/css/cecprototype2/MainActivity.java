@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupButtonTakePhoto();
         setupCamera();
-        setupLiveDataObservers();
+        //setupLiveDataObservers();
     }
 
     private void setupCamera()
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     imageView.setImageBitmap(mainViewModel.calibrationBitMap);
 
                     // Run calibration logic when taking the first photo
-                    mainViewModel.doCalibration();
+                    //mainViewModel.doCalibration();
 
                     // Change the button text and disable it
                     buttonTakePhoto.setText("Next Reading");
