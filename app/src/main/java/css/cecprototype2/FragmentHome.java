@@ -27,7 +27,7 @@ public class FragmentHome extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.textHome;
-        viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        //viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

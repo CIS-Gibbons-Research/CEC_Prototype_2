@@ -23,13 +23,13 @@ public class FragmentAnalyze extends Fragment {
         // Use the shared ViewModel
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         // Set the text in the shared ViewModel. This should appear in the other fragments.
-        viewModel.setText("Notification Set !!!");
+        //viewModel.setText("Notification Set !!!");
 
         binding = FragmentAnalyzeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        //final TextView textView = binding.textNotifications;
+        //viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

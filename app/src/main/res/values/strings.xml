@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CEC Sensor</string>
+    <string name="app_name">Chem Sensor</string>
     <string name="title_home">Home</string>
     <string name="title_fragment2">Calibrate</string>
     <string name="title_fragement3">Analyze</string>
