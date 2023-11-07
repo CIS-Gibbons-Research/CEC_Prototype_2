@@ -39,8 +39,10 @@ public class Region
     }
 
     public Bitmap getBitmapRegion(Bitmap wholeImageBitmap) {
+        //convert center value, x, y to xUpperLeft and yUpperLeft using radius of circle
         int xUpperLeft = Math.max(x - rad, 0);
         int yUpperLeft = Math.max(y - rad, 0);
+        //width and height of bitmap is 2 * radius
         int xWidth = Math.min(2 * rad, wholeImageBitmap.getWidth() - xUpperLeft);
         int yHeight = Math.min(2 * rad, wholeImageBitmap.getHeight() - yUpperLeft);
         Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);

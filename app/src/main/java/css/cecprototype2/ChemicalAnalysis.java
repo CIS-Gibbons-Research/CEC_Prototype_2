@@ -1,6 +1,8 @@
 package css.cecprototype2;
 
 import android.graphics.Bitmap;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -36,6 +38,7 @@ public class ChemicalAnalysis {
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
         for (Region region : regions.getStandardRegions()) {
             Double currentCalibrationReading = intensityExtractor.getRegionIntensity(region, fullCalibrationImage);
+            Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
             calibrationIntensities.add(currentCalibrationReading);
         }
         //FIXME: calibration readings are all 0.0, so intesnsityExtractor isn't working -- possibly wrong values for locations

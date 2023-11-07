@@ -167,8 +167,6 @@ public class SensorCamera {
                 // TODO: add code to crop to just the needed area of the photo
                 //bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height())
 
-                // TODO: notify some software that the image has been updated
-                // Notify observers that the bitmap is available
                 bitmapAvailableLiveData.postValue(true);
 
                 // after done, release the ImageProxy object
