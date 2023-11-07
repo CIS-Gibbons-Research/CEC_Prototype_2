@@ -13,11 +13,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 //import org.apache.commons.math3.stat.regression.SimpleRegression;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import css.cecprototype2.databinding.ActivityMainBinding;
 
 
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
 
     MainViewModel mainViewModel;
     TextView tvStatus;
@@ -33,16 +38,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tvStatus = findViewById(R.id.tvStatus);
-        imageView = findViewById(R.id.imageView);
-        previewView = findViewById(R.id.previewView);
-        buttonTakePhoto = findViewById(R.id.buttonTakePhoto);
+        setupNavBindings();
+
+//        tvStatus = findViewById(R.id.tvStatus);
+//        imageView = findViewById(R.id.imageView);
+//        previewView = findViewById(R.id.previewView);
+//        buttonTakePhoto = findViewById(R.id.buttonTakePhoto);
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        setupButtonTakePhoto();
-        setupCamera();
+        //setupButtonTakePhoto();
+        //setupCamera();
         //setupLiveDataObservers();
+    }
+
+    private void setupNavBindings() {
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_calibrate, R.id.navigation_analyze)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
     private void setupCamera()
@@ -109,4 +130,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    // TOM --- code to read sample images into the bitmap to test processing
+//    private void setupSampleButtons() {
+//        buttonSampleCalibrate = findViewById(R.id.buttonSampleCalibrate);
+//        buttonSampleAnalyze = findViewById(R.id.buttonSampleCalibrate);
+//        buttonSampleCalibrate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("CIS4444","Sample Calibrate Button onClick");
+//                mainViewModel.setBitmap(loadSampleImage(R.drawable.sample_b));
+//                mainViewModel.doCalibration();
+//            }
+//        });
+//        buttonSampleAnalyze.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("CIS4444","Sample Analyze Button onClick");
+//                mainViewModel.setBitmap(loadSampleImage(R.drawable.sample_b));
+//                mainViewModel.doAnalysis();
+//            }
+//        });
+//    }
+
 }
