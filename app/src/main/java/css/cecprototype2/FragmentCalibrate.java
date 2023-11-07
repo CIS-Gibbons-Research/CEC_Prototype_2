@@ -18,21 +18,23 @@ public class FragmentCalibrate extends Fragment {
 
     private FragmentCalibrateBinding binding;
     private MainViewModel viewModel;
-    Button buttonUpdateOrder;
+    Button buttonCalibrate;
+    Button buttonCalibrateSample;
+    TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //DashboardViewModel dashboardViewModel =  new ViewModelProvider(this).get(DashboardViewModel.class);
         // Use the shared ViewModel
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        //viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        tvCalibrate1 = binding.textViewCalibrate1;
+        // TODO -- Add bindings for rest of the textview.
 
-        setupButton();
+        setupButtons();
 
         return root;
     }
@@ -43,16 +45,23 @@ public class FragmentCalibrate extends Fragment {
         binding = null;
     }
 
-    private void setupButton() {
-        //buttonUpdateOrder = findViewById(R.id.buttonUpdateOrder);
+    private void setupButtons() {
         // This app uses the new bindings instead of the old findViewById
-        buttonUpdateOrder= binding.buttonUpdateOrder;
-        buttonUpdateOrder.setOnClickListener(new View.OnClickListener() {
+        buttonCalibrate = binding.buttonCalibrate;
+        buttonCalibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 3334", "Place order button clicked");   // log button click for debugging using "CIS 3334" tag
-                //viewModel.setText("Order Placed");
+                Log.d("CIS 4444", "Calibrate button clicked");   // log button click for debugging
             }
         });
-    }
+
+        // This app uses the new bindings instead of the old findViewById
+        buttonCalibrateSample = binding.buttonCalibrateSample;
+        buttonCalibrateSample.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("CIS 4444", "Calibrate with Samples button clicked");   // log button click for debugging
+            }
+        });
+    }  // end SetupButtons
 }
