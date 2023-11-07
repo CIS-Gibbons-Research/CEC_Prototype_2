@@ -1,6 +1,8 @@
 package css.cecprototype2;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class Region
 {
@@ -37,13 +39,19 @@ public class Region
     }
 
     public Bitmap getBitmapRegion(Bitmap wholeImageBitmap) {
-        //convert circle dimensions to square shape
-        int xUpperLeft = x - rad;
-        int yUpperLeft = y - rad;
-        int xWidth = 2*rad;
-        int yHeight = 2*rad;
-
-        return Bitmap.createBitmap(wholeImageBitmap, xUpperLeft, yUpperLeft, xWidth, yHeight);
+        int xUpperLeft = Math.max(x - rad, 0);
+        int yUpperLeft = Math.max(y - rad, 0);
+        int xWidth = Math.min(2 * rad, wholeImageBitmap.getWidth() - xUpperLeft);
+        int yHeight = Math.min(2 * rad, wholeImageBitmap.getHeight() - yUpperLeft);
+        Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);
+        // Ensure that the indices are within valid range
+        if (x >= 0 && y >= 0 && rad > 0) {
+            // Convert circle dimensions to square shape
+            return Bitmap.createBitmap(wholeImageBitmap, xUpperLeft, yUpperLeft, xWidth, yHeight);
+        } else {
+            // Handle invalid dimensions or provide a default bitmap
+            return null;
+        }
     }
 
 
