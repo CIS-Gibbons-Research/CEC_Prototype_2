@@ -38,7 +38,7 @@ public class ChemicalAnalysis {
             Double currentCalibrationReading = intensityExtractor.getRegionIntensity(region, fullCalibrationImage);
             calibrationIntensities.add(currentCalibrationReading);
         }
-        //TODO: calibration readings are all 0.0, so intesnsityExtractor isn't working
+        //FIXME: calibration readings are all 0.0, so intesnsityExtractor isn't working -- possibly wrong values for locations
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
     }
 
