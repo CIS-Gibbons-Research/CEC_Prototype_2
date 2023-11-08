@@ -51,9 +51,9 @@ public class MainActivity extends AppCompatActivity {
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        //setupButtonTakePhoto();
-        //setupCamera();
-        //setupLiveDataObservers();
+        setupButtonTakePhoto();
+        setupCamera();
+        setupLiveDataObservers();
     }
 
     private void setupNavBindings() {
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     imageView.setImageBitmap(mainViewModel.calibrationBitMap);
 
                     // Run calibration logic when taking the first photo
-                    //mainViewModel.doCalibration();
+                    mainViewModel.doCalibration();
 
                     // Change the button text and disable it
                     buttonTakePhoto.setText("Next Reading");
