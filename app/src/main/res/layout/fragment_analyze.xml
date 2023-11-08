@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentAnalyze">
+
+    <TextView
+        android:id="@+id/text_dashboard3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="8dp"
+        android:text="Analyze screen"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewLabel1"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="104dp"
+        android:text="A-"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <TextView
+        android:id="@+id/textViewCalibrate1"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:text="Text"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel1"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel1" />
+
+    <TextView
+        android:id="@+id/textViewLabel2"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:text="B-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel1" />
+
+    <TextView
+        android:id="@+id/textViewCalibrate2"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:text="Text"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel2"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel2" />
+
+    <TextView
+        android:id="@+id/textViewLabel3"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:text="C-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel2"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel2" />
+
+    <TextView
+        android:id="@+id/textViewCalibrate3"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:text="Text"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel3"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel3" />
+
+    <TextView
+        android:id="@+id/textViewLabel4"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:text="D-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel3" />
+
+    <TextView
+        android:id="@+id/textViewCalibrate4"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:text="Text"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel4"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel4" />
+
+    <TextView
+        android:id="@+id/textViewLabel5"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:text="E-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel4"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel4" />
+
+    <TextView
+        android:id="@+id/textViewCalibrate5"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:text="Text"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel5"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel5" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="325dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_dashboard3" />
+
+    <Button
+        android:id="@+id/buttonAnalyze"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="20dp"
+        android:text="Test"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <Button
+        android:id="@+id/buttonAnalyzeSample"
+        android:layout_width="180dp"
+        android:layout_height="50dp"
+        android:text="Test with Sample"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonAnalyze"
+        app:layout_constraintTop_toTopOf="@+id/buttonAnalyze" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

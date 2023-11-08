@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="css.cecprototype2.FragmentHome"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_calibrate"
+            app:destination="@id/navigation_calibrate" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_analyze"
+            app:destination="@id/navigation_analyze" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_calibrate"
+        android:name="css.cecprototype2.FragmentCalibrate"
+        android:label="@string/title_fragment2"
+        tools:layout="@layout/fragment_calibrate" />
+
+    <fragment
+        android:id="@+id/navigation_analyze"
+        android:name="css.cecprototype2.FragmentAnalyze"
+        android:label="@string/title_fragement3"
+        tools:layout="@layout/fragment_analyze" />
+</navigation>
