@@ -1,15 +1,19 @@
 package css.cecprototype2;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.camera.view.PreviewView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import css.cecprototype2.databinding.FragmentCalibrateBinding;
@@ -17,24 +21,34 @@ import css.cecprototype2.databinding.FragmentCalibrateBinding;
 public class FragmentCalibrate extends Fragment {
 
     private FragmentCalibrateBinding binding;
-    private MainViewModel viewModel;
+    private MainViewModel mainViewModel;
+    private SensorCamera cam;
+    private boolean bitmapAvailable;
+    private boolean isPreviewVisible = true;
+
     Button buttonCalibrate;
     Button buttonCalibrateSample;
+    ImageView imageView;
+    PreviewView previewView;
+    TextView tvStatus;
     TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Use the shared ViewModel
-        viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        tvStatus = binding.textViewStatus;
         tvCalibrate1 = binding.textViewCalibrate1;
         // TODO -- Add bindings for rest of the textview.
 
+        setupCamera();
         setupButtons();
+        setupLiveDataObservers();
 
         return root;
     }
@@ -51,6 +65,8 @@ public class FragmentCalibrate extends Fragment {
         buttonCalibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Run calibration logic when taking the first photo
+                doButtonTakePhoto();
                 Log.d("CIS 4444", "Calibrate button clicked");   // log button click for debugging
             }
         });
@@ -64,4 +80,88 @@ public class FragmentCalibrate extends Fragment {
             }
         });
     }  // end SetupButtons
+
+    private void setupCamera()
+    {
+        Log.i("CIS4444","Main Activity --- setupCamera");
+        cam = new SensorCamera(getActivity(),getActivity(), previewView);
+        mainViewModel.initializeCamera(cam);
+    }
+
+    private void setupLiveDataObservers() {
+        // Observe the LiveData for bitmapAvailable
+        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAvailable) {
+                bitmapAvailable = isAvailable;
+                if (bitmapAvailable) {
+                    // Get the bitmap from the ViewModel
+                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
+
+                    // Display the photo bitmap in the imageView
+                    imageView.setImageBitmap(photoBitmap);
+                } else {
+                    tvStatus.setText("Bitmap not available");
+                }
+            }
+        });
+    }
+
+    private void doButtonTakePhoto() {
+                if (isPreviewVisible) {
+                    mainViewModel.takePhoto();
+                    imageView.setImageBitmap(mainViewModel.calibrationBitMap);
+
+                    // Run calibration logic when taking the first photo
+                    mainViewModel.doCalibration();
+
+                    // Change the button text and disable it
+                    buttonCalibrate.setText("Next Reading");
+                    buttonCalibrate.setEnabled(false);
+
+                    // Make the previewView invisible and imageViewCamera visible
+                    previewView.setVisibility(View.INVISIBLE);
+                    imageView.setVisibility(View.VISIBLE);
+
+                    isPreviewVisible = false;
+                } else {
+                    // When "Next Reading" is clicked
+                    // Make the previewView visible and imageViewCamera invisible
+                    previewView.setVisibility(View.VISIBLE);
+                    imageView.setVisibility(View.INVISIBLE);
+
+                    // Change the button text back to "Take Photo" and enable it
+                    buttonCalibrate.setText("Take Photo");
+                    buttonCalibrate.setEnabled(true);
+
+                    // Run analysis logic when taking the second photo
+                    mainViewModel.doAnalysis();
+
+                    isPreviewVisible = true;
+                }
+            }
+
+    // TOM --- code to read sample images into the bitmap to test processing
+//    private void setupSampleButtons() {
+//        buttonSampleCalibrate = findViewById(R.id.buttonSampleCalibrate);
+//        buttonSampleAnalyze = findViewById(R.id.buttonSampleCalibrate);
+//        buttonSampleCalibrate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("CIS4444","Sample Calibrate Button onClick");
+//                mainViewModel.setBitmap(loadSampleImage(R.drawable.sample_b));
+//                mainViewModel.doCalibration();
+//            }
+//        });
+//        buttonSampleAnalyze.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i("CIS4444","Sample Analyze Button onClick");
+//                mainViewModel.setBitmap(loadSampleImage(R.drawable.sample_b));
+//                mainViewModel.doAnalysis();
+//            }
+//        });
+//    }
+
+
 }

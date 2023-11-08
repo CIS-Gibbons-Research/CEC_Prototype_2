@@ -2,17 +2,16 @@ package css.cecprototype2;
 
 import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ExperimentalGetImage;
 import androidx.core.content.ContextCompat;
@@ -28,7 +27,6 @@ import android.media.Image;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.LiveData;
 
@@ -44,20 +43,22 @@ public class SensorCamera {
     private MutableLiveData<Boolean> bitmapAvailableLiveData;
 
     // Constructor: initialize camera
-    SensorCamera(MainActivity mainActivity, PreviewView mainActivityPreviewView) {
+    SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner, PreviewView mainActivityPreviewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
         bitmapAvailableLiveData = new MutableLiveData<>();
-        activity = mainActivity;
+        context = mainActivity;
+        this.lifecycleOwner = lifecycleOwner;
         previewView = mainActivityPreviewView;
-        startCameraProvider( activity,  previewView);
+        startCameraProvider(context,  previewView);
     }
 
     private Executor executor = Executors.newSingleThreadExecutor();
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     //Context context;        // the app context we are running in
-    MainActivity activity;
+    LifecycleOwner  lifecycleOwner;
+    Context context;
     PreviewView previewView;
     ImageCapture imageCapture;
     ImageAnalysis imageAnalysis;
@@ -113,7 +114,7 @@ public class SensorCamera {
                 .build();
 
         // Now bind all these item to the camera
-        cameraProvider.bindToLifecycle(activity, cameraSelector, imageAnalysis, imageCapture, imagePreview);
+        cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageAnalysis, imageCapture, imagePreview);
     }
 
     public Image capturePhotoImage() {
@@ -192,7 +193,7 @@ public class SensorCamera {
 
         // Create output options object which contains file + metadata
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
-                .Builder(activity.getContentResolver(),
+                .Builder(context.getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues).build();
 

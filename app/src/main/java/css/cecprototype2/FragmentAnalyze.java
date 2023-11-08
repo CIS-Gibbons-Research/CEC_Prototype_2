@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.camera.view.PreviewView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,6 +19,16 @@ public class FragmentAnalyze extends Fragment {
 
     private FragmentAnalyzeBinding binding;
     private MainViewModel viewModel;
+    private SensorCamera cam;
+    private boolean bitmapAvailable;
+    private boolean isPreviewVisible = true;
+
+    Button buttonAnalyze;
+    Button buttonAnalyzeSample;
+    ImageView imageView;
+    PreviewView previewView;
+    TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
