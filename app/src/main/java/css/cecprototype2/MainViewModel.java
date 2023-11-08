@@ -79,6 +79,14 @@ public class MainViewModel extends AndroidViewModel {
         return testBitmap;
     }
 
+    public void setCalibrationBitMap(Bitmap sampleBitmap) {
+        calibrationBitMap = sampleBitmap;
+    }
+
+    public void setAnalysisBitMap(Bitmap sampleBitmap) {
+        analysisBitMap = sampleBitmap;
+    }
+
     public LiveData<Boolean> getBitmapAvailableLiveData() {
         return cam.getAvailableLiveData();
     }
