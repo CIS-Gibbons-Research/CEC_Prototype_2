@@ -2,6 +2,8 @@ package css.cecprototype2;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -25,7 +27,7 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
         this.application = application;
         regions = new ArrayList<>();
-        regionFinder = new RegionFinder();
+        regionFinder = new RegionFinder(application.getApplicationContext());
         chemicalAnalysis = new ChemicalAnalysis();
     }
     public Bitmap getCalibrationBitmap()
@@ -40,6 +42,7 @@ public class MainViewModel extends AndroidViewModel {
     public void doCalibration(){
         calibrationBitMap = takePhoto();
         setupStandardRegions();
+        Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + calibrationBitMap.getHeight() + " | Calibration Bitmap W: " + calibrationBitMap.getWidth());
         chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
     }
 
@@ -47,6 +50,7 @@ public class MainViewModel extends AndroidViewModel {
         analysisBitMap = takePhoto();
         //setupRegions(analysisBitMap);
         setupStandardRegions();
+        Log.i("MainViewModel", ".doAnalysis(): Analysis Bitmap H: " + analysisBitMap.getHeight() + " | Analysis Bitmap W: " + analysisBitMap.getWidth());
         chemicalAnalysis.Analyze(regionFinder,analysisBitMap);
     }
 
@@ -68,13 +72,15 @@ public class MainViewModel extends AndroidViewModel {
 
     public Bitmap takePhoto() {
         Log.i("CIS4444","MainViewModel --- takePhoto");
-        Bitmap bitmap = cam.capturePhotoBitmap();
-        return bitmap;
+        //commented out for testing -- use a bitmap of sample_image_a instead of capturing an image
+        //Bitmap bitmap = cam.capturePhotoBitmap();
+        Bitmap testBitmap = BitmapFactory.decodeResource(application.getResources(), R.drawable.sample_image_a);
+        Log.i("MainViewModel", ".takePhoto(): Standard Bitmap H: " + testBitmap.getHeight() + " | Standard Bitmap W: " + testBitmap.getWidth());
+        return testBitmap;
     }
 
     public LiveData<Boolean> getBitmapAvailableLiveData() {
-        //return cam.getBitmapAvailableLiveData();
-        return null;
+        return cam.getAvailableLiveData();
     }
 
 }

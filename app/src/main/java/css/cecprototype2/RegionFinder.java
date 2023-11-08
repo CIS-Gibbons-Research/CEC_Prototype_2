@@ -1,5 +1,6 @@
 package css.cecprototype2;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
@@ -13,10 +14,10 @@ import java.util.List;
 public class RegionFinder
 {
     private List<Region> standardRegions;
-    public RegionFinder()
+    public RegionFinder(Context context)
     {
         standardRegions = new ArrayList<>();
-        populateStandardRegionsList();
+        populateStandardRegionsList(context);
     }
 
     public List<Region> getStandardRegions()
@@ -30,16 +31,24 @@ public class RegionFinder
         return null;
     }
 
-    public void populateStandardRegionsList() {
-        //x values
-        Integer[] xResources = {R.integer.region1_x, R.integer.region2_x, R.integer.region3_x, R.integer.region4_x, R.integer.region5_x, R.integer.region6_x};
-        //y values
-        Integer[] yResources ={R.integer.region1_y, R.integer.region2_y, R.integer.region3_y, R.integer.region4_y, R.integer.region5_y, R.integer.region6_y};
-        //radius values
-        Integer[] radResources = {R.integer.region1_rad, R.integer.region2_rad, R.integer.region3_rad, R.integer.region4_rad, R.integer.region5_rad, R.integer.region6_rad};
-        for (int i = 0; i < 6; i++)
-        {
-            Region region = new Region(xResources[i], yResources[i], radResources[i]);
+    public void populateStandardRegionsList(Context context) {
+        // Initialize an array of resource names for x, y, and rad values
+        String[] xResourceNames = {"region1_x", "region2_x", "region3_x", "region4_x", "region5_x", "region6_x"};
+        String[] yResourceNames = {"region1_y", "region2_y", "region3_y", "region4_y", "region5_y", "region6_y"};
+        String[] radResourceNames = {"region1_rad", "region2_rad", "region3_rad", "region4_rad", "region5_rad", "region6_rad"};
+
+        for (int i = 0; i < 6; i++) {
+            int xResource = context.getResources().getIdentifier(xResourceNames[i], "integer", context.getPackageName());
+            int yResource = context.getResources().getIdentifier(yResourceNames[i], "integer", context.getPackageName());
+            int radResource = context.getResources().getIdentifier(radResourceNames[i], "integer", context.getPackageName());
+
+            // Retrieve integer values from resources
+            int xValue = context.getResources().getInteger(xResource);
+            int yValue = context.getResources().getInteger(yResource);
+            int radValue = context.getResources().getInteger(radResource);
+
+            // Create a Region object with the retrieved values
+            Region region = new Region(xValue, yValue, radValue);
             standardRegions.add(region);
         }
     }

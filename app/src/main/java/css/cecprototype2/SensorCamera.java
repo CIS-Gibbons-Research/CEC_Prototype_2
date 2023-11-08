@@ -37,13 +37,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.LiveData;
+
 public class SensorCamera {
+    private MutableLiveData<Boolean> bitmapAvailableLiveData;
 
     // Constructor: initialize camera
     SensorCamera(MainActivity mainActivity, PreviewView mainActivityPreviewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
+        bitmapAvailableLiveData = new MutableLiveData<>();
         activity = mainActivity;
         previewView = mainActivityPreviewView;
         startCameraProvider( activity,  previewView);
@@ -77,6 +82,10 @@ public class SensorCamera {
                 Log.i("CIS4444","startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
             }
         }, ContextCompat.getMainExecutor(activityContext));
+    }
+
+    public LiveData<Boolean> getAvailableLiveData() {
+        return bitmapAvailableLiveData;
     }
 
     private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
@@ -158,7 +167,7 @@ public class SensorCamera {
                 // TODO: add code to crop to just the needed area of the photo
                 //bitmap = Bitmap.createBitmap(bitmap, rect.left, rect.top, rect.width(), rect.height())
 
-                // TODO: notify some software that the image has been updated
+                bitmapAvailableLiveData.postValue(true);
 
                 // after done, release the ImageProxy object
                 imageProxy.close();
@@ -189,6 +198,8 @@ public class SensorCamera {
 
         executor = Executors.newSingleThreadExecutor();
         Log.i("CIS4444","Trying to Capture Photo 2");
+        // Notify observers that the bitmap is not available
+        bitmapAvailableLiveData.postValue(false);
 
         imageCapture.takePicture(
                 outputFileOptions,
