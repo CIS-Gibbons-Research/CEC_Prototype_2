@@ -26,6 +26,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    // test comment -- delete later
+
     private ActivityMainBinding binding;
 
     MainViewModel mainViewModel;
