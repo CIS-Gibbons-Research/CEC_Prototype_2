@@ -41,7 +41,7 @@ public class ChemicalAnalysis {
             Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
             calibrationIntensities.add(currentCalibrationReading);
         }
-        //FIXME: calibration readings are all 0.0, so intesnsityExtractor isn't working -- possibly wrong values for locations
+        //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
     }
 

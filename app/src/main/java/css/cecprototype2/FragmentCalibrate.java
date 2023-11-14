@@ -146,10 +146,12 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromSampleImage() {
         Log.i("CIS4444", "Load sample image to Calibrate");
-        Bitmap sampleBitmap = BitmapFactory.decodeFile("/res/drawable/sample_b.jpg");
+        // Use the resource identifier to load the sample image
+        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
         mainViewModel.setCalibrationBitMap(sampleBitmap);
         mainViewModel.doCalibration();
     }
+
 
 
 }
