@@ -59,7 +59,7 @@ public class RegionIntensityExtractor {
         }
     }
 
-    public Integer getAlternateRegionIntensity(Region inRegion, Bitmap bitMap) {
+    public Double getAlternateRegionIntensity(Region inRegion, Bitmap bitMap) {
         int sumIntensity = 0;
         int numPixels = 0;
         final int GREEN_THRESHOLD = 10; // Minimum green value threshold
@@ -88,13 +88,13 @@ public class RegionIntensityExtractor {
 
         if (numPixels > 0) {
             // Calculate and return the average intensity
-            int averageIntensity = sumIntensity / numPixels;
+            double averageIntensity = (double)sumIntensity / numPixels;
             Log.d("RegionIntensityExtractor", "getAlternateRegionIntensity: Result = " + averageIntensity);
             return averageIntensity;
         } else {
             // No pixels in the region that meet the criteria, return a default value
             Log.d("RegionIntensityExtractor", "getAlternateRegionIntensity: No pixels in the region, returning 0");
-            return 0;
+            return 0.0;
         }
     }
 }

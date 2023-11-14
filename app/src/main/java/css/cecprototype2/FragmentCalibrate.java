@@ -151,7 +151,5 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel.setCalibrationBitMap(sampleBitmap);
         mainViewModel.doCalibration();
     }
-
-
-
+    
 }
