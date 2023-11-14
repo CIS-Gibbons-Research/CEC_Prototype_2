@@ -1,28 +1,18 @@
-package css.cecprototype2;
+package css.cecprototype2.main;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.view.PreviewView;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 //import org.apache.commons.math3.stat.regression.SimpleRegression;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import css.cecprototype2.R;
 import css.cecprototype2.databinding.ActivityMainBinding;
-
-
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 

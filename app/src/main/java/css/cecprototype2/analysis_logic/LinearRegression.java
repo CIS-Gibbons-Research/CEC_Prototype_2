@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.analysis_logic;
 
 import android.util.Log;
 

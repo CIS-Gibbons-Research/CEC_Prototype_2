@@ -1,6 +1,5 @@
 package css.cecprototype2;
 
-import junit.framework.TestCase;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +9,8 @@ import android.graphics.Rect;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+
+import css.cecprototype2.region_logic.Region;
 
 public class RegionTest {
 

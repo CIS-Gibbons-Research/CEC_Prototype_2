@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_dynamic_primary40"
-    tools:context=".FragmentCalibrate">
+    tools:context=".fragments.FragmentCalibrate">
 
     <TextView
         android:id="@+id/textViewCalibrateTitle"

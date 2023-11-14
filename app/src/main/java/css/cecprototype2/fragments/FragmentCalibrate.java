@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import css.cecprototype2.main.MainViewModel;
+import css.cecprototype2.R;
+import css.cecprototype2.main.SensorCamera;
 import css.cecprototype2.databinding.FragmentCalibrateBinding;
 
 public class FragmentCalibrate extends Fragment {

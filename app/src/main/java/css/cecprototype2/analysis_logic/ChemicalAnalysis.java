@@ -1,10 +1,14 @@
-package css.cecprototype2;
+package css.cecprototype2.analysis_logic;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import css.cecprototype2.region_logic.Region;
+import css.cecprototype2.region_logic.RegionFinder;
+import css.cecprototype2.region_logic.RegionIntensityExtractor;
 
 public class ChemicalAnalysis {
     RegionIntensityExtractor intensityExtractor;

@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.databinding.FragmentHomeBinding;
 
 public class FragmentHome extends Fragment {

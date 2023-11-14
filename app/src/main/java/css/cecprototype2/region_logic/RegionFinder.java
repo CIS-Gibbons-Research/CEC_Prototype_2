@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.region_logic;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import css.cecprototype2.main.MainViewModel;
+import css.cecprototype2.main.SensorCamera;
 import css.cecprototype2.databinding.FragmentAnalyzeBinding;
 
 public class FragmentAnalyze extends Fragment {

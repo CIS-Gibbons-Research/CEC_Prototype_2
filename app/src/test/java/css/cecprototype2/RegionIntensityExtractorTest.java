@@ -1,15 +1,15 @@
 package css.cecprototype2;
 
-import junit.framework.TestCase;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+
+import css.cecprototype2.region_logic.Region;
+import css.cecprototype2.region_logic.RegionIntensityExtractor;
 
 public class RegionIntensityExtractorTest {
 

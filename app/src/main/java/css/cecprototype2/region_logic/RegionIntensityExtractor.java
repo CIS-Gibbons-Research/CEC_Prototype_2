@@ -1,10 +1,8 @@
-package css.cecprototype2;
+package css.cecprototype2.region_logic;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
-
-import java.util.List;
 
 public class RegionIntensityExtractor {
 

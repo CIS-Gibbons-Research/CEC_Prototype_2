@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.main;
 
 import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 
@@ -43,7 +43,7 @@ public class SensorCamera {
     private MutableLiveData<Boolean> bitmapAvailableLiveData;
 
     // Constructor: initialize camera
-    SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner, PreviewView mainActivityPreviewView) {
+    public SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner, PreviewView mainActivityPreviewView) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
