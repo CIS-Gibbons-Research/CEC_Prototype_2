@@ -69,6 +69,13 @@ dependencies {
     // needed for Simple Linear Regression
     implementation ("org.apache.commons:commons-math3:3.6.1")
 
+    //google sheets api
+    implementation ("com.google.api-client:google-api-client-android:1.30.9")
+    implementation ("com.google.http-client:google-http-client-gson:1.30.9")
+    implementation ("com.google.apis:google-api-services-sheets:v4-rev581-1.25.0")
+    implementation ("com.google.auth:google-auth-library-oauth2-http:0.25.0")
+
+
     constraints{
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")

@@ -3,8 +3,11 @@ package css.cecprototype2.analysis_logic;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import css.cecprototype2.region_logic.Region;
 import css.cecprototype2.region_logic.RegionFinder;
@@ -57,6 +60,31 @@ public class ChemicalAnalysis {
             Double currentAnalysisFluorescence = intensityExtractor.getRegionIntensity(region, fullAnalysisImage);
             analysisReadings.add(currentAnalysisFluorescence);
             analysisConcentrations.add(linearRegressionModel.predict(currentAnalysisFluorescence));
+        }
+    }
+
+    public void writeToGoogleSheets() {
+        String spreadsheetId = "yourSpreadsheetId";
+        String sheetName = "Sheet1"; // Change to the name of your sheet
+        int numRowsToSkip = 1; // Skip header row
+
+        try {
+            // Get the existing data to determine the next available row
+            List<List<Object>> existingData = SheetsReader.readFromGoogleSheets(spreadsheetId, sheetName, numRowsToSkip);
+            int nextRow = existingData.size() + numRowsToSkip + 1; // Add 1 to skip header row
+
+            // Prepare the new data
+            List<List<Object>> values = new ArrayList<>();
+            values.add(Arrays.asList("Concentration", "Analysis Value"));
+
+            for (int i = 0; i < analysisConcentrations.size(); i++) {
+                values.add(Arrays.asList(calibrationConcentrations.get(i), analysisConcentrations.get(i)));
+            }
+
+            // Append the new data to the end of the sheet
+            SheetsWriter.appendRowsToGoogleSheets(spreadsheetId, sheetName, values, nextRow);
+        } catch (IOException | GeneralSecurityException e) {
+            e.printStackTrace(); // Handle the exception according to your needs
         }
     }
 }
