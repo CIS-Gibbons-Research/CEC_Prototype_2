@@ -18,8 +18,8 @@ public class LinearRegression {
     SimpleRegression regression;
 
     public LinearRegression(List<Double> fluorescenceValues, List<Double> concentrationValues) {
-        Log.d("LinearRegression", "Fluorescence values size: " + fluorescenceValues.size());
-        Log.d("LinearRegression", "Concentration values size: " + concentrationValues.size());
+        //Log.d("LinearRegression", "Fluorescence values size: " + fluorescenceValues.size());
+        //Log.d("LinearRegression", "Concentration values size: " + concentrationValues.size());
 
         if (fluorescenceValues.size() != concentrationValues.size()) {
             throw new IllegalArgumentException("Lists must have the same size");
@@ -36,7 +36,7 @@ public class LinearRegression {
         // Add data points to the regression model
         for (int i = 0; i < fluorescenceValues.size(); i++) {
             regression.addData(fluorescenceValues.get(i), concentrationValues.get(i));
-            Log.d("LinearRegression","Adding in x = " + fluorescenceValues.get(i)+ " and y = "+concentrationValues.get(i));
+            //Log.d("LinearRegression","Adding in x = " + fluorescenceValues.get(i)+ " and y = "+concentrationValues.get(i));
         }
         // Perform linear regression
         m_slope = regression.getSlope();

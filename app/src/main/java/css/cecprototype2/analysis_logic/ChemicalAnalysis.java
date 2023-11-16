@@ -11,12 +11,12 @@ import css.cecprototype2.region_logic.RegionFinder;
 import css.cecprototype2.region_logic.RegionIntensityExtractor;
 
 public class ChemicalAnalysis {
-    RegionIntensityExtractor intensityExtractor;
-    private ArrayList<Double> calibrationIntensities;
-    private ArrayList<Double> calibrationConcentrations;
-    private ArrayList<Double> analysisReadings;
-    private ArrayList<Double> analysisConcentrations;
-    private LinearRegression linearRegressionModel;
+    public RegionIntensityExtractor intensityExtractor;
+    public ArrayList<Double> calibrationIntensities;
+    public ArrayList<Double> calibrationConcentrations;
+    public ArrayList<Double> analysisReadings;
+    public ArrayList<Double> analysisConcentrations;
+    public LinearRegression linearRegressionModel;
 
 
     public Double getCalibrationIntensity(int key) {
@@ -42,7 +42,7 @@ public class ChemicalAnalysis {
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
         for (Region region : regions.getStandardRegions()) {
             Double currentCalibrationReading = intensityExtractor.getRegionIntensity(region, fullCalibrationImage);
-            Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
+            //Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
             calibrationIntensities.add(currentCalibrationReading);
         }
         //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
