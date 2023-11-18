@@ -22,11 +22,19 @@
         android:id="@+id/navigation_calibrate"
         android:name="css.cecprototype2.fragments.FragmentCalibrate"
         android:label="@string/title_fragment2"
-        tools:layout="@layout/fragment_calibrate" />
+        tools:layout="@layout/fragment_calibrate" >
+        <action
+            android:id="@+id/action_navigation_calibrate_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_analyze"
         android:name="css.cecprototype2.fragments.FragmentAnalyze"
         android:label="@string/title_fragement3"
-        tools:layout="@layout/fragment_analyze" />
+        tools:layout="@layout/fragment_analyze" >
+        <action
+            android:id="@+id/action_navigation_analyze_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>
