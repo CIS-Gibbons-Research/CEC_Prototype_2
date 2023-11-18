@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.camera.core.Preview;
+import androidx.camera.view.PreviewView;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -25,6 +27,7 @@ public class MainViewModel extends AndroidViewModel {
     RegionFinder regionFinder;
     ChemicalAnalysis chemicalAnalysis;
     List<Region> regions;
+    public List<Double> calibrationIntensities;
 
 
     public MainViewModel(@NonNull Application application) {
@@ -44,14 +47,14 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void doCalibration(){
-        calibrationBitMap = takePhoto();
+        //calibrationBitMap = takePhoto();
         setupStandardRegions();
         Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + calibrationBitMap.getHeight() + " | Calibration Bitmap W: " + calibrationBitMap.getWidth());
-        chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
+        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
     }
 
     public void doAnalysis(){
-        analysisBitMap = takePhoto();
+        //analysisBitMap = takePhoto();
         //setupRegions(analysisBitMap);
         setupStandardRegions();
         Log.i("MainViewModel", ".doAnalysis(): Analysis Bitmap H: " + analysisBitMap.getHeight() + " | Analysis Bitmap W: " + analysisBitMap.getWidth());
@@ -74,13 +77,17 @@ public class MainViewModel extends AndroidViewModel {
         cam = sensorCamera;
     }
 
+    public void setCameraPreview(PreviewView preview) {
+        cam.previewView = preview;
+    }
+
     public Bitmap takePhoto() {
         Log.i("CIS4444","MainViewModel --- takePhoto");
         //commented out for testing -- use a bitmap of sample_image_a instead of capturing an image
-        //Bitmap bitmap = cam.capturePhotoBitmap();
-        Bitmap testBitmap = BitmapFactory.decodeResource(application.getResources(), R.drawable.sample_image_a);
-        Log.i("MainViewModel", ".takePhoto(): Standard Bitmap H: " + testBitmap.getHeight() + " | Standard Bitmap W: " + testBitmap.getWidth());
-        return testBitmap;
+        Bitmap bitmap = cam.capturePhotoBitmap();
+        //Bitmap bitmap = BitmapFactory.decodeResource(application.getResources(), R.drawable.sample_image_a);
+        Log.i("MainViewModel", ".takePhoto(): Standard Bitmap H: " + bitmap.getHeight() + " | Standard Bitmap W: " + bitmap.getWidth());
+        return bitmap;
     }
 
     public void setCalibrationBitMap(Bitmap sampleBitmap) {
@@ -91,8 +98,10 @@ public class MainViewModel extends AndroidViewModel {
         analysisBitMap = sampleBitmap;
     }
 
-    public LiveData<Boolean> getBitmapAvailableLiveData() {
-        return cam.getAvailableLiveData();
-    }
+    // TODO: This is causing an error
+
+//    public LiveData<Boolean> getBitmapAvailableLiveData() {
+//        return cam.getAvailableLiveData();
+//    }
 
 }

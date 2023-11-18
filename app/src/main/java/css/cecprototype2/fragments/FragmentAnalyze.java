@@ -1,6 +1,7 @@
 package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import css.cecprototype2.R;
+import css.cecprototype2.main.MainActivity;
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.main.SensorCamera;
 import css.cecprototype2.databinding.FragmentAnalyzeBinding;
@@ -33,7 +36,7 @@ public class FragmentAnalyze extends Fragment {
 
     Button buttonAnalyze;
     Button buttonAnalyzeSample;
-    TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5;
+    TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5, tvAnalyze6;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -48,11 +51,15 @@ public class FragmentAnalyze extends Fragment {
         previewView = binding.previewViewAnalyze;
         tvStatus = binding.textViewAnalyzeStatus;
         tvAnalyze1 = binding.textViewAnalyze1;
-        // TODO -- Add bindings for rest of the textview.
+        tvAnalyze2 = binding.textViewAnalyze2;
+        tvAnalyze3 = binding.textViewAnalyze3;
+        tvAnalyze4 = binding.textViewAnalyze4;
+        tvAnalyze5 = binding.textViewAnalyze5;
+        tvAnalyze6 = binding.textViewAnalyze6;
 
-        setupCamera();
+        setupCameraPreview();
         setupButtons();
-        setupLiveDataObservers();
+//        setupLiveDataObservers();
 
 
         return root;
@@ -82,35 +89,35 @@ public class FragmentAnalyze extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("CIS 4444", "Calibrate with Samples button clicked");   // log button click for debugging
+                calibrateFromSampleImage();
             }
         });
     }  // end SetupButtons
 
-    private void setupCamera()
-    {
-        Log.i("CIS4444","Main Activity --- setupCamera");
-        cam = new SensorCamera(getActivity(),getActivity(), previewView);
+    private void setupCameraPreview() {
+        Log.i("CIS4444", "Fragment Calibrarte --- setupCameraPreview");
+        cam =((MainActivity)getActivity()).cam;
         mainViewModel.initializeCamera(cam);
     }
 
-    private void setupLiveDataObservers() {
-        // Observe the LiveData for bitmapAvailable
-        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isAvailable) {
-                bitmapAvailable = isAvailable;
-                if (bitmapAvailable) {
-                    // Get the bitmap from the ViewModel
-                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
-
-                    // Display the photo bitmap in the imageView
-                    imageView.setImageBitmap(photoBitmap);
-                } else {
-                    tvStatus.setText("Bitmap not available");
-                }
-            }
-        });
-    }
+//    private void setupLiveDataObservers() {
+//        // Observe the LiveData for bitmapAvailable
+//        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isAvailable) {
+//                bitmapAvailable = isAvailable;
+//                if (bitmapAvailable) {
+//                    // Get the bitmap from the ViewModel
+//                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
+//
+//                    // Display the photo bitmap in the imageView
+//                    imageView.setImageBitmap(photoBitmap);
+//                } else {
+//                    tvStatus.setText("Bitmap not available");
+//                }
+//            }
+//        });
+//    }
 
     private void doButtonTakePhoto() {
         if (isPreviewVisible) {
@@ -146,26 +153,27 @@ public class FragmentAnalyze extends Fragment {
         }
     }
 
-    // TOM --- code to read sample images into the bitmap to test processing
-//    private void setupSampleButtons() {
-//        buttonSampleCalibrate = findViewById(R.id.buttonSampleCalibrate);
-//        buttonSampleAnalyze = findViewById(R.id.buttonSampleCalibrate);
-//        buttonSampleCalibrate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i("CIS4444","Sample Calibrate Button onClick");
-//                mainViewModel.setBitmap(loadSampleImage(R.drawable.sample_b));
-//                mainViewModel.doCalibration();
-//            }
-//        });
-//        buttonSampleAnalyze.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.i("CIS4444","Sample Analyze Button onClick");
-//                mainViewModel.setBitmap(loadSampleImage(R.drawable.sample_b));
-//                mainViewModel.doAnalysis();
-//            }
-//        });
-//    }
+    private void calibrateFromSampleImage() {
+        Log.i("CIS4444", "Load sample image to Calibrate");
+        // Use the resource identifier to load the sample image
+        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
+
+        mainViewModel.setCalibrationBitMap(sampleBitmap);
+        mainViewModel.doCalibration();
+        updateAnalyzeUI();
+    }
+
+    private void updateAnalyzeUI() {
+        // TODO: The textviews should be in a list and this should be a loop
+        tvAnalyze1.setText(mainViewModel.calibrationIntensities.get(0).toString());
+        tvAnalyze2.setText(mainViewModel.calibrationIntensities.get(1).toString());
+        tvAnalyze3.setText(mainViewModel.calibrationIntensities.get(2).toString());
+        tvAnalyze4.setText(mainViewModel.calibrationIntensities.get(3).toString());
+        tvAnalyze5.setText(mainViewModel.calibrationIntensities.get(4).toString());
+        tvAnalyze6.setText(mainViewModel.calibrationIntensities.get(5).toString());
+
+    }
+
 
 }

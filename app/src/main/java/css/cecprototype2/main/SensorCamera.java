@@ -43,14 +43,13 @@ public class SensorCamera {
     private MutableLiveData<Boolean> bitmapAvailableLiveData;
 
     // Constructor: initialize camera
-    public SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner, PreviewView mainActivityPreviewView) {
+    public SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner) {
         // should be passed the application context which is needed by the camera
         // should also be passed the previewView on the screen where the image should be displayed
         // TODO: is there a better way to connect the camera to the previewView?  Will the previewView change when the phone is rotated?
         bitmapAvailableLiveData = new MutableLiveData<>();
         context = mainActivity;
         this.lifecycleOwner = lifecycleOwner;
-        previewView = mainActivityPreviewView;
         startCameraProvider(context,  previewView);
     }
 

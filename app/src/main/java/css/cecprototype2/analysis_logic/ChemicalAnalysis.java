@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import css.cecprototype2.region_logic.Region;
 import css.cecprototype2.region_logic.RegionFinder;
@@ -12,6 +13,7 @@ import css.cecprototype2.region_logic.RegionIntensityExtractor;
 
 public class ChemicalAnalysis {
     public RegionIntensityExtractor intensityExtractor;
+    public List<Region> regions;
     public ArrayList<Double> calibrationIntensities;
     public ArrayList<Double> calibrationConcentrations;
     public ArrayList<Double> analysisReadings;
@@ -37,16 +39,19 @@ public class ChemicalAnalysis {
         intensityExtractor = new RegionIntensityExtractor();
     }
 
-    public void Calibrate(RegionFinder regions, Bitmap fullCalibrationImage) {
+    public List<Double> Calibrate(RegionFinder regionsFinder, Bitmap fullCalibrationImage) {
         calibrationIntensities = new ArrayList<>();
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
-        for (Region region : regions.getStandardRegions()) {
+            regions = regionsFinder.getStandardRegions();
+        for (Region region : regions) {
+            Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + "  and y: " + region.getX());
             Double currentCalibrationReading = intensityExtractor.getRegionIntensity(region, fullCalibrationImage);
-            //Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
+            Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
             calibrationIntensities.add(currentCalibrationReading);
         }
         //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
+        return calibrationIntensities;
     }
 
     public void Analyze(RegionFinder regions, Bitmap fullAnalysisImage) {

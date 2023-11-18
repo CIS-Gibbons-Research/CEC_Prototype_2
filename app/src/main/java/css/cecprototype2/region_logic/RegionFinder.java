@@ -25,10 +25,6 @@ public class RegionFinder
         populateStandardRegionsList(context);
     }
 
-    public List<Region> getStandardRegions()
-    {
-        return this.standardRegions;
-    }
 
     public List<Region> getCustomRegions(Bitmap bitmap)
     {
@@ -63,6 +59,10 @@ public class RegionFinder
         }
     }
 
+    public List<Region> getStandardRegions()
+    {
+        return this.standardRegions;
+    }
     public Region getStandardRegion(int regionNumber)
     {
         return standardRegions.get(regionNumber);

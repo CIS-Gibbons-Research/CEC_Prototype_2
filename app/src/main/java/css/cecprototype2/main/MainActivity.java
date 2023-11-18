@@ -8,6 +8,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.util.Log;
 //import org.apache.commons.math3.stat.regression.SimpleRegression;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,7 +18,7 @@ import css.cecprototype2.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-
+    public SensorCamera cam;
     MainViewModel mainViewModel;
 
 
@@ -29,6 +30,13 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
     }
+
+    private void setupCamera() {
+        Log.i("CIS4444", "Main Activity --- setupCamera");
+        cam = new SensorCamera(this, this);
+        mainViewModel.initializeCamera(cam);
+    }
+
 
     private void setupNavBindings() {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
