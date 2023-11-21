@@ -44,9 +44,9 @@ public class ChemicalAnalysis {
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
             regions = regionsFinder.getStandardRegions();
         for (Region region : regions) {
-            Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + "  and y: " + region.getX());
+            //Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + "  and y: " + region.getX());
             Double currentCalibrationReading = intensityExtractor.getRegionIntensity(region, fullCalibrationImage);
-            Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
+            //Log.d("ChemicalAnalysis", "Region with x: " + region.getX() + " has " + currentCalibrationReading + " intensity.");
             calibrationIntensities.add(currentCalibrationReading);
         }
         //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
