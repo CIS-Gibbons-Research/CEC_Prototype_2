@@ -81,4 +81,9 @@ dependencies {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
     }
 
+    // Add for gson library for parsing json files
+    //implementation ("com.google.code.gson:gson:2.10.1")
+    // Add for Volley libary for HTTP requests, see https://developer.android.com/training/volley
+    implementation("com.android.volley:volley:1.2.1")
+
 }

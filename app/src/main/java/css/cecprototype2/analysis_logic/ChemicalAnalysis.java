@@ -20,7 +20,6 @@ public class ChemicalAnalysis {
     public ArrayList<Double> analysisConcentrations;
     public LinearRegression linearRegressionModel;
 
-
     public Double getCalibrationIntensity(int key) {
         return calibrationConcentrations.get(key);
     }
@@ -39,7 +38,7 @@ public class ChemicalAnalysis {
         intensityExtractor = new RegionIntensityExtractor();
     }
 
-    public List<Double> Calibrate(RegionFinder regionsFinder, Bitmap fullCalibrationImage) {
+    public List<Double> Calibrate(RegionFinder regionsFinder, SheetWriter sheetWriter, Bitmap fullCalibrationImage) {
         calibrationIntensities = new ArrayList<>();
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
             regions = regionsFinder.getStandardRegions();
@@ -51,6 +50,7 @@ public class ChemicalAnalysis {
         }
         //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
+        sheetWriter.writeCalibrationToSheets(calibrationIntensities);
         return calibrationIntensities;
     }
 

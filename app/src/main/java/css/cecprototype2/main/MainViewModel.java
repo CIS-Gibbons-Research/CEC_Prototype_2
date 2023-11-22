@@ -16,6 +16,7 @@ import java.util.List;
 
 import css.cecprototype2.R;
 import css.cecprototype2.analysis_logic.ChemicalAnalysis;
+import css.cecprototype2.analysis_logic.SheetWriter;
 import css.cecprototype2.region_logic.Region;
 import css.cecprototype2.region_logic.RegionFinder;
 
@@ -25,6 +26,7 @@ public class MainViewModel extends AndroidViewModel {
     public Bitmap calibrationBitMap, analysisBitMap;
     Application application;
     RegionFinder regionFinder;
+    SheetWriter sheetWriter;
     ChemicalAnalysis chemicalAnalysis;
     List<Region> regions;
     public List<Double> calibrationIntensities;
@@ -35,6 +37,7 @@ public class MainViewModel extends AndroidViewModel {
         this.application = application;
         regions = new ArrayList<>();
         regionFinder = new RegionFinder(application.getApplicationContext());
+        sheetWriter = new SheetWriter(application);
         chemicalAnalysis = new ChemicalAnalysis();
     }
     public Bitmap getCalibrationBitmap()
@@ -50,7 +53,7 @@ public class MainViewModel extends AndroidViewModel {
         //calibrationBitMap = takePhoto();
         setupStandardRegions();
         Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + calibrationBitMap.getHeight() + " | Calibration Bitmap W: " + calibrationBitMap.getWidth());
-        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder,calibrationBitMap);
+        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, sheetWriter, calibrationBitMap);
     }
 
     public void doAnalysis(){
