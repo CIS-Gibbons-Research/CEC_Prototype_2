@@ -2,19 +2,15 @@ package css.cecprototype2.main;
 
 import android.app.Application;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import css.cecprototype2.R;
 import css.cecprototype2.analysis_logic.ChemicalAnalysis;
 import css.cecprototype2.analysis_logic.SheetWriter;
 import css.cecprototype2.region_logic.Region;
