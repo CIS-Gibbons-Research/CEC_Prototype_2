@@ -1,22 +1,20 @@
-package css.cecprototype2;
+package css.cecprototype2.region_logic;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
-import java.util.List;
+public class RegionIntensityExtractor {
 
-public class RegionIntensityExtractor
-{
     /**
-     * instantiates the image and list of regions values
+     * Instantiates the image and list of regions values
      */
-    public RegionIntensityExtractor()
-    {
-
+    public RegionIntensityExtractor() {
+        // You can add any initialization code here
     }
 
     /**
-     * calculates the average intensity of RGB values given the region's location and size.
+     * Calculates the average intensity of RGB values given the region's location and size.
      *
      * @param inRegion
      * @return average intensity of RGB pixels for the given region.
@@ -45,16 +43,21 @@ public class RegionIntensityExtractor
         }
 
         if (numPixels > 0) {
-            // Calculate and return the average intensity
-            int averageIntensity = sumIntensity / numPixels;
-            return averageIntensity + 0.0;
+            // Calculate and return the average intensity, testing the values also
+            double averageIntensity = (double) sumIntensity / numPixels;
+            double result = averageIntensity;
+            //Log.d("RegionIntensityExtractor", "getRegionIntensity: Result = " + result);
+            //Log.d("RegionIntensityExtractor", "getRegionIntensity: sumIntensity = " + sumIntensity);
+            //Log.d("RegionIntensityExtractor", "getRegionIntensity: numPixels = " + numPixels);
+            return result + 0.0;
         } else {
             // No pixels in the region, return a default value
+            //Log.d("RegionIntensityExtractor", "getRegionIntensity: No pixels in the region, returning 0.0");
             return 0.0;
         }
     }
 
-    public Integer getAlterntiveRegionIntensity(Region inRegion, Bitmap bitMap) {
+    public Double getAlternateRegionIntensity(Region inRegion, Bitmap bitMap) {
         int sumIntensity = 0;
         int numPixels = 0;
         final int GREEN_THRESHOLD = 10; // Minimum green value threshold
@@ -83,12 +86,14 @@ public class RegionIntensityExtractor
 
         if (numPixels > 0) {
             // Calculate and return the average intensity
-            int averageIntensity = sumIntensity / numPixels;
+            double averageIntensity = (double)sumIntensity / numPixels;
+            Log.d("RegionIntensityExtractor", "getAlternateRegionIntensity: Result = " + averageIntensity);
             return averageIntensity;
         } else {
             // No pixels in the region that meet the criteria, return a default value
-            return 0;
+            Log.d("RegionIntensityExtractor", "getAlternateRegionIntensity: No pixels in the region, returning 0");
+            return 0.0;
         }
     }
-
 }
+

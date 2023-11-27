@@ -33,6 +33,11 @@ android {
         dataBinding = true
         viewBinding =  true
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -44,9 +49,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     implementation("androidx.navigation:navigation-fragment:2.7.4")
     implementation("androidx.navigation:navigation-ui:2.7.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // CameraX core library using the camera2 implementation
     val camerax_version = "1.2.3"
@@ -69,9 +71,19 @@ dependencies {
     // needed for Simple Linear Regression
     implementation ("org.apache.commons:commons-math3:3.6.1")
 
+    testImplementation("org.mockito:mockito-core:3.11.2")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("androidx.test.ext:junit:1.1.5")
+    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
+
     constraints{
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0")
     }
+
+    // Add for gson library for parsing json files
+    //implementation ("com.google.code.gson:gson:2.10.1")
+    // Add for Volley libary for HTTP requests, see https://developer.android.com/training/volley
+    implementation("com.android.volley:volley:1.2.1")
 
 }

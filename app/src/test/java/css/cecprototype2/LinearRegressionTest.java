@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import css.cecprototype2.analysis_logic.LinearRegression;
+
 public class LinearRegressionTest extends TestCase {
     @Test
     public void testTwoValueTest() {

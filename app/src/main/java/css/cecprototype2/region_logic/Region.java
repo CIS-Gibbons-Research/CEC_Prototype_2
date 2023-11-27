@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.region_logic;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,7 +45,7 @@ public class Region
         //width and height of bitmap is 2 * radius
         int xWidth = Math.min(2 * rad, wholeImageBitmap.getWidth() - xUpperLeft);
         int yHeight = Math.min(2 * rad, wholeImageBitmap.getHeight() - yUpperLeft);
-        Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);
+        //Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);
         // Ensure that the indices are within valid range
         if (x >= 0 && y >= 0 && rad > 0) {
             // Convert circle dimensions to square shape

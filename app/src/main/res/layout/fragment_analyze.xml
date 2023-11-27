@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentAnalyze">
+    tools:context=".fragments.FragmentAnalyze">
 
     <TextView
         android:id="@+id/text_dashboard3"
@@ -111,6 +111,24 @@
         android:text="Text"
         app:layout_constraintStart_toEndOf="@+id/textViewLabel5"
         app:layout_constraintTop_toTopOf="@+id/textViewLabel5" />
+
+    <TextView
+        android:id="@+id/textViewLabel6"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="20dp"
+        android:text="F-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel5"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel5" />
+
+    <TextView
+        android:id="@+id/textViewAnalyze6"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:text="Text"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel6"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel6" />
 
     <ImageView
         android:id="@+id/imageViewAnalyze"

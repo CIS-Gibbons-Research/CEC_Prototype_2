@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.region_logic;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,16 +14,17 @@ import java.util.List;
 public class RegionFinder
 {
     private List<Region> standardRegions;
+
+    private static final int IMAGE_WIDTH = 3024;
+    private static final int IMAGE_HEIGHT = 4032;
+
+
     public RegionFinder(Context context)
     {
         standardRegions = new ArrayList<>();
         populateStandardRegionsList(context);
     }
 
-    public List<Region> getStandardRegions()
-    {
-        return this.standardRegions;
-    }
 
     public List<Region> getCustomRegions(Bitmap bitmap)
     {
@@ -47,12 +48,21 @@ public class RegionFinder
             int yValue = context.getResources().getInteger(yResource);
             int radValue = context.getResources().getInteger(radResource);
 
-            // Create a Region object with the retrieved values
-            Region region = new Region(xValue, yValue, radValue);
+            // Convert to percentage values
+            int percentageX = Math.round((float) xValue / IMAGE_WIDTH * 100);
+            int percentageY = Math.round((float) yValue / IMAGE_HEIGHT * 100);
+            int percentageRad = Math.round((float) radValue / Math.min(IMAGE_WIDTH, IMAGE_HEIGHT) * 100);
+
+            // Create a Region object with the converted values
+            Region region = new Region(percentageX, percentageY, percentageRad);
             standardRegions.add(region);
         }
     }
 
+    public List<Region> getStandardRegions()
+    {
+        return this.standardRegions;
+    }
     public Region getStandardRegion(int regionNumber)
     {
         return standardRegions.get(regionNumber);

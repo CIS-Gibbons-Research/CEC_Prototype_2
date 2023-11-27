@@ -1,4 +1,4 @@
-package css.cecprototype2;
+package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,22 +17,26 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import css.cecprototype2.main.MainActivity;
+import css.cecprototype2.main.MainViewModel;
+import css.cecprototype2.R;
+import css.cecprototype2.main.SensorCamera;
 import css.cecprototype2.databinding.FragmentCalibrateBinding;
 
 public class FragmentCalibrate extends Fragment {
 
     private FragmentCalibrateBinding binding;
     private MainViewModel mainViewModel;
-    private SensorCamera cam;
     private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
+    SensorCamera cam;
 
     Button buttonCalibrate;
     Button buttonCalibrateSample;
     ImageView imageView;
     PreviewView previewView;
     TextView tvStatus;
-    TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5;
+    TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5, tvCalibrate6;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -47,11 +51,15 @@ public class FragmentCalibrate extends Fragment {
         previewView = binding.previewViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
         tvCalibrate1 = binding.textViewCalibrate1;
-        // TODO -- Add bindings for rest of the textview.
+        tvCalibrate2 = binding.textViewCalibrate2;
+        tvCalibrate3 = binding.textViewCalibrate3;
+        tvCalibrate4 = binding.textViewCalibrate4;
+        tvCalibrate5 = binding.textViewCalibrate5;
+        tvCalibrate6 = binding.textViewCalibrate6;
 
-        setupCamera();
+        setupCameraPreview();
         setupButtons();
-        setupLiveDataObservers();
+//        setupLiveDataObservers();
 
         return root;
     }
@@ -85,30 +93,30 @@ public class FragmentCalibrate extends Fragment {
         });
     }  // end SetupButtons
 
-    private void setupCamera() {
-        Log.i("CIS4444", "Main Activity --- setupCamera");
-        cam = new SensorCamera(getActivity(), getActivity(), previewView);
+    private void setupCameraPreview() {
+        Log.i("CIS4444", "Fragment Calibrarte --- setupCameraPreview");
+        cam =((MainActivity)getActivity()).cam;
         mainViewModel.initializeCamera(cam);
     }
 
-    private void setupLiveDataObservers() {
-        // Observe the LiveData for bitmapAvailable
-        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isAvailable) {
-                bitmapAvailable = isAvailable;
-                if (bitmapAvailable) {
-                    // Get the bitmap from the ViewModel
-                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
-
-                    // Display the photo bitmap in the imageView
-                    imageView.setImageBitmap(photoBitmap);
-                } else {
-                    tvStatus.setText("Bitmap not available");
-                }
-            }
-        });
-    }
+//    private void setupLiveDataObservers() {
+//        // Observe the LiveData for bitmapAvailable
+//        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
+//            @Override
+//            public void onChanged(Boolean isAvailable) {
+//                bitmapAvailable = isAvailable;
+//                if (bitmapAvailable) {
+//                    // Get the bitmap from the ViewModel
+//                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
+//
+//                    // Display the photo bitmap in the imageView
+//                    imageView.setImageBitmap(photoBitmap);
+//                } else {
+//                    tvStatus.setText("Bitmap not available");
+//                }
+//            }
+//        });
+//    }
 
     private void calibrateFromPhoto() {
         if (isPreviewVisible) {
@@ -146,10 +154,24 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromSampleImage() {
         Log.i("CIS4444", "Load sample image to Calibrate");
-        Bitmap sampleBitmap = BitmapFactory.decodeFile("/res/drawable/sample_b.jpg");
+        // Use the resource identifier to load the sample image
+        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
+
         mainViewModel.setCalibrationBitMap(sampleBitmap);
         mainViewModel.doCalibration();
+        updateCalibrateUI();
     }
 
+    private void updateCalibrateUI() {
+        // TODO: The textviews should be in a list and this should be a loop
+        tvCalibrate1.setText(mainViewModel.calibrationIntensities.get(0).toString());
+        tvCalibrate2.setText(mainViewModel.calibrationIntensities.get(1).toString());
+        tvCalibrate3.setText(mainViewModel.calibrationIntensities.get(2).toString());
+        tvCalibrate4.setText(mainViewModel.calibrationIntensities.get(3).toString());
+        tvCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
+        tvCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
+
+    }
 
 }
