@@ -109,9 +109,11 @@ public class SensorCamera {
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build();
 
-        // Image Capture Use Case
+        // Create ImageCapture builder and set manual camera settings
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setFlashMode(ImageCapture.FLASH_MODE_OFF)
+                .setTargetRotation(Surface.ROTATION_0)  // Set the desired rotation
                 .build();
 
         // Now bind all these item to the camera
@@ -197,13 +199,6 @@ public class SensorCamera {
                 context.getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues).build();
-
-        // Create ImageCapture builder and set manual camera settings
-        ImageCapture imageCapture = new ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .setFlashMode(ImageCapture.FLASH_MODE_OFF)
-                .setTargetRotation(Surface.ROTATION_0)  // Set the desired rotation
-                .build();
 
         // Notify observers that the bitmap is not available
         bitmapAvailableLiveData.postValue(false);
