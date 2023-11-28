@@ -1,53 +1,59 @@
 package css.cecprototype2.region_logic;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class Region
 {
-    private int x,y,rad;
+    private int xCenter, yCenter, radius;
+    // Pascal_VOC
+    public int xUpperLeft, yUpperLeft, xLowerRight, yLowerRight;
 
     public Region(int x, int y, int rad) {
-        this.x = x;
-        this.y = y;
-        this.rad = rad;
+        this.xCenter = x;
+        this.yCenter = y;
+        this.radius = rad;
+        xUpperLeft = Math.max(xCenter - radius, 0);
+        yUpperLeft = Math.max(yCenter - radius, 0);
+        xLowerRight = xCenter + radius;
+        yLowerRight = yCenter + radius;
     }
 
-    public int getX() {
-        return x;
+    public int getxCenter() {
+        return xCenter;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setxCenter(int xCenter) {
+        this.xCenter = xCenter;
     }
 
-    public int getY() {
-        return y;
+    public int getyCenter() {
+        return yCenter;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setyCenter(int yCenter) {
+        this.yCenter = yCenter;
     }
 
-    public int getRad() {
-        return rad;
+    public int getRadius() {
+        return radius;
     }
 
-    public void setRad(int rad) {
-        this.rad = rad;
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 
     public Bitmap getBitmapRegion(Bitmap wholeImageBitmap) {
         //convert center value, x, y to xUpperLeft and yUpperLeft using radius of circle
-        int xUpperLeft = Math.max(x - rad, 0);
-        int yUpperLeft = Math.max(y - rad, 0);
+        xUpperLeft = Math.max(xCenter - radius, 0);
+        yUpperLeft = Math.max(yCenter - radius, 0);
+        xLowerRight = Math.min(xCenter + radius, wholeImageBitmap.getWidth());
+        yLowerRight = Math.min(yCenter + radius, wholeImageBitmap.getHeight());
         //width and height of bitmap is 2 * radius
-        int xWidth = Math.min(2 * rad, wholeImageBitmap.getWidth() - xUpperLeft);
-        int yHeight = Math.min(2 * rad, wholeImageBitmap.getHeight() - yUpperLeft);
+        int xWidth = Math.min(2 * radius, wholeImageBitmap.getWidth() - xUpperLeft);
+        int yHeight = Math.min(2 * radius, wholeImageBitmap.getHeight() - yUpperLeft);
         //Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);
         // Ensure that the indices are within valid range
-        if (x >= 0 && y >= 0 && rad > 0) {
+        if (xCenter >= 0 && yCenter >= 0 && radius > 0) {
             // Convert circle dimensions to square shape
             return Bitmap.createBitmap(wholeImageBitmap, xUpperLeft, yUpperLeft, xWidth, yHeight);
         } else {

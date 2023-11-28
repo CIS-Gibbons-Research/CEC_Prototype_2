@@ -2,6 +2,9 @@ package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,11 +31,12 @@ public class FragmentAnalyze extends Fragment {
     private FragmentAnalyzeBinding binding;
     private MainViewModel mainViewModel;
     private SensorCamera cam;
-    private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
     TextView tvStatus;
     ImageView imageView;
     PreviewView previewView;
+
+    Bitmap sampleBitmap;            // bitmap from Sample image
 
     Button buttonAnalyze;
     Button buttonAnalyzeSample;
@@ -156,12 +160,18 @@ public class FragmentAnalyze extends Fragment {
     private void calibrateFromSampleImage() {
         Log.i("CIS4444", "Load sample image to Calibrate");
         // Use the resource identifier to load the sample image
-        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
         Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
 
         mainViewModel.setCalibrationBitMap(sampleBitmap);
         mainViewModel.doCalibration();
+        imageView.setImageBitmap(sampleBitmap);
+        // Make the previewView invisible and imageViewCamera visible
+        previewView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+
         updateAnalyzeUI();
+        drawBoundingBoxes();
     }
 
     private void updateAnalyzeUI() {
@@ -174,6 +184,15 @@ public class FragmentAnalyze extends Fragment {
         tvAnalyze6.setText(mainViewModel.calibrationIntensities.get(5).toString());
 
     }
+
+    private void drawBoundingBoxes(){
+        BoundingBoxOverlay bbOverlay = new BoundingBoxOverlay(mainViewModel);
+        // Step 7: Set the modified bitmap to the ImageView
+        imageView.setImageBitmap(bbOverlay.drawBoundingBoxes());
+    }
+
+
+
 
 
 }

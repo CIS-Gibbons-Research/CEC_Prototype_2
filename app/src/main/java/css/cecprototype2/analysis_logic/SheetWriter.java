@@ -42,6 +42,7 @@ public class SheetWriter {
                     Log.d("CIS 4444", "Params being set");
                     Map<String, String> params = new HashMap<>();
                     params.put("action", "calibrate");
+                    // TODO: Put in the acutual date here.
                     params.put("date", "today");
                     params.put("c1", calibrateValues.get(0).toString());
                     params.put("c2", calibrateValues.get(1).toString());

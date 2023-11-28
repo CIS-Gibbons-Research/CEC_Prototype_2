@@ -19,12 +19,12 @@ import css.cecprototype2.region_logic.RegionFinder;
 public class MainViewModel extends AndroidViewModel {
 
     private SensorCamera cam;
-    public Bitmap calibrationBitMap, analysisBitMap;
+    public Bitmap calibrationBitMap, analysisBitMap, currentBitmap;
     Application application;
     RegionFinder regionFinder;
     SheetWriter sheetWriter;
     ChemicalAnalysis chemicalAnalysis;
-    List<Region> regions;
+    public List<Region> regions;
     public List<Double> calibrationIntensities;
 
 
@@ -91,10 +91,12 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setCalibrationBitMap(Bitmap sampleBitmap) {
         calibrationBitMap = sampleBitmap;
+        currentBitmap = sampleBitmap;
     }
 
     public void setAnalysisBitMap(Bitmap sampleBitmap) {
         analysisBitMap = sampleBitmap;
+        currentBitmap = sampleBitmap;
     }
 
     // TODO: This is causing an error

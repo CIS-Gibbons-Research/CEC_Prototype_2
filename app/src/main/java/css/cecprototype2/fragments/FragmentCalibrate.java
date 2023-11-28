@@ -161,6 +161,7 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel.setCalibrationBitMap(sampleBitmap);
         mainViewModel.doCalibration();
         updateCalibrateUI();
+        drawBoundingBoxes();
     }
 
     private void updateCalibrateUI() {
@@ -172,6 +173,12 @@ public class FragmentCalibrate extends Fragment {
         tvCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
         tvCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
 
+    }
+
+    private void drawBoundingBoxes(){
+        BoundingBoxOverlay bbOverlay = new BoundingBoxOverlay(mainViewModel);
+        // Step 7: Set the modified bitmap to the ImageView
+        imageView.setImageBitmap(bbOverlay.drawBoundingBoxes());
     }
 
 }
