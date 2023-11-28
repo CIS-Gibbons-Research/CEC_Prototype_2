@@ -5,6 +5,7 @@ import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.hardware.camera2.CaptureRequest;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -24,6 +25,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.view.Surface;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -109,7 +111,7 @@ public class SensorCamera {
 
         // Image Capture Use Case
         imageCapture = new ImageCapture.Builder()
-                .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build();
 
         // Now bind all these item to the camera
@@ -191,13 +193,18 @@ public class SensorCamera {
         }
 
         // Create output options object which contains file + metadata
-        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
-                .Builder(context.getContentResolver(),
+        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions.Builder(
+                context.getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues).build();
 
-        executor = Executors.newSingleThreadExecutor();
-        Log.i("CIS4444","Trying to Capture Photo 2");
+        // Create ImageCapture builder and set manual camera settings
+        ImageCapture imageCapture = new ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .setFlashMode(ImageCapture.FLASH_MODE_OFF)
+                .setTargetRotation(Surface.ROTATION_0)  // Set the desired rotation
+                .build();
+
         // Notify observers that the bitmap is not available
         bitmapAvailableLiveData.postValue(false);
 
