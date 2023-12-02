@@ -17,10 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import css.cecprototype2.main.MainActivity;
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.R;
-import css.cecprototype2.main.SensorCamera;
 import css.cecprototype2.databinding.FragmentCalibrateBinding;
 
 public class FragmentCalibrate extends Fragment {
@@ -29,12 +27,12 @@ public class FragmentCalibrate extends Fragment {
     private MainViewModel mainViewModel;
     private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
-    SensorCamera cam;
 
     Button buttonCalibrate;
     Button buttonCalibrateSample;
     ImageView imageView;
     PreviewView previewView;
+    Bitmap calibrationBitMap;
     TextView tvStatus;
     TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5, tvCalibrate6;
 
@@ -59,7 +57,7 @@ public class FragmentCalibrate extends Fragment {
 
         setupCameraPreview();
         setupButtons();
-//        setupLiveDataObservers();
+        setupLiveDataObservers();
 
         return root;
     }
@@ -95,39 +93,48 @@ public class FragmentCalibrate extends Fragment {
 
     private void setupCameraPreview() {
         Log.i("CIS4444", "Fragment Calibrarte --- setupCameraPreview");
-        cam =((MainActivity)getActivity()).cam;
-        mainViewModel.initializeCamera(cam);
+        mainViewModel.setCameraPreview(previewView);
     }
 
-//    private void setupLiveDataObservers() {
-//        // Observe the LiveData for bitmapAvailable
-//        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean isAvailable) {
-//                bitmapAvailable = isAvailable;
-//                if (bitmapAvailable) {
-//                    // Get the bitmap from the ViewModel
-//                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
-//
-//                    // Display the photo bitmap in the imageView
-//                    imageView.setImageBitmap(photoBitmap);
-//                } else {
-//                    tvStatus.setText("Bitmap not available");
-//                }
-//            }
-//        });
-//    }
+    private void setupLiveDataObservers() {
+        // Observe the LiveData for bitmapAvailable
+        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAvailable) {
+                bitmapAvailable = isAvailable;
+                if (bitmapAvailable) {
+                    readingsAvailableUpdateUI();
+                } else {
+                    Log.i("CIS4444", "Fragment Calibrarte --- LiveData --- bitmap NOT Available");
+                    tvStatus.setText("Bitmap not available");
+                }
+            }
+        });
+    }
+
+    private void readingsAvailableUpdateUI() {
+        Log.i("CIS4444", "Fragment Calibrarte --- LiveData --- bitmap Available");
+        // Run calibration logic when taking the first photo
+        mainViewModel.doCalibration();
+        // Get the bitmap from the ViewModel
+        calibrationBitMap = mainViewModel.getCalibrationBitmap();
+        if (calibrationBitMap == null) {
+            Log.i("CIS4444", "Fragment Calibrarte --- calibrationBitMap still NULL");
+        } else {
+            // Display the photo bitmap in the imageView
+            imageView.setImageBitmap(calibrationBitMap);
+            // Update the UI with new calibration readings
+            updateCalibrateUI();
+        }
+    }
 
     private void calibrateFromPhoto() {
         if (isPreviewVisible) {
             mainViewModel.takePhoto();
-            imageView.setImageBitmap(mainViewModel.calibrationBitMap);
 
-            // Run calibration logic when taking the first photo
-            mainViewModel.doCalibration();
 
             // Change the button text and disable it
-            buttonCalibrate.setText("Next Reading");
+            buttonCalibrate.setText("Processing");
             buttonCalibrate.setEnabled(false);
 
             // Make the previewView invisible and imageViewCamera visible
@@ -142,18 +149,14 @@ public class FragmentCalibrate extends Fragment {
             imageView.setVisibility(View.INVISIBLE);
 
             // Change the button text back to "Take Photo" and enable it
-            buttonCalibrate.setText("Take Photo");
+            buttonCalibrate.setText("Take Calibration Photo");
             buttonCalibrate.setEnabled(true);
-
-            // Run analysis logic when taking the second photo
-            mainViewModel.doAnalysis();
 
             isPreviewVisible = true;
         }
     }
 
     private void calibrateFromSampleImage() {
-        Log.i("CIS4444", "Load sample image to Calibrate");
         // Use the resource identifier to load the sample image
         Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
         Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
@@ -171,7 +174,9 @@ public class FragmentCalibrate extends Fragment {
         tvCalibrate4.setText(mainViewModel.calibrationIntensities.get(3).toString());
         tvCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
         tvCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
-
+        // Change the button text and disable it
+        buttonCalibrate.setText("Another Calibration?");
+        buttonCalibrate.setEnabled(true);
     }
 
 }

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setupNavBindings();
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
+        setupCamera();
     }
 
     private void setupCamera() {
