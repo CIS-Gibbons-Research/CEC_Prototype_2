@@ -109,13 +109,15 @@ public class SensorCamera {
         // Preview Use Case
         imagePreview = new Preview.Builder().build();
         imagePreview.setSurfaceProvider(previewView.getSurfaceProvider());
+        imagePreview.setTargetRotation(Surface.ROTATION_90);          // Set the desired rotation
+
 
         Log.i("CIS4444","startCameraX creating new imageCapture");
         // Create ImageCapture builder and set manual camera settings
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .setFlashMode(ImageCapture.FLASH_MODE_OFF)
-                .setTargetRotation(Surface.ROTATION_0)  // Set the desired rotation
+                .setTargetRotation(Surface.ROTATION_90)                 // Set the desired rotation
                 .build();
 
 
@@ -148,12 +150,13 @@ public class SensorCamera {
         // Notify observers that the bitmap is not available
         bitmapAvailableLiveData.postValue(false);
 
-        String name = new SimpleDateFormat("yyyyMMddHHmmss", Locale.US).format(new Date());
+        String name = new SimpleDateFormat("yyyy_MM_dd_HHmmss", Locale.US).format(new Date());
+        name = "CECsensor_"+name;
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ChemTest");
         }
 
         // Create output options object which contains file + metadata
