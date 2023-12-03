@@ -25,7 +25,7 @@ public class MainViewModel extends AndroidViewModel {
     RegionFinder regionFinder;
     SheetWriter sheetWriter;
     ChemicalAnalysis chemicalAnalysis;
-    List<Region> regions;
+    public List<Region> regions;
     public List<Double> calibrationIntensities;
     public List<Double> analysisIntensities;
 

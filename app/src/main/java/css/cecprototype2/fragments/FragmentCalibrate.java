@@ -158,12 +158,13 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromSampleImage() {
         // Use the resource identifier to load the sample image
-        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
-        Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
+        calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        Log.i("CIS4444", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
 
-        mainViewModel.setCalibrationBitMap(sampleBitmap);
+        mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration();
         updateCalibrateUI();
+        drawBoundingBoxes();
     }
 
     private void updateCalibrateUI() {
@@ -177,6 +178,12 @@ public class FragmentCalibrate extends Fragment {
         // Change the button text and disable it
         buttonCalibrate.setText("Another Calibration?");
         buttonCalibrate.setEnabled(true);
+    }
+
+    private void drawBoundingBoxes(){
+        BoundingBoxOverlay bbOverlay = new BoundingBoxOverlay(mainViewModel.calibrationBitMap, mainViewModel.regions);
+        // Step 7: Set the modified bitmap to the ImageView
+        imageView.setImageBitmap(bbOverlay.drawBoundingBoxes());
     }
 
 }
