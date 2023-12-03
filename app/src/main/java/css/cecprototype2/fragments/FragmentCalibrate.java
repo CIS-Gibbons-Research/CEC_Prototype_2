@@ -115,6 +115,7 @@ public class FragmentCalibrate extends Fragment {
     private void readingsAvailableUpdateUI() {
         Log.i("CIS4444", "Fragment Calibrarte --- LiveData --- bitmap Available");
         // Run calibration logic when taking the first photo
+        mainViewModel.retrieveCalibrationBitmapFromCamera();
         mainViewModel.doCalibration();
         // Get the bitmap from the ViewModel
         calibrationBitMap = mainViewModel.getCalibrationBitmap();
@@ -158,12 +159,17 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromSampleImage() {
         // Use the resource identifier to load the sample image
-        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
-        Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
-
-        mainViewModel.setCalibrationBitMap(sampleBitmap);
+        calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        Log.i("CIS4444", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
+        mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration();
+        // Display the photo bitmap in the imageView
+        imageView.setImageBitmap(calibrationBitMap);
+        // Update the UI with new calibration readings
         updateCalibrateUI();
+        // Make the previewView invisible and imageViewCamera visible
+        previewView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.VISIBLE);
     }
 
     private void updateCalibrateUI() {

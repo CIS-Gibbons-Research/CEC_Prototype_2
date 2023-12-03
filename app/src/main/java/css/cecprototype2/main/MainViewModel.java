@@ -47,16 +47,28 @@ public class MainViewModel extends AndroidViewModel {
         return this.analysisBitMap;
     }
 
-    public void doCalibration(){
+    public Bitmap retrieveCalibrationBitmapFromCamera()
+    {
         calibrationBitMap = cam.currentBitmap;
+        return this.calibrationBitMap;
+    }
+
+    public void doCalibration(){
+        //calibrationBitMap = cam.currentBitmap;
         setupStandardRegions();
         Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + calibrationBitMap.getHeight() + " | Calibration Bitmap W: " + calibrationBitMap.getWidth());
         calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, sheetWriter, calibrationBitMap);
     }
 
+    public Bitmap retrieveAnalysisBitmapFromCamera()
+    {
+        analysisBitMap = cam.currentBitmap;
+        return this.analysisBitMap;
+    }
+
     public void doAnalysis(){
         if (chemicalAnalysis.calibrateCompleted) {
-            analysisBitMap = cam.currentBitmap;;
+            //analysisBitMap = cam.currentBitmap;;
             setupStandardRegions();
             Log.i("MainViewModel", ".doAnalysis(): Analysis Bitmap H: " + analysisBitMap.getHeight() + " | Analysis Bitmap W: " + analysisBitMap.getWidth());
             analysisIntensities = chemicalAnalysis.Analyze(regionFinder, sheetWriter, analysisBitMap);
