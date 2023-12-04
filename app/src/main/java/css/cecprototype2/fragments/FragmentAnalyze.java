@@ -18,22 +18,19 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import css.cecprototype2.R;
-import css.cecprototype2.main.MainActivity;
 import css.cecprototype2.main.MainViewModel;
-import css.cecprototype2.main.SensorCamera;
 import css.cecprototype2.databinding.FragmentAnalyzeBinding;
 
 public class FragmentAnalyze extends Fragment {
 
     private FragmentAnalyzeBinding binding;
     private MainViewModel mainViewModel;
-    private SensorCamera cam;
     private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
     TextView tvStatus;
     ImageView imageView;
     PreviewView previewView;
-
+    Bitmap analysisBitMap;
     Button buttonAnalyze;
     Button buttonAnalyzeSample;
     TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5, tvAnalyze6;
@@ -59,7 +56,7 @@ public class FragmentAnalyze extends Fragment {
 
         setupCameraPreview();
         setupButtons();
-//        setupLiveDataObservers();
+        setupLiveDataObservers();
 
 
         return root;
@@ -77,9 +74,9 @@ public class FragmentAnalyze extends Fragment {
         buttonAnalyze.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Run calibration logic when taking the first photo
-                doButtonTakePhoto();
-                Log.d("CIS 4444", "Calibrate button clicked");   // log button click for debugging
+                // Run analysis logic when taking the first photo
+                Log.d("CIS 4444", "Analysis button clicked");   // log button click for debugging
+                analyzeFromPhoto();
             }
         });
 
@@ -88,47 +85,56 @@ public class FragmentAnalyze extends Fragment {
         buttonAnalyzeSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 4444", "Calibrate with Samples button clicked");   // log button click for debugging
-                calibrateFromSampleImage();
+                Log.d("CIS 4444", "Analysus with Samples button clicked");   // log button click for debugging
+                analyzeFromSampleImage();
             }
         });
     }  // end SetupButtons
 
     private void setupCameraPreview() {
-        Log.i("CIS4444", "Fragment Calibrarte --- setupCameraPreview");
-        cam =((MainActivity)getActivity()).cam;
-        mainViewModel.initializeCamera(cam);
+        Log.i("CIS4444", "Fragment Analysis --- setupCameraPreview");
+        mainViewModel.setCameraPreview(previewView);
     }
 
-//    private void setupLiveDataObservers() {
-//        // Observe the LiveData for bitmapAvailable
-//        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
-//            @Override
-//            public void onChanged(Boolean isAvailable) {
-//                bitmapAvailable = isAvailable;
-//                if (bitmapAvailable) {
-//                    // Get the bitmap from the ViewModel
-//                    Bitmap photoBitmap = mainViewModel.getCalibrationBitmap();
-//
-//                    // Display the photo bitmap in the imageView
-//                    imageView.setImageBitmap(photoBitmap);
-//                } else {
-//                    tvStatus.setText("Bitmap not available");
-//                }
-//            }
-//        });
-//    }
+    private void setupLiveDataObservers() {
+        // Observe the LiveData for bitmapAvailable
+        mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAvailable) {
+                bitmapAvailable = isAvailable;
+                if (bitmapAvailable) {
+                    readingsAvailableUpdateUI();
+                } else {
+                    Log.i("CIS4444", "Fragment Analysis --- LiveData --- bitmap NOT Available");
+                    tvStatus.setText("Bitmap not available");
+                }
+            }
+        });
+    }
 
-    private void doButtonTakePhoto() {
+    private void readingsAvailableUpdateUI() {
+        Log.i("CIS4444", "Fragment Analysis --- LiveData --- bitmap Available");
+        // Run Analysis logic when taking the first photo
+        mainViewModel.retrieveAnalysisBitmapFromCamera();
+        mainViewModel.doAnalysis();
+        // Get the bitmap from the ViewModel
+        analysisBitMap = mainViewModel.getAnalysisBitmap();
+        if (analysisBitMap == null) {
+            Log.i("CIS4444", "Fragment Analysis --- analysisBitMap still NULL");
+        } else {
+            // Display the photo bitmap in the imageView
+            imageView.setImageBitmap(analysisBitMap);
+            // Update the UI with new analysis readings
+            updateAnalyzeUI();
+        }
+    }
+
+    private void analyzeFromPhoto() {
         if (isPreviewVisible) {
             mainViewModel.takePhoto();
-            imageView.setImageBitmap(mainViewModel.calibrationBitMap);
-
-            // Run calibration logic when taking the first photo
-            mainViewModel.doCalibration();
 
             // Change the button text and disable it
-            buttonAnalyze.setText("Next Reading");
+            buttonAnalyze.setText("Processing");
             buttonAnalyze.setEnabled(false);
 
             // Make the previewView invisible and imageViewCamera visible
@@ -143,25 +149,26 @@ public class FragmentAnalyze extends Fragment {
             imageView.setVisibility(View.INVISIBLE);
 
             // Change the button text back to "Take Photo" and enable it
-            buttonAnalyze.setText("Take Photo");
+            buttonAnalyze.setText("Take  Analysis Photo");
             buttonAnalyze.setEnabled(true);
-
-            // Run analysis logic when taking the second photo
-            mainViewModel.doAnalysis();
 
             isPreviewVisible = true;
         }
     }
 
-    private void calibrateFromSampleImage() {
-        Log.i("CIS4444", "Load sample image to Calibrate");
+    private void analyzeFromSampleImage() {
         // Use the resource identifier to load the sample image
-        Bitmap sampleBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
-        Log.i("CIS4444", "Sample image size width="+sampleBitmap.getWidth()+ " and height="+sampleBitmap.getHeight());
-
-        mainViewModel.setCalibrationBitMap(sampleBitmap);
-        mainViewModel.doCalibration();
+        analysisBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        Log.i("CIS4444", "Sample image size width="+analysisBitMap.getWidth()+ " and height="+analysisBitMap.getHeight());
+        mainViewModel.setAnalysisBitMap(analysisBitMap);
+        mainViewModel.doAnalysis();
+        // Display the photo bitmap in the imageView
+        imageView.setImageBitmap(analysisBitMap);
+        // Update the UI with new calibration readings
         updateAnalyzeUI();
+        // Make the previewView invisible and imageViewCamera visible
+        previewView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.VISIBLE);
     }
 
     private void updateAnalyzeUI() {
@@ -172,7 +179,9 @@ public class FragmentAnalyze extends Fragment {
         tvAnalyze4.setText(mainViewModel.calibrationIntensities.get(3).toString());
         tvAnalyze5.setText(mainViewModel.calibrationIntensities.get(4).toString());
         tvAnalyze6.setText(mainViewModel.calibrationIntensities.get(5).toString());
-
+        // Change the button text and disable it
+        buttonAnalyze.setText("Another Analysis?");
+        buttonAnalyze.setEnabled(true);
     }
 
 

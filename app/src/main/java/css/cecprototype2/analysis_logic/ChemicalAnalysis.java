@@ -19,6 +19,7 @@ public class ChemicalAnalysis {
     public ArrayList<Double> analysisReadings;
     public ArrayList<Double> analysisConcentrations;
     public LinearRegression linearRegressionModel;
+    public boolean calibrateCompleted = false;              // flag showing calibration is done and analysis is available
 
     public Double getCalibrationIntensity(int key) {
         return calibrationConcentrations.get(key);
@@ -51,10 +52,11 @@ public class ChemicalAnalysis {
         //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
         sheetWriter.writeCalibrationToSheets(calibrationIntensities);
+        calibrateCompleted = true;          // turn on flag that calibration is done and analysis can be performed.
         return calibrationIntensities;
     }
 
-    public void Analyze(RegionFinder regions, Bitmap fullAnalysisImage) {
+    public List<Double> Analyze(RegionFinder regions, SheetWriter sheetWriter, Bitmap fullAnalysisImage) {
         analysisReadings = new ArrayList<>();
         analysisConcentrations = new ArrayList<>();
         //for each region, get intensity of given region from fullAnalysisImage parameter and add it to analysisReadings list, then run LRM.predict() and add to analysisConcentrations.
@@ -63,5 +65,8 @@ public class ChemicalAnalysis {
             analysisReadings.add(currentAnalysisFluorescence);
             analysisConcentrations.add(linearRegressionModel.predict(currentAnalysisFluorescence));
         }
+        // TODO: write analsysis to sheets
+        //sheetWriter.writeAnalysisToSheets(calibrationIntensities);
+        return analysisConcentrations;
     }
 }

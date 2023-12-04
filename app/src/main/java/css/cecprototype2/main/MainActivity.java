@@ -9,6 +9,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 //import org.apache.commons.math3.stat.regression.SimpleRegression;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -27,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);      // Step 1 of hiding the title bar
+        getSupportActionBar().hide();                       // Step 2 of hiding the title bar
         setupNavBindings();
 
         mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
+        setupCamera();
     }
 
     private void setupCamera() {
