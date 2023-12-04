@@ -29,28 +29,27 @@ public class SheetWriter {
 
     public void writeCalibrationToSheets(ArrayList<Double> calibrateValues) {
         // TODO: the url should be stored in the string.xml file
-        String url = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec";
-
+        //String url = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec";
+        String url1 = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec?action=calibrate";
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url1,
                 response -> Log.d("CIS 4444", "HTTP Response Received: " + response),
                 error -> Log.d("CIS 4444", "HTTP Error Received: " + error)
-        )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Log.d("CIS 4444", "Params being set");
-                    Map<String, String> params = new HashMap<>();
-                    params.put("action", "calibrate");
-                    params.put("date", "today");
-                    params.put("c1", calibrateValues.get(0).toString());
-                    params.put("c2", calibrateValues.get(1).toString());
-                    params.put("c3", calibrateValues.get(2).toString());
-                    params.put("c4", calibrateValues.get(3).toString());
-                    params.put("c5", calibrateValues.get(4).toString());
-                    params.put("c6", calibrateValues.get(5).toString());
-                    return params;
-                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Log.d("CIS 4444", "Params being set");
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "calibrate");
+                params.put("date", "today");
+                params.put("c1", calibrateValues.get(0).toString());
+                params.put("c2", calibrateValues.get(1).toString());
+                params.put("c3", calibrateValues.get(2).toString());
+                params.put("c4", calibrateValues.get(3).toString());
+                params.put("c5", calibrateValues.get(4).toString());
+                params.put("c6", calibrateValues.get(5).toString());
+                return params;
+            }
         };
 
         // Instantiate the RequestQueue.
@@ -60,5 +59,35 @@ public class SheetWriter {
     }
 
     // TODO: Add method to post Analysis data to Google sheet.
+    public void writeAnalysisToSheets(ArrayList<Double> analyzeValues) {
+        // TODO: the url should be stored in the string.xml file
+        //String url = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec";
+        String url2 = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec?action=analysis";
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url2,
+                response -> Log.d("CIS 4444", "HTTP Response Received: " + response),
+                error -> Log.d("CIS 4444", "HTTP Error Received: " + error)
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Log.d("CIS 4444", "Params being set");
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "analysis");
+                params.put("date", "today");
+                params.put("a1", analyzeValues.get(0).toString());
+                params.put("a2", analyzeValues.get(1).toString());
+                params.put("a3", analyzeValues.get(2).toString());
+                params.put("a4", analyzeValues.get(3).toString());
+                params.put("a5", analyzeValues.get(4).toString());
+                params.put("a6", analyzeValues.get(5).toString());
+                return params;
+            }
+        };
 
+        // Instantiate the RequestQueue.
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        // Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+
+    }
 }

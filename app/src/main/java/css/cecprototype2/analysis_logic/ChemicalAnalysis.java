@@ -65,8 +65,7 @@ public class ChemicalAnalysis {
             analysisReadings.add(currentAnalysisFluorescence);
             analysisConcentrations.add(linearRegressionModel.predict(currentAnalysisFluorescence));
         }
-        // TODO: write analsysis to sheets
-        //sheetWriter.writeAnalysisToSheets(calibrationIntensities);
+        sheetWriter.writeAnalysisToSheets(analysisConcentrations);
         return analysisConcentrations;
     }
 }
