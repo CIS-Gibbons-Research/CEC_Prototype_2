@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     public SensorCamera cam;
-    MainViewModel mainViewModel;
+    MainViewModel mainViewModel;        // View model shared with fragments
 
 
     @Override
