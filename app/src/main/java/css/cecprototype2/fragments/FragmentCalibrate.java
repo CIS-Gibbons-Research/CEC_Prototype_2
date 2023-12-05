@@ -160,10 +160,16 @@ public class FragmentCalibrate extends Fragment {
         // Use the resource identifier to load the sample image
         calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
         Log.i("CIS4444", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
-
         mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration();
+        // Display the photo bitmap in the imageView
+        imageView.setImageBitmap(calibrationBitMap);
+        // Update the UI with new calibration readings
         updateCalibrateUI();
+        // Make the previewView invisible and imageViewCamera visible
+        previewView.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.VISIBLE);
+
         drawBoundingBoxes();
     }
 

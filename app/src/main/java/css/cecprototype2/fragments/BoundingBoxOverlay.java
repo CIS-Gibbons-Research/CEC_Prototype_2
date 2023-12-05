@@ -39,6 +39,8 @@ public class BoundingBoxOverlay {
                 currentBitmap.getHeight(),
                 currentBitmap.getConfig()
         );
+        Log.i("CIS4444", "drawBoundingBoxes currentBitmap size = "+ currentBitmap.getWidth() +" x "+currentBitmap.getHeight());
+
         // Step 5: Create a canvas using the new Bitmap
         canvas = new Canvas(bitmapDrawing);
         canvas.drawBitmap(currentBitmap, 0, 0, null);
