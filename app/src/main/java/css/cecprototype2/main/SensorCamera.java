@@ -100,7 +100,7 @@ public class SensorCamera {
     }
 
     private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
-        //Camera Selector Use Case
+        // Camera Selector Use Case
         cameraProvider.unbindAll();
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
@@ -109,28 +109,27 @@ public class SensorCamera {
         // Preview Use Case
         imagePreview = new Preview.Builder().build();
         imagePreview.setSurfaceProvider(previewView.getSurfaceProvider());
-        imagePreview.setTargetRotation(Surface.ROTATION_90);          // Set the desired rotation
+        imagePreview.setTargetRotation(Surface.ROTATION_0); // Set the desired rotation to Surface.ROTATION_0
 
+        Log.i("CIS4444", "startCameraX creating new imageCapture");
 
-        Log.i("CIS4444","startCameraX creating new imageCapture");
         // Create ImageCapture builder and set manual camera settings
         imageCapture = new ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .setFlashMode(ImageCapture.FLASH_MODE_OFF)
-                .setTargetRotation(Surface.ROTATION_90)                 // Set the desired rotation
+                .setTargetRotation(Surface.ROTATION_0) // Set the desired rotation to Surface.ROTATION_0
                 .build();
 
-
         // TODO: Set camera parameters
-        //Camera2Interop.Extender<ImageCapture> extender = new Camera2Interop.Extender<>(imageCapture);
-        //extender.setCaptureRequestOption(CaptureRequest.SENSOR_SENSITIVITY, 1600);
+        // Camera2Interop.Extender<ImageCapture> extender = new Camera2Interop.Extender<>(imageCapture);
+        // extender.setCaptureRequestOption(CaptureRequest.SENSOR_SENSITIVITY, 1600);
 
-        // Now bind all these item to the camera
+        // Now bind all these items to the camera
         cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imagePreview);
 
-        Log.i("CIS4444","startCameraX bindToLifecycle done");
-
+        Log.i("CIS4444", "startCameraX bindToLifecycle done");
     }
+
 
     /**
      *  public abstraction to take photo.
