@@ -149,7 +149,7 @@ public class FragmentAnalyze extends Fragment {
             imageView.setVisibility(View.INVISIBLE);
 
             // Change the button text back to "Take Photo" and enable it
-            buttonAnalyze.setText("Take  Analysis Photo");
+            buttonAnalyze.setText("Analyze");
             buttonAnalyze.setEnabled(true);
 
             isPreviewVisible = true;
@@ -173,14 +173,14 @@ public class FragmentAnalyze extends Fragment {
 
     private void updateAnalyzeUI() {
         // TODO: The textviews should be in a list and this should be a loop
-        tvAnalyze1.setText(mainViewModel.calibrationIntensities.get(0).toString());
-        tvAnalyze2.setText(mainViewModel.calibrationIntensities.get(1).toString());
-        tvAnalyze3.setText(mainViewModel.calibrationIntensities.get(2).toString());
-        tvAnalyze4.setText(mainViewModel.calibrationIntensities.get(3).toString());
-        tvAnalyze5.setText(mainViewModel.calibrationIntensities.get(4).toString());
-        tvAnalyze6.setText(mainViewModel.calibrationIntensities.get(5).toString());
+        tvAnalyze1.setText(mainViewModel.analysisIntensities.get(0).toString());
+        tvAnalyze2.setText(mainViewModel.analysisIntensities.get(1).toString());
+        tvAnalyze3.setText(mainViewModel.analysisIntensities.get(2).toString());
+        tvAnalyze4.setText(mainViewModel.analysisIntensities.get(3).toString());
+        tvAnalyze5.setText(mainViewModel.analysisIntensities.get(4).toString());
+        tvAnalyze6.setText(mainViewModel.analysisIntensities.get(5).toString());
         // Change the button text and disable it
-        buttonAnalyze.setText("Another Analysis?");
+        buttonAnalyze.setText("Reset Analysis?");
         buttonAnalyze.setEnabled(true);
     }
 

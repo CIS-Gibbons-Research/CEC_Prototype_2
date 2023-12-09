@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.camera2.CaptureRequest;
 import android.net.Uri;
 import android.os.Build;
@@ -178,6 +179,12 @@ public class SensorCamera {
                             // Load the saved photo into a Bitmap
                             InputStream is = context.getContentResolver().openInputStream(picUri);
                             currentBitmap = BitmapFactory.decodeStream(is);
+                            // Rotate the bitmap image
+                            Matrix matrix = new Matrix();
+                            matrix.postRotate(90);
+                            currentBitmap = Bitmap.createBitmap(currentBitmap, 0, 0,
+                                    currentBitmap.getWidth(), currentBitmap.getHeight(),
+                                    matrix, true);
                             Log.i("CIS4444","onImageSaved -- currentBitmap set and picUri = "+picUri);
                             bitmapAvailableLiveData.postValue(true);
                         } catch (FileNotFoundException e) {

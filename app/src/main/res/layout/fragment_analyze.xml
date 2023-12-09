@@ -155,7 +155,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="20dp"
-        android:text="Test"
+        android:text="Analyze"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewAnalyze" />
 
@@ -163,7 +163,7 @@
         android:id="@+id/buttonAnalyzeSample"
         android:layout_width="180dp"
         android:layout_height="50dp"
-        android:text="Test with Sample"
+        android:text="Analyze with Sample"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonAnalyze"
         app:layout_constraintTop_toTopOf="@+id/buttonAnalyze" />

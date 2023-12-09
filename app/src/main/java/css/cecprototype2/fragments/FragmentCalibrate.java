@@ -150,7 +150,7 @@ public class FragmentCalibrate extends Fragment {
             imageView.setVisibility(View.INVISIBLE);
 
             // Change the button text back to "Take Photo" and enable it
-            buttonCalibrate.setText("Take Calibration Photo");
+            buttonCalibrate.setText("Calibrate");
             buttonCalibrate.setEnabled(true);
 
             isPreviewVisible = true;
@@ -181,7 +181,7 @@ public class FragmentCalibrate extends Fragment {
         tvCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
         tvCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
         // Change the button text and disable it
-        buttonCalibrate.setText("Another Calibration?");
+        buttonCalibrate.setText("Reset Calibration?");
         buttonCalibrate.setEnabled(true);
     }
 
