@@ -1,5 +1,6 @@
 package css.cecprototype2;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 import css.cecprototype2.analysis_logic.ChemicalAnalysis;
 import css.cecprototype2.analysis_logic.LinearRegression;
+import css.cecprototype2.analysis_logic.SheetWriter;
 import css.cecprototype2.region_logic.Region;
 import css.cecprototype2.region_logic.RegionFinder;
 import css.cecprototype2.region_logic.RegionIntensityExtractor;
@@ -45,13 +47,18 @@ public class ChemicalAnalysisTest {
     @Mock
     Region mockRegion;
 
+    @Mock
+    SheetWriter mockSheetWriter;
+
     private ChemicalAnalysis chemicalAnalysis;
+    private Context context;
 
     @Before
     public void setUp() {
         chemicalAnalysis = new ChemicalAnalysis();
         MockitoAnnotations.openMocks(this);
         chemicalAnalysis.intensityExtractor = mockIntensityExtractor;
+        mockSheetWriter = new SheetWriter(context);
 
     }
 
@@ -73,7 +80,7 @@ public class ChemicalAnalysisTest {
         chemicalAnalysis.calibrationConcentrations = mockCalibrationConcentrations;
 
         // Perform calibration
-        chemicalAnalysis.Calibrate(mockRegionFinder, mockCalibrationImage);
+        chemicalAnalysis.Calibrate(mockRegionFinder, mockSheetWriter, mockCalibrationImage);
 
         // Verify that linearRegressionModel is initialized
         LinearRegression linearRegressionModel = chemicalAnalysis.linearRegressionModel;
@@ -104,7 +111,7 @@ public class ChemicalAnalysisTest {
         //Mockito.when(mockLinearRegression.predict(mockFluorescence)).thenReturn(mockPredictedConcentration);
 
         // Perform analysis
-        chemicalAnalysis.Analyze(mockRegionFinder, mockAnalysisImage);
+        chemicalAnalysis.Analyze(mockRegionFinder, mockSheetWriter, mockAnalysisImage);
 
         // Verify that analysisReadings and analysisConcentrations are populated
         List<Double> analysisReadings = chemicalAnalysis.analysisReadings;
