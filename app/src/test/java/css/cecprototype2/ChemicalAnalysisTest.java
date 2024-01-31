@@ -58,8 +58,8 @@ public class ChemicalAnalysisTest {
         chemicalAnalysis = new ChemicalAnalysis();
         MockitoAnnotations.openMocks(this);
         chemicalAnalysis.intensityExtractor = mockIntensityExtractor;
-        mockSheetWriter = new SheetWriter(context);
-
+        mockSheetWriter = new SheetWriter(this.context);
+        //context = new MockContext();
     }
 
     @Test

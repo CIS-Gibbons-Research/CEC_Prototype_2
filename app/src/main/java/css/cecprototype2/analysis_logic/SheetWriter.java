@@ -28,13 +28,12 @@ public class SheetWriter {
     }
 
     public void writeCalibrationToSheets(ArrayList<Double> calibrateValues) {
-        // TODO: the url should be stored in the string.xml file
-        //String url = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec";
-        String url1 = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec?action=calibrate";
+        // The Google Sheets URL is stored in the strings.xml file
+        String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "String", context.getPackageName()));
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url1,
-                response -> Log.d("CIS 4444", "HTTP Response Received: " + response),
-                error -> Log.d("CIS 4444", "HTTP Error Received: " + error)
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalibrate,
+                response -> {},//Log.d("CIS 4444", "HTTP Response Received: " + response),
+                error -> {}// Log.d("CIS 4444", "HTTP Error Received: " + error)
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -60,17 +59,16 @@ public class SheetWriter {
 
     // TODO: Add method to post Analysis data to Google sheet.
     public void writeAnalysisToSheets(ArrayList<Double> analyzeValues) {
-        // TODO: the url should be stored in the string.xml file
-        //String url = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec";
-        String url2 = "https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec?action=analysis";
+        // The Google Sheets URL is stored in the strings.xml file
+        String urlAnalyze = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_analysis", "String", context.getPackageName()));
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url2,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlAnalyze,
                 response -> Log.d("CIS 4444", "HTTP Response Received: " + response),
                 error -> Log.d("CIS 4444", "HTTP Error Received: " + error)
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Log.d("CIS 4444", "Params being set");
+                //Log.d("CIS 4444", "Params being set");
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "analysis");
                 params.put("date", "today");
