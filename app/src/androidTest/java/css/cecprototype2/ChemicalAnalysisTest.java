@@ -2,15 +2,15 @@ package css.cecprototype2;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +26,7 @@ import css.cecprototype2.region_logic.RegionIntensityExtractor;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class ChemicalAnalysisTest {
 
     @Mock
@@ -50,37 +50,39 @@ public class ChemicalAnalysisTest {
     @Mock
     SheetWriter mockSheetWriter;
 
+    @InjectMocks
     private ChemicalAnalysis chemicalAnalysis;
+
     private Context context;
 
     @Before
     public void setUp() {
-        chemicalAnalysis = new ChemicalAnalysis();
+        // Obtain the context from ApplicationProvider
+        context = ApplicationProvider.getApplicationContext();
         MockitoAnnotations.openMocks(this);
-        chemicalAnalysis.intensityExtractor = mockIntensityExtractor;
-        mockSheetWriter = new SheetWriter(this.context);
-        //context = new MockContext();
+        chemicalAnalysis.linearRegressionModel = mockLinearRegression;
+        chemicalAnalysis.sheetWriter = new SheetWriter(context);
+        mockRegion = new Region(0, 0, 0);
     }
 
     @Test
     public void testCalibrate() {
         // Set up mock data for the region and intensity
-        mockRegion = new Region(0,0,0);
         double mockIntensity = 0.5;
 
         // Mock calibration data with the same size
         ArrayList<Double> mockCalibrationIntensities = new ArrayList<>(Arrays.asList(mockIntensity));
         ArrayList<Double> mockCalibrationConcentrations = new ArrayList<>(Arrays.asList(1.0));
 
-        Mockito.when(mockRegionFinder.getStandardRegions()).thenReturn(Arrays.asList(mockRegion));
-        Mockito.when(mockIntensityExtractor.getRegionIntensity(mockRegion, mockCalibrationImage)).thenReturn(mockIntensity);
+        when(mockRegionFinder.getStandardRegions()).thenReturn(Arrays.asList(mockRegion));
+        when(mockIntensityExtractor.getRegionIntensity(mockRegion, mockCalibrationImage)).thenReturn(mockIntensity);
 
         // Set up mock calibration data with the same size
         chemicalAnalysis.calibrationIntensities = mockCalibrationIntensities;
         chemicalAnalysis.calibrationConcentrations = mockCalibrationConcentrations;
 
         // Perform calibration
-        chemicalAnalysis.Calibrate(mockRegionFinder, mockSheetWriter, mockCalibrationImage);
+        chemicalAnalysis.Calibrate(mockRegionFinder, mockCalibrationImage);
 
         // Verify that linearRegressionModel is initialized
         LinearRegression linearRegressionModel = chemicalAnalysis.linearRegressionModel;
@@ -89,26 +91,22 @@ public class ChemicalAnalysisTest {
 
     @Test
     public void testAnalyze() {
-        mockRegion = new Region(0,0,0);
         // Set up mock data for the region and intensity
         double mockFluorescence = 0.5;
         double mockPredictedConcentration = 0.3;
 
-        ArrayList<Double> mockFlorecenceValues = new ArrayList<Double>(Arrays.asList(mockFluorescence, 0.0));
-        ArrayList<Double> mockConcentrationValues = new ArrayList<Double>(Arrays.asList(mockPredictedConcentration, 0.0));
+        ArrayList<Double> mockFluorescenceValues = new ArrayList<>(Arrays.asList(mockFluorescence, 0.0));
+        ArrayList<Double> mockConcentrationValues = new ArrayList<>(Arrays.asList(mockPredictedConcentration, 0.0));
 
-        mockLinearRegression = new LinearRegression(mockFlorecenceValues, mockConcentrationValues);
+        mockLinearRegression = new LinearRegression(mockFluorescenceValues, mockConcentrationValues);
         chemicalAnalysis.linearRegressionModel = mockLinearRegression;
 
         // Mock behavior for RegionFinder
-        Mockito.when(mockRegionFinder.getStandardRegions()).thenReturn(Arrays.asList(mockRegion));
+        when(mockRegionFinder.getStandardRegions()).thenReturn(Arrays.asList(mockRegion));
 
         // Mock behavior for RegionIntensityExtractor
-        Mockito.when(mockIntensityExtractor.getRegionIntensity(Mockito.eq(mockRegion), Mockito.any(Bitmap.class)))
+        when(mockIntensityExtractor.getRegionIntensity(mockRegion, mockAnalysisImage))
                 .thenReturn(mockFluorescence);
-
-        // Mock behavior for LinearRegression
-        //Mockito.when(mockLinearRegression.predict(mockFluorescence)).thenReturn(mockPredictedConcentration);
 
         // Perform analysis
         chemicalAnalysis.Analyze(mockRegionFinder, mockSheetWriter, mockAnalysisImage);

@@ -20,6 +20,7 @@ public class ChemicalAnalysis {
     public ArrayList<Double> analysisConcentrations;
     public LinearRegression linearRegressionModel;
     public boolean calibrateCompleted = false;              // flag showing calibration is done and analysis is available
+    public SheetWriter sheetWriter;
 
     public Double getCalibrationIntensity(int key) {
         return calibrationConcentrations.get(key);
@@ -33,13 +34,14 @@ public class ChemicalAnalysis {
         return analysisConcentrations.get(key);
     }
 
-    public ChemicalAnalysis() {
+    public ChemicalAnalysis(SheetWriter sheetWriter) {
         //calibration concentrations provided by user, can be changed or placed in values.xml
+        this.sheetWriter = sheetWriter;
         calibrationConcentrations = new ArrayList<>(Arrays.asList(0.1, 0.3, 0.5, 0.7, 0.9, 1.0));
         intensityExtractor = new RegionIntensityExtractor();
     }
 
-    public List<Double> Calibrate(RegionFinder regionsFinder, SheetWriter sheetWriter, Bitmap fullCalibrationImage) {
+    public List<Double> Calibrate(RegionFinder regionsFinder, Bitmap fullCalibrationImage) {
         calibrationIntensities = new ArrayList<>();
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
             regions = regionsFinder.getStandardRegions();

@@ -1,26 +1,35 @@
 package css.cecprototype2;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.BitmapFactory;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.runner.RunWith;
 
 import css.cecprototype2.region_logic.Region;
 import css.cecprototype2.region_logic.RegionIntensityExtractor;
 
+import static org.junit.Assert.assertEquals;
+
+@RunWith(AndroidJUnit4.class)
 public class RegionIntensityExtractorTest {
 
     private RegionIntensityExtractor intensityExtractor;
     private Bitmap mockBitmap;
     private Region mockRegion;
+    private Context context;
 
     @Before
     public void setUp() {
         intensityExtractor = new RegionIntensityExtractor();
-        mockBitmap = createMockBitmap();
+        context = ApplicationProvider.getApplicationContext();
+        mockBitmap = createMockBitmap(context);
         mockRegion = new Region(50, 50, 20);
     }
 
@@ -81,19 +90,9 @@ public class RegionIntensityExtractorTest {
     }
 
     // Helper method to create a mock Bitmap for testing
-    private Bitmap createMockBitmap() {
-        int width = 100;
-        int height = 100;
-        Bitmap.Config config = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = Bitmap.createBitmap(width, height, config);
-
-        // Set some pixels in the mockBitmap to simulate the region
-        for (int x = 40; x < 60; x++) {
-            for (int y = 40; y < 60; y++) {
-                bitmap.setPixel(x, y, Color.rgb(0, 255, 0)); // Green color
-            }
-        }
-
-        return bitmap;
+    private Bitmap createMockBitmap(Context context) {
+        // Load the Bitmap from the resource
+        int resourceId = R.drawable.sample_a; // Assuming 'sample_a.jpg' is in the res/drawable folder
+        return BitmapFactory.decodeResource(context.getResources(), resourceId);
     }
 }

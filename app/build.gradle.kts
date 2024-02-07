@@ -71,10 +71,10 @@ dependencies {
     // needed for Simple Linear Regression
     implementation ("org.apache.commons:commons-math3:3.6.1")
 
-    testImplementation("org.mockito:mockito-core:3.11.2")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.test.ext:junit:1.1.5")
-    testImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("org.mockito:mockito-core:3.11.2")
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     constraints{
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0")

@@ -36,7 +36,7 @@ public class MainViewModel extends AndroidViewModel {
         regions = new ArrayList<>();
         regionFinder = new RegionFinder(application.getApplicationContext());
         sheetWriter = new SheetWriter(application);
-        chemicalAnalysis = new ChemicalAnalysis();
+        chemicalAnalysis = new ChemicalAnalysis(sheetWriter);
     }
     public Bitmap getCalibrationBitmap()
     {
@@ -57,7 +57,7 @@ public class MainViewModel extends AndroidViewModel {
         //calibrationBitMap = cam.currentBitmap;
         setupStandardRegions();
         Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + calibrationBitMap.getHeight() + " | Calibration Bitmap W: " + calibrationBitMap.getWidth());
-        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, sheetWriter, calibrationBitMap);
+        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, calibrationBitMap);
     }
 
     public Bitmap retrieveAnalysisBitmapFromCamera()
