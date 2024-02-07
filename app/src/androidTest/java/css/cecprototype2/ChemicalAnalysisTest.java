@@ -59,6 +59,7 @@ public class ChemicalAnalysisTest {
     public void setUp() {
         // Obtain the context from ApplicationProvider
         context = ApplicationProvider.getApplicationContext();
+        //FIXME: This doesn't work - java.lang.IllegalStateException: Could not initialize plugin: interface org.mockito.plugins.MockMaker
         MockitoAnnotations.openMocks(this);
         chemicalAnalysis.linearRegressionModel = mockLinearRegression;
         chemicalAnalysis.sheetWriter = new SheetWriter(context);

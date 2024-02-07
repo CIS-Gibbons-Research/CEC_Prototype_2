@@ -37,7 +37,7 @@ public class RegionIntensityExtractorTest {
     public void testGetRegionIntensity_ValidInputs() {
         // Test when the inputs are valid
 
-        // Assuming the mockBitmap has a known region with known intensity, adjust the expected value accordingly
+        //TODO: Replace expectedIntensity with a real value
         Double expectedIntensity = 100.0; // Adjust this value based on your expectations
 
         // Call the method to get the region intensity
@@ -65,7 +65,7 @@ public class RegionIntensityExtractorTest {
     public void testGetAlternateRegionIntensity_ValidInputs() {
         // Test when the inputs are valid for getAlternateRegionIntensity
 
-        // Assuming the mockBitmap has a known region with known intensity, adjust the expected value accordingly
+        //TODO: Replace expectedIntensity with a real value
         Integer expectedIntensity = 50; // Adjust this value based on your expectations
 
         // Call the method to get the alternative region intensity
