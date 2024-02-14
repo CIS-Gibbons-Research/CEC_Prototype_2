@@ -96,6 +96,7 @@ public class FragmentAnalyze extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("CIS 4444", "Analysis with Burst button clicked");   // log button click for debugging
+                analyzeFromBurst();
             }
         });
     }  // end SetupButtons
@@ -119,6 +120,14 @@ public class FragmentAnalyze extends Fragment {
                 }
             }
         });
+    }
+
+    private void analyzeFromBurst()
+    {
+        //TODO: Write method to capture a series of photos in succession and average (HDR? CNN?)
+        //Capture multiple images (6-10)
+        //Use some function to consolidate them
+        //Similarly to analyzeFromPhoto(), send consolidated image through our analysis algorithm using viewModel
     }
 
     private void readingsAvailableUpdateUI() {
