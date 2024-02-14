@@ -33,6 +33,7 @@ public class FragmentAnalyze extends Fragment {
     Bitmap analysisBitMap;
     Button buttonAnalyze;
     Button buttonAnalyzeSample;
+    Button buttonAnalyzeBurst;
     TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5, tvAnalyze6;
 
 
@@ -85,8 +86,16 @@ public class FragmentAnalyze extends Fragment {
         buttonAnalyzeSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 4444", "Analysus with Samples button clicked");   // log button click for debugging
+                Log.d("CIS 4444", "Analysis with Samples button clicked");   // log button click for debugging
                 analyzeFromSampleImage();
+            }
+        });
+
+        buttonAnalyzeBurst = binding.buttonAnalyzeBurst;
+        buttonAnalyzeBurst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("CIS 4444", "Analysis with Burst button clicked");   // log button click for debugging
             }
         });
     }  // end SetupButtons
