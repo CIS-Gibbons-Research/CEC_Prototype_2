@@ -2,7 +2,7 @@
     <string name="app_name">Chem Sensor</string>
     <string name="title_home">Home</string>
     <string name="title_fragment2">Calibrate</string>
-    <string name="title_fragement3">Analyze</string>
+    <string name="title_fragment3">Analyze</string>
     <string name="google_sheets_url_calibrate">https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec?action=calibrate</string>
     <string name="google_sheets_url_analysis">https://script.google.com/macros/s/AKfycbzSal1-D3ElMlG0uqULb8xbK9_CD8piExocl2MPUlUe63TWgwYjOqkri5LtaQVNMX4Asw/exec?action=analysis</string>
 </resources>

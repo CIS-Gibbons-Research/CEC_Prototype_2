@@ -29,7 +29,7 @@ public class RegionIntensityExtractorTest {
     public void setUp() {
         intensityExtractor = new RegionIntensityExtractor();
         context = ApplicationProvider.getApplicationContext();
-        mockBitmap = createMockBitmap(context);
+        mockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sample_a);
         mockRegion = new Region(50, 50, 20);
     }
 
@@ -87,12 +87,5 @@ public class RegionIntensityExtractorTest {
 
         // Verify that the result is 0
         assertEquals(0, actualIntensity.intValue());
-    }
-
-    // Helper method to create a mock Bitmap for testing
-    private Bitmap createMockBitmap(Context context) {
-        // Load the Bitmap from the resource
-        int resourceId = R.drawable.sample_a; // Assuming 'sample_a.jpg' is in the res/drawable folder
-        return BitmapFactory.decodeResource(context.getResources(), resourceId);
     }
 }

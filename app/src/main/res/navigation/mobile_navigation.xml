@@ -31,8 +31,8 @@
     <fragment
         android:id="@+id/navigation_analyze"
         android:name="css.cecprototype2.fragments.FragmentAnalyze"
-        android:label="@string/title_fragement3"
-        tools:layout="@layout/fragment_analyze" >
+        android:label="@string/title_fragment3"
+        tools:layout="@layout/fragment_analyze">
         <action
             android:id="@+id/action_navigation_analyze_to_navigation_home"
             app:destination="@id/navigation_home" />

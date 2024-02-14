@@ -18,8 +18,8 @@ public class LinearRegression {
     SimpleRegression regression;
 
     public LinearRegression(List<Double> fluorescenceValues, List<Double> concentrationValues) {
-        //Log.d("LinearRegression", "Fluorescence values size: " + fluorescenceValues.size());
-        //Log.d("LinearRegression", "Concentration values size: " + concentrationValues.size());
+        Log.d("LinearRegression", "Fluorescence values size: " + fluorescenceValues.size());
+        Log.d("LinearRegression", "Concentration values size: " + concentrationValues.size());
 
         if (fluorescenceValues.size() != concentrationValues.size()) {
             throw new IllegalArgumentException("Lists must have the same size");

@@ -40,6 +40,11 @@ public class FragmentAnalyze extends Fragment {
     Button buttonAnalyzeSample;
     Button buttonAnalyzeBurst;
     TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5, tvAnalyze6;
+    private ImageView testImageView;
+
+    public void setTestImageView(ImageView testImageView) {
+        this.testImageView = testImageView;
+    }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -66,6 +71,16 @@ public class FragmentAnalyze extends Fragment {
 
 
         return root;
+    }
+
+    public ImageView getImageView()
+    {
+        return this.imageView;
+    }
+
+    public void setMainViewModel(MainViewModel vm)
+    {
+        this.mainViewModel = vm;
     }
 
     @Override
@@ -127,7 +142,7 @@ public class FragmentAnalyze extends Fragment {
         });
     }
 
-    private void analyzeFromBurst() {
+    public void analyzeFromBurst() {
         // Number of photos to capture in the burst
         int burstCount = 6; // You can adjust this based on your requirements
 
@@ -158,7 +173,7 @@ public class FragmentAnalyze extends Fragment {
     }
 
     // Function to consolidate burst images (e.g., average)
-    private Bitmap consolidateBurstImages(List<Bitmap> burstBitmaps) {
+    public Bitmap consolidateBurstImages(List<Bitmap> burstBitmaps) {
         if (burstBitmaps.isEmpty()) {
             return null;
         }
@@ -185,8 +200,12 @@ public class FragmentAnalyze extends Fragment {
         consolidatedBitmap = Bitmap.createBitmap(consolidatedBitmap, 0, 0, width, height);
         consolidatedBitmap = Bitmap.createScaledBitmap(consolidatedBitmap, width, height, true);
 
+        // Display the consolidated bitmap in the testImageView
+        testImageView.setImageBitmap(consolidatedBitmap);
+
         return consolidatedBitmap;
     }
+
 
     private void readingsAvailableUpdateUI() {
         Log.i("CIS4444", "Fragment Analysis --- LiveData --- bitmap Available");
@@ -245,6 +264,29 @@ public class FragmentAnalyze extends Fragment {
         // Make the previewView invisible and imageViewCamera visible
         previewView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
+    }
+
+
+    //for testing, only called in AndroidTest environment
+    public void displayConsolidatedImage() {
+        // Number of photos to capture in the burst
+        int burstCount = 6; // You can adjust this based on your requirements
+
+        // List to store the captured bitmaps
+        List<Bitmap> burstBitmaps = new ArrayList<>();
+
+        // Capture a series of photos in succession
+        for (int i = 0; i < burstCount; i++) {
+            mainViewModel.takePhoto();
+            mainViewModel.retrieveAnalysisBitmapFromCamera();
+            burstBitmaps.add(mainViewModel.getAnalysisBitmap());
+        }
+
+        // Use some function to consolidate the captured images (e.g., average)
+        Bitmap consolidatedBitmap = consolidateBurstImages(burstBitmaps);
+
+        // Display the consolidated bitmap in the imageView
+        imageView.setImageBitmap(consolidatedBitmap);
     }
 
     private void updateAnalyzeUI() {
