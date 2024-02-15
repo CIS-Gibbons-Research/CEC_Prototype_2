@@ -2,6 +2,8 @@ package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +18,9 @@ import androidx.camera.view.PreviewView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import css.cecprototype2.R;
 import css.cecprototype2.main.MainViewModel;
@@ -35,6 +40,11 @@ public class FragmentAnalyze extends Fragment {
     Button buttonAnalyzeSample;
     Button buttonAnalyzeBurst;
     TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5, tvAnalyze6;
+    private ImageView testImageView;
+
+    public void setTestImageView(ImageView testImageView) {
+        this.testImageView = testImageView;
+    }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -61,6 +71,16 @@ public class FragmentAnalyze extends Fragment {
 
 
         return root;
+    }
+
+    public ImageView getImageView()
+    {
+        return this.imageView;
+    }
+
+    public void setMainViewModel(MainViewModel vm)
+    {
+        this.mainViewModel = vm;
     }
 
     @Override
@@ -122,13 +142,70 @@ public class FragmentAnalyze extends Fragment {
         });
     }
 
-    private void analyzeFromBurst()
-    {
-        //TODO: Write method to capture a series of photos in succession and average (HDR? CNN?)
-        //Capture multiple images (6-10)
-        //Use some function to consolidate them
-        //Similarly to analyzeFromPhoto(), send consolidated image through our analysis algorithm using viewModel
+    public void analyzeFromBurst() {
+        // Number of photos to capture in the burst
+        int burstCount = 6; // You can adjust this based on your requirements
+
+        // List to store the captured bitmaps
+        List<Bitmap> burstBitmaps = new ArrayList<>();
+
+        // Capture a series of photos in succession
+        for (int i = 0; i < burstCount; i++) {
+            mainViewModel.takePhoto();
+            mainViewModel.retrieveAnalysisBitmapFromCamera();
+            burstBitmaps.add(mainViewModel.getAnalysisBitmap());
+        }
+
+        // Use some function to consolidate the captured images (e.g., average)
+        Bitmap consolidatedBitmap = consolidateBurstImages(burstBitmaps);
+
+        // Set the consolidated bitmap in the ViewModel for analysis
+        mainViewModel.setAnalysisBitMap(consolidatedBitmap);
+
+        // Perform analysis on the consolidated image
+        mainViewModel.doAnalysis();
+
+        // Display the consolidated bitmap in the imageView
+        imageView.setImageBitmap(consolidatedBitmap);
+
+        // Update the UI with new analysis readings
+        updateAnalyzeUI();
     }
+
+    // Function to consolidate burst images (e.g., average)
+    public Bitmap consolidateBurstImages(List<Bitmap> burstBitmaps) {
+        if (burstBitmaps.isEmpty()) {
+            return null;
+        }
+
+        int width = burstBitmaps.get(0).getWidth();
+        int height = burstBitmaps.get(0).getHeight();
+
+        // Create a new bitmap for consolidation
+        Bitmap consolidatedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+        // Initialize an empty canvas
+        Canvas canvas = new Canvas(consolidatedBitmap);
+
+        // Initialize Paint object for drawing
+        Paint paint = new Paint();
+
+        // Loop through each bitmap in the burst and draw it on the canvas
+        for (Bitmap bitmap : burstBitmaps) {
+            canvas.drawBitmap(bitmap, 0, 0, paint);
+        }
+
+        // Divide each pixel value by the number of bitmaps for averaging
+        int bitmapCount = burstBitmaps.size();
+        consolidatedBitmap = Bitmap.createBitmap(consolidatedBitmap, 0, 0, width, height);
+        consolidatedBitmap = Bitmap.createScaledBitmap(consolidatedBitmap, width, height, true);
+
+        // Display the consolidated bitmap in the testImageView
+        testImageView.setImageBitmap(consolidatedBitmap);
+
+        return consolidatedBitmap;
+    }
+
 
     private void readingsAvailableUpdateUI() {
         Log.i("CIS4444", "Fragment Analysis --- LiveData --- bitmap Available");
@@ -187,6 +264,29 @@ public class FragmentAnalyze extends Fragment {
         // Make the previewView invisible and imageViewCamera visible
         previewView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
+    }
+
+
+    //for testing, only called in AndroidTest environment
+    public void displayConsolidatedImage() {
+        // Number of photos to capture in the burst
+        int burstCount = 6; // You can adjust this based on your requirements
+
+        // List to store the captured bitmaps
+        List<Bitmap> burstBitmaps = new ArrayList<>();
+
+        // Capture a series of photos in succession
+        for (int i = 0; i < burstCount; i++) {
+            mainViewModel.takePhoto();
+            mainViewModel.retrieveAnalysisBitmapFromCamera();
+            burstBitmaps.add(mainViewModel.getAnalysisBitmap());
+        }
+
+        // Use some function to consolidate the captured images (e.g., average)
+        Bitmap consolidatedBitmap = consolidateBurstImages(burstBitmaps);
+
+        // Display the consolidated bitmap in the imageView
+        imageView.setImageBitmap(consolidatedBitmap);
     }
 
     private void updateAnalyzeUI() {

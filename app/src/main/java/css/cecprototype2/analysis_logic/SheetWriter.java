@@ -29,7 +29,7 @@ public class SheetWriter {
 
     public void writeCalibrationToSheets(ArrayList<Double> calibrateValues) {
         // The Google Sheets URL is stored in the strings.xml file
-        String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "String", context.getPackageName()));
+        String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "string", context.getPackageName()));
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalibrate,
                 response -> {},//Log.d("CIS 4444", "HTTP Response Received: " + response),
@@ -60,7 +60,7 @@ public class SheetWriter {
     // TODO: Add method to post Analysis data to Google sheet.
     public void writeAnalysisToSheets(ArrayList<Double> analyzeValues) {
         // The Google Sheets URL is stored in the strings.xml file
-        String urlAnalyze = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_analysis", "String", context.getPackageName()));
+        String urlAnalyze = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_analysis", "string", context.getPackageName()));
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlAnalyze,
                 response -> Log.d("CIS 4444", "HTTP Response Received: " + response),

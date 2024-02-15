@@ -17,12 +17,13 @@ public class RegionFinder
 
     private static final int IMAGE_WIDTH = 3024;
     private static final int IMAGE_HEIGHT = 4032;
+    private Context context;
 
 
     public RegionFinder(Context context)
     {
-        standardRegions = new ArrayList<>();
-        populateStandardRegionsList(context);
+        this.context = context;
+        standardRegions = populateStandardRegionsList(context);
     }
 
 
@@ -32,7 +33,8 @@ public class RegionFinder
         return null;
     }
 
-    public void populateStandardRegionsList(Context context) {
+    public List<Region> populateStandardRegionsList(Context context) {
+        standardRegions = new ArrayList<>();
         // Initialize an array of resource names for x, y, and rad values
         String[] xResourceNames = {"region1_x", "region2_x", "region3_x", "region4_x", "region5_x", "region6_x"};
         String[] yResourceNames = {"region1_y", "region2_y", "region3_y", "region4_y", "region5_y", "region6_y"};
@@ -57,11 +59,13 @@ public class RegionFinder
             Region region = new Region(percentageX, percentageY, percentageRad);
             standardRegions.add(region);
         }
+        return standardRegions;
     }
 
     public List<Region> getStandardRegions()
     {
-        return this.standardRegions;
+        standardRegions = populateStandardRegionsList(this.context);
+        return standardRegions;
     }
     public Region getStandardRegion(int regionNumber)
     {
