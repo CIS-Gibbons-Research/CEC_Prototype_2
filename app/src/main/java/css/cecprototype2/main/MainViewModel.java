@@ -30,6 +30,7 @@ public class MainViewModel extends AndroidViewModel {
     public List<Double> analysisIntensities;
     private ImageStacker imageStacker;
 
+
     public MainViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
@@ -107,9 +108,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void takePhoto() {
         Log.i("CIS4444","MainViewModel --- takePhoto");
-
-        cam.capturePhotoBitmap();
-
+        cam.takePicture();
     }
 
     public void setCalibrationBitMap(Bitmap sampleBitmap) {
@@ -119,8 +118,6 @@ public class MainViewModel extends AndroidViewModel {
     public void setAnalysisBitMap(Bitmap sampleBitmap) {
         analysisBitMap = sampleBitmap;
     }
-
-    // TODO: This is causing an error
 
     public LiveData<Boolean> getBitmapAvailableLiveData() {
         Log.i("CIS4444","MainViewModel --- getBitmapAvailableLiveData = "+ cam.getAvailableLiveData().toString());

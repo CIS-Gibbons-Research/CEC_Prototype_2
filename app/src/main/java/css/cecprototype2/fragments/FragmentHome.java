@@ -28,7 +28,7 @@ public class FragmentHome extends Fragment {
 
     private FragmentHomeBinding binding;
     private Button buttonCalibrate, buttonAnalyze;
-    private EditText etISO, etFocalLength, etAperture;
+    private EditText etISO, etFocus, etExposureTime;
     private MainViewModel mainViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -67,18 +67,18 @@ public class FragmentHome extends Fragment {
     private void setUpEditTexts()
     {
         etISO = binding.etISO;
-        etFocalLength = binding.etFocalLength;
-        etAperture = binding.etAperture;
+        etFocus = binding.etFocus;
+        etExposureTime = binding.etExposureTime;
 
         if (mainViewModel != null && mainViewModel.cam != null)
         {
             mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
-            mainViewModel.cam.setFocalLength(Integer.parseInt(etFocalLength.getText().toString()));
-            mainViewModel.cam.setAperture(Integer.parseInt(etAperture.getText().toString()));
+            mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
+            mainViewModel.cam.setExposureTime(Integer.parseInt(etExposureTime.getText().toString()));
 
             Log.d("HomeFragment", "Cam ISO set to: " +  etISO.getText().toString());
-            Log.d("HomeFragment", "Cam Focal Length set to: " +  etFocalLength.getText().toString());
-            Log.d("HomeFragment", "Cam Aperture set to: " +  etAperture.getText().toString());
+            Log.d("HomeFragment", "Cam Focal Length set to: " +  etFocus.getText().toString());
+            Log.d("HomeFragment", "Cam Exposure Time set to: " +  etExposureTime.getText().toString());
         }
     }
 

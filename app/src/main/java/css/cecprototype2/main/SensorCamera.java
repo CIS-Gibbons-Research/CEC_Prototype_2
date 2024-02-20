@@ -1,139 +1,170 @@
 package css.cecprototype2.main;
 
-import static androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY;
-
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.hardware.camera2.CaptureRequest;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.util.Log;
-
-
-import androidx.annotation.NonNull;
-import androidx.annotation.OptIn;
-import androidx.camera.camera2.interop.Camera2Interop;
-import androidx.camera.camera2.interop.ExperimentalCamera2Interop;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ExperimentalGetImage;
-import androidx.core.content.ContextCompat;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
 import android.graphics.Bitmap;
+import android.hardware.camera2.CaptureRequest;
+import android.util.Log;
+import androidx.annotation.NonNull;
 import android.media.Image;
 import android.view.Surface;
-
-import com.google.common.util.concurrent.ListenableFuture;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
+import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
+import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.ImageReader;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.util.Size;
+import android.util.SparseIntArray;
+import android.view.TextureView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraProvider;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class SensorCamera {
-    private MutableLiveData<Boolean> bitmapAvailableLiveData;   // LiveData to notify the fragments when the photo is ready
-    LifecycleOwner  lifecycleOwner;     // the app context cast to a lifecycleOwner needed for camera
-    Context context;                    // the app context we are running in
-    PreviewView previewView;            // preview widget on fragment's UI
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    ProcessCameraProvider cameraProvider;   // CameraX provider built from Future above
-    ImageCapture imageCapture;              // CameraX imageCaputer object
-    Preview imagePreview;                   // CameraX preview object
-    private Executor executor = Executors.newSingleThreadExecutor();    // thread to run CameraX
-    Bitmap currentBitmap;      // Bitmap from the image proxy
-    float iso, focalLength, aperture;
+        AppCompatActivity context;
+        TextureView textureView;
+        private String cameraId;
+        protected CameraDevice cameraDevice;
+        private static final String TAG = "CIS4444 SensorCamera";
+        private Handler mBackgroundHandler;
+        private HandlerThread mBackgroundThread;
+        protected CameraCaptureSession cameraCaptureSessions;
+        protected CaptureRequest.Builder captureRequestBuilder;
+        private Size imageDimension;
+        private ImageReader imageReader;
+        private MutableLiveData<Boolean> bitmapAvailableLiveData;
+        PreviewView previewView;
+        ProcessCameraProvider cameraProvider;
+        LifecycleOwner lifecycleOwner;
+        ImageCapture imageCapture;
+        Preview imagePreview;
+        Bitmap currentBitmap;
+        private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
 
-    // Constructor: initialize camera
-    public SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner) {
-        // should be passed the application context which is needed by the camera
-        // should also be passed the lifecycleOwner which is also the mainActivity cast to this
-        bitmapAvailableLiveData = new MutableLiveData<>();
-        context = mainActivity;
-        this.lifecycleOwner = lifecycleOwner;
-        startCameraProvider();
-    }
+        private static final int REQUEST_CAMERA_PERMISSION = 200;
 
-    public void startCameraProvider() {
-        Log.i("CIS4444","startCameraProvider ");
-        cameraProviderFuture = ProcessCameraProvider.getInstance(context);
-        cameraProviderFuture.addListener(() -> {
-            try {
-                cameraProvider = cameraProviderFuture.get();
-            } catch (ExecutionException | InterruptedException e) {
-                // No errors need to be handled for this Future.
-                // This should never be reached.
-                Log.i("CIS4444","startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
-            }
-        }, ContextCompat.getMainExecutor(context));
-    }
-
-    /**
-     * Each Fragment calls this to update the camera preview to the one used by that fragement.
-     *     Do not start up the camera and bind it to the preview until this is called and preview is set
-     * @param previewView
-     */
-    public void updateCameraPreview(PreviewView previewView) {
-        this.previewView = previewView;
-        startCameraX(cameraProvider, previewView);
-
-    }
-    public LiveData<Boolean> getAvailableLiveData() {
-        return bitmapAvailableLiveData;
-    }
-
-    public void setISO(float iso) {
-        this.iso = iso;
-        updateCameraParameters();
-    }
-
-    public void setFocalLength(float focalLength) {
-        this.focalLength = focalLength;
-        updateCameraParameters();
-    }
-
-    public void setAperture(float aperture) {
-        this.aperture = aperture;
-        updateCameraParameters();
-    }
-
-    private void updateCameraParameters() {
-
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-
-        if (imageCapture != null) {
-            // Update ImageCapture configuration directly
-            imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
-            imageCapture.setTargetRotation(Surface.ROTATION_0);
-
-            // Bind the updated configuration to the camera
-            cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imagePreview);
+        private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+        static {
+            ORIENTATIONS.append(Surface.ROTATION_0, 90);
+            ORIENTATIONS.append(Surface.ROTATION_90, 0);
+            ORIENTATIONS.append(Surface.ROTATION_180, 270);
+            ORIENTATIONS.append(Surface.ROTATION_270, 180);
         }
-    }
+
+        private final int photoWidth = 1920;
+        private final int photoHeight = 1440;
+
+        public SensorCamera(AppCompatActivity appContext, TextureView textureView, LifecycleOwner lifecycleOwner) {
+            this.context = appContext;
+            this.textureView = textureView;
+            bitmapAvailableLiveData = new MutableLiveData<>();
+            this.lifecycleOwner = lifecycleOwner;
+            startCameraProvider();
+        }
+
+        public void startCameraProvider() {
+            Log.i("CIS4444","startCameraProvider ");
+            cameraProviderFuture = ProcessCameraProvider.getInstance(context);
+            cameraProviderFuture.addListener(() -> {
+                try {
+                    cameraProvider = cameraProviderFuture.get();
+                } catch (ExecutionException | InterruptedException e) {
+                    // No errors need to be handled for this Future.
+                    // This should never be reached.
+                    Log.e(TAG,"startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
+                }
+            }, ContextCompat.getMainExecutor(context));
+        }
+
+        private float focus;
+        public float setFocus(int newFocus){
+            focus = newFocus;
+            Log.d("CIS4444", "focus distance set to "+focus);
+            return focus;
+        }
+
+        private Integer iso;
+        public Integer setISO(int newIso){
+            // range of 100 to 1000
+            iso = newIso;
+            Log.d("CIS4444", "ISO set to "+iso);
+            return iso;
+        }
+
+        private Long exposureTime;
+        public Long setExposureTime(int milSec){
+            // range of
+            exposureTime = 100_000L *milSec + 20_000L;
+            Log.d("CIS4444", "exposureTime set to "+exposureTime);
+            return  exposureTime;
+        }
+
+        private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+            @Override
+            public void onOpened(CameraDevice camera) {
+                //This is called when the camera is open
+                Log.e(TAG, "onOpened");
+                cameraDevice = camera;
+                createCameraPreview();
+            }
+
+            @Override
+            public void onDisconnected(CameraDevice camera) {
+                cameraDevice.close();
+            }
+
+            @Override
+            public void onError(CameraDevice camera, int error) {
+                cameraDevice.close();
+                cameraDevice = null;
+            }
+        };
+        final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
+            @Override
+            public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                super.onCaptureCompleted(session, request, result);
+                // TODO fix this --- Toast.makeText(context, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                createCameraPreview();
+            }
+        };
 
     private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
-        // Camera Selector Use Case
+
         cameraProvider.unbindAll();
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
@@ -153,85 +184,235 @@ public class SensorCamera {
                 .setTargetRotation(Surface.ROTATION_0) // Set the desired rotation to Surface.ROTATION_0
                 .build();
 
-        // TODO: Set camera parameters
-        // Camera2Interop.Extender<ImageCapture> extender = new Camera2Interop.Extender<>(imageCapture);
-        // extender.setCaptureRequestOption(CaptureRequest.SENSOR_SENSITIVITY, 1600);
-
-        // Now bind all these items to the camera
         cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imagePreview);
 
         Log.i("CIS4444", "startCameraX bindToLifecycle done");
     }
 
 
-    /**
-     *  public abstraction to take photo.
-     *     -- remember that updateCameraPreview must be called before this
-     */
-    public void capturePhotoBitmap() {
-        capturePhotoProvider();
-        //  return currentBitmap;   // Bitmap captured async so availalbe later with livedata update
-    }
-    
-
-    /**
-     *  Use the camera Capture method to save an image from the camera to a file
-     */
-    private void capturePhotoProvider() {
-        Log.i("CIS4444","Trying to Capture Photo");
-        // Notify observers that the bitmap is not available
-        bitmapAvailableLiveData.postValue(false);
-
-        String name = new SimpleDateFormat("yyyy_MM_dd_HHmmss", Locale.US).format(new Date());
-        name = "CECsensor_"+name;
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/ChemTest");
+        public LiveData<Boolean> getAvailableLiveData() {
+            return bitmapAvailableLiveData;
         }
 
-        // Create output options object which contains file + metadata
-        ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
-                .Builder(context.getContentResolver(),
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues).build();
+        public void updateCameraPreview(PreviewView previewView) {
+            this.previewView = previewView;
+            if (cameraProvider != null) {
+                startCameraX(cameraProvider, previewView);
+                Log.d(TAG, "CameraX Preview Updating...");
+            }else {Log.e(TAG, "CameraX Update Failed - CameraProvider is Null");}
 
-        executor = Executors.newSingleThreadExecutor();
-        Log.i("CIS4444","Trying to Capture Photo 2 -- "+ outputFileOptions.toString());
+        }
 
-        imageCapture.takePicture(
-                outputFileOptions,
-                executor,
-                new ImageCapture.OnImageSavedCallback () {
-                    @Override
-                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        try {
-                            Uri picUri = outputFileResults.getSavedUri();
-                            // Load the saved photo into a Bitmap
-                            InputStream is = context.getContentResolver().openInputStream(picUri);
-                            currentBitmap = BitmapFactory.decodeStream(is);
-                            // Rotate the bitmap image
-                            Matrix matrix = new Matrix();
-                            matrix.postRotate(90);
-                            currentBitmap = Bitmap.createBitmap(currentBitmap, 0, 0,
-                                    currentBitmap.getWidth(), currentBitmap.getHeight(),
-                                    matrix, true);
-                            Log.i("CIS4444","onImageSaved -- currentBitmap set and picUri = "+picUri);
-                            bitmapAvailableLiveData.postValue(true);
-                        } catch (FileNotFoundException e) {
-                            Log.i("CIS4444","onImageSaved -- exception  = "+e.getMessage());
-                            throw new RuntimeException(e);
-                        }
-                        Log.i("CIS4444","onImageSaved -- Photo openned at bitmap with width = "+currentBitmap.getWidth());
+        public void takePicture() {
+            if (null == cameraDevice) {
+                Log.e(TAG, "cameraDevice is null");
+                return;
+            }
+            CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+            try {
+                ImageReader reader = ImageReader.newInstance(photoWidth, photoHeight, ImageFormat.JPEG, 1);
+                List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+                outputSurfaces.add(reader.getSurface());
+                outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
+                Log.d(TAG, "takePicture --- creating captureBuilder");
+                final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                captureBuilder.addTarget(reader.getSurface());
+                captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);             // set to manual flash control
+                captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);                       // set flash off
+                captureBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, 0);                             // set
+                captureBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, focus);                                      // set focal distance
+                captureBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);                                         // set ISO sensitivity                 // 66600000 nanoseconds is 1/15sec
+                captureBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exposureTime);
+
+                Log.d(TAG, "takePicture --- done setting up camera attributes");
+
+
+                File dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+                File chemTestFolder = new File(dcimFolder, "ChemTest");
+
+                if (!chemTestFolder.exists()) {
+                    Log.d(TAG, "DCIM/ChemTest folder does not exist, creating it.");
+                    chemTestFolder.mkdirs();
                 }
-                    @Override
-                    public void onError(@NonNull ImageCaptureException error) {
-                        Log.i("CIS4444","onImageSaved -- onError");
-                        error.printStackTrace();
-                    }
-                });
+                String dateName = new SimpleDateFormat("yyyy_MM_dd_HHmmss", Locale.US).format(new Date());
+                final File file = new File(chemTestFolder,"/CECsensor_"+dateName+".jpg");
 
-    }
+                Log.d(TAG, "takePicture --- setting up OnImageAvailableListener");
+
+                ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
+                    @Override
+                    public void onImageAvailable(ImageReader reader) {
+                        Log.d(TAG, "takePicture --- onImageAvailable");
+                        mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), file));
+                    }
+                    private void save(byte[] bytes) throws IOException {
+                        Log.d(TAG, "takePicture --- save");
+
+                        OutputStream output = null;
+                        try {
+                            output = new FileOutputStream(file);
+                            output.write(bytes);
+                        } finally {
+                            if (null != output) {
+                                output.close();
+                            }
+                        }
+                    }
+                };
+                Log.d(TAG, "takePicture --- setting up setOnImageAvailableListener");
+                reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
+                final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+                    @Override
+                    public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                        Log.d(TAG, "takePicture --- CameraCaptureSession");
+                        super.onCaptureCompleted(session, request, result);
+                        Toast.makeText(context, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                        createCameraPreview();
+                    }
+                };
+                Log.d(TAG, "takePicture --- setting up createCaptureSession");
+                cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
+                    @Override
+                    public void onConfigured(CameraCaptureSession session) {
+                        try {
+                            Log.d(TAG, "takePicture --- onConfigured");
+                            session.capture(captureBuilder.build(), captureListener, mBackgroundHandler);
+                        } catch (CameraAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onConfigureFailed(CameraCaptureSession session) {
+                    }
+                }, mBackgroundHandler);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * Saves a JPEG {@link Image} into the specified {@link File}.
+         */
+        private static class ImageSaver implements Runnable {
+
+            /**
+             * The JPEG image
+             */
+            private final Image mImage;
+            /**
+             * The file we save the image into.
+             */
+            private final File mFile;
+
+            ImageSaver(Image image, File file) {
+                mImage = image;
+                mFile = file;
+            }
+
+            @Override
+            public void run() {
+                Log.d(TAG, "ImageSaver --- run()");
+                ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
+                byte[] bytes = new byte[buffer.remaining()];
+                buffer.get(bytes);
+                FileOutputStream output = null;
+                try {
+                    output = new FileOutputStream(mFile);
+                    output.write(bytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    mImage.close();
+                    if (null != output) {
+                        try {
+                            output.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        protected void createCameraPreview() {
+            try {
+                Log.d(TAG, "createCameraPreview ");
+                SurfaceTexture texture = textureView.getSurfaceTexture();
+                assert texture != null;
+                texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
+                Surface surface = new Surface(texture);
+                captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+                captureRequestBuilder.addTarget(surface);
+                cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+                    @Override
+                    public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        //The camera is already closed
+                        if (null == cameraDevice) {
+                            Log.e(TAG, "createCameraPreview --- onConfigured -- device null, camera already closed");
+                            return;
+                        }
+                        // When the session is ready, we start displaying the preview.
+                        cameraCaptureSessions = cameraCaptureSession;
+                        Log.d(TAG, "createCameraPreview --- onConfigured -- about to call updatePreview()");
+                        updatePreview();
+                    }
+
+                    @Override
+                    public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        Log.e(TAG, "createCameraPreview --- onConfigureFailed");
+                        Toast.makeText(context, "Configuration change", Toast.LENGTH_SHORT).show();
+                    }
+                }, null);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void openCamera() {
+            CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+            Log.d(TAG, "is camera open");
+            try {
+                cameraId = manager.getCameraIdList()[0];
+                CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+                StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                assert map != null;
+                imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
+                // Add permission for camera and let user grant the permission
+                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(context, new String[]{android.Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                    return;
+                }
+                manager.openCamera(cameraId, stateCallback, null);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+            Log.d(TAG, "openCamera done");
+        }
+
+        protected void updatePreview() {
+            if (null == cameraDevice) {
+                Log.e(TAG, "updatePreview error, return");
+            }
+            captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            try {
+                cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void closeCamera() {
+            if (null != cameraDevice) {
+                cameraDevice.close();
+                cameraDevice = null;
+            }
+            if (null != imageReader) {
+                imageReader.close();
+                imageReader = null;
+            }
+        }
 
 }

@@ -7,8 +7,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.Window;
 //import org.apache.commons.math3.stat.regression.SimpleRegression;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -17,17 +19,16 @@ import css.cecprototype2.R;
 import css.cecprototype2.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
-    // test comment -- delete later
-
     private ActivityMainBinding binding;
     public SensorCamera cam;
     MainViewModel mainViewModel;        // View model shared with fragments
+    Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this.getApplicationContext();
         requestWindowFeature(Window.FEATURE_NO_TITLE);      // Step 1 of hiding the title bar
         getSupportActionBar().hide();                       // Step 2 of hiding the title bar
         setupNavBindings();
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupCamera() {
         Log.i("CIS4444", "Main Activity --- setupCamera");
-        cam = new SensorCamera(this, this);
+        cam = new SensorCamera(this, new TextureView(context), this);
         mainViewModel.initializeCamera(cam);
     }
 
