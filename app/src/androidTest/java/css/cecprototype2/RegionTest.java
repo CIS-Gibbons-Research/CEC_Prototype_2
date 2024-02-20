@@ -25,7 +25,8 @@ public class RegionTest {
     public void setUp()
     {
         context = ApplicationProvider.getApplicationContext();
-        wholeImageBitmap = createMockBitmap(context);
+        int resourceId = R.drawable.sample_a;
+        wholeImageBitmap = BitmapFactory.decodeResource(context.getResources(), resourceId);;
     }
     @Test
     public void testGetBitmapRegion_ValidInputs() {
@@ -73,12 +74,5 @@ public class RegionTest {
         Bitmap regionBitmapZeroRadius = regionZeroRadius.getBitmapRegion(wholeImageBitmap);
         // Verify that the result is null
         assertNull(regionBitmapZeroRadius);
-    }
-
-    // Helper method to create a sample bitmap for testing
-    private Bitmap createMockBitmap(Context context) {
-        // Load the Bitmap from the resource
-        int resourceId = R.drawable.sample_a; // Assuming 'sample_a.jpg' is in the res/drawable folder
-        return BitmapFactory.decodeResource(context.getResources(), resourceId);
     }
 }
