@@ -56,7 +56,7 @@ public class RegionFinder
             int percentageRad = Math.round((float) radValue / Math.min(IMAGE_WIDTH, IMAGE_HEIGHT) * 100);
 
             // Create a Region object with the converted values
-            Region region = new Region(percentageX, percentageY, percentageRad);
+            Region region = new Region(percentageX, percentageY, percentageRad, 1.0);
             standardRegions.add(region);
         }
         return standardRegions;

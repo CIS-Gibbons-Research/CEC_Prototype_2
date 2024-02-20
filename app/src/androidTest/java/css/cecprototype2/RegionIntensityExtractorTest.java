@@ -30,7 +30,7 @@ public class RegionIntensityExtractorTest {
         intensityExtractor = new RegionIntensityExtractor();
         context = ApplicationProvider.getApplicationContext();
         mockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.sample_a);
-        mockRegion = new Region(50, 50, 20);
+        mockRegion = new Region(50, 50, 20, 1.0);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class RegionIntensityExtractorTest {
         // Test when there are no pixels in the region
 
         // Set up a mockRegion with zero radius to ensure no pixels in the region
-        Region regionNoPixels = new Region(50, 50, 0);
+        Region regionNoPixels = new Region(50, 50, 0, 1.0);
 
         // Call the method to get the region intensity
         Double actualIntensity = intensityExtractor.getRegionIntensity(regionNoPixels, mockBitmap);
@@ -80,7 +80,7 @@ public class RegionIntensityExtractorTest {
         // Test when there are no pixels in the region that meet the criteria
 
         // Set up a mockRegion with a high GREEN_THRESHOLD to ensure no pixels meet the criteria
-        Region regionNoPixelsMeetCriteria = new Region(50, 50, 20);
+        Region regionNoPixelsMeetCriteria = new Region(50, 50, 20, 1.0);
 
         // Call the method to get the alternative region intensity
         Double actualIntensity = intensityExtractor.getAlternateRegionIntensity(regionNoPixelsMeetCriteria, mockBitmap);

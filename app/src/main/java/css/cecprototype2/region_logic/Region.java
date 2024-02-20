@@ -7,11 +7,23 @@ import android.util.Log;
 public class Region
 {
     private int x,y,rad;
+    private double multiplier;
 
-    public Region(int x, int y, int rad) {
+    public Region(int x, int y, int rad, double multiplier) {
         this.x = x;
         this.y = y;
         this.rad = rad;
+        this.multiplier = multiplier;
+    }
+
+    public double getMultiplier()
+    {
+        return this.multiplier;
+    }
+
+    public void setMultiplier(double multiplier)
+    {
+        this.multiplier = multiplier;
     }
 
     public int getX() {

@@ -32,7 +32,7 @@ public class RegionTest {
         // Test when the inputs are valid
 
         // Create a Region object
-        Region region = new Region(50, 50, 20);
+        Region region = new Region(50, 50, 20, 1.0);
 
         // Call the getBitmapRegion method
         Bitmap regionBitmap = region.getBitmapRegion(wholeImageBitmap);
@@ -49,14 +49,14 @@ public class RegionTest {
     public void testGetBitmapRegion_NegativeInputs() {
         // Test when x or y is negative
         // Create a Region object with negative x
-        Region regionNegativeX = new Region(-10, 50, 20);
+        Region regionNegativeX = new Region(-10, 50, 20, 1.0);
         // Call the getBitmapRegion method
         Bitmap regionBitmapNegativeX = regionNegativeX.getBitmapRegion(wholeImageBitmap);
         // Verify that the result is null
         assertNull(regionBitmapNegativeX);
 
         // Create a Region object with negative y
-        Region regionNegativeY = new Region(50, -10, 20);
+        Region regionNegativeY = new Region(50, -10, 20, 1.0);
         // Call the getBitmapRegion method
         Bitmap regionBitmapNegativeY = regionNegativeY.getBitmapRegion(wholeImageBitmap);
         // Verify that the result is null
@@ -68,7 +68,7 @@ public class RegionTest {
         // Test when the radius is zero
 
         // Create a Region object with radius zero
-        Region regionZeroRadius = new Region(50, 50, 0);
+        Region regionZeroRadius = new Region(50, 50, 0, 1.0);
         // Call the getBitmapRegion method
         Bitmap regionBitmapZeroRadius = regionZeroRadius.getBitmapRegion(wholeImageBitmap);
         // Verify that the result is null
