@@ -7,7 +7,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +25,8 @@ import java.util.Map;
 public class SheetWriter {
 
     Context context;        // we need the app context to write the Volley HTTP post
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now;
 
     public SheetWriter(Context context) {
         this.context = context;
@@ -71,7 +76,8 @@ public class SheetWriter {
                 //Log.d("CIS 4444", "Params being set");
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "analysis");
-                params.put("date", "today");
+                now = LocalDateTime.now();
+                params.put("date", String.valueOf(now));
                 params.put("a1", analyzeValues.get(0).toString());
                 params.put("a2", analyzeValues.get(1).toString());
                 params.put("a3", analyzeValues.get(2).toString());
