@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import css.cecprototype2.R;
+import css.cecprototype2.main.ImageStacker;
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.databinding.FragmentAnalyzeBinding;
 
@@ -144,10 +145,13 @@ public class FragmentAnalyze extends Fragment {
 
     public void analyzeFromBurst() {
         // Number of photos to capture in the burst
-        int burstCount = 6; // You can adjust this based on your requirements
+        int burstCount = 6;
 
         // List to store the captured bitmaps
         List<Bitmap> burstBitmaps = new ArrayList<>();
+
+        // Create a new ImageStacker instance for this burst
+        ImageStacker burstImageStacker = new ImageStacker();
 
         // Capture a series of photos in succession
         for (int i = 0; i < burstCount; i++) {
@@ -156,8 +160,11 @@ public class FragmentAnalyze extends Fragment {
             burstBitmaps.add(mainViewModel.getAnalysisBitmap());
         }
 
+        // Set the ImageStacker for the mainViewModel
+        mainViewModel.setImageStacker(burstImageStacker);
+
         // Use some function to consolidate the captured images (e.g., average)
-        Bitmap consolidatedBitmap = consolidateBurstImages(burstBitmaps);
+        Bitmap consolidatedBitmap = burstImageStacker.averagePixelValues(burstBitmaps);
 
         // Set the consolidated bitmap in the ViewModel for analysis
         mainViewModel.setAnalysisBitMap(consolidatedBitmap);
@@ -172,38 +179,14 @@ public class FragmentAnalyze extends Fragment {
         updateAnalyzeUI();
     }
 
-    // Function to consolidate burst images (e.g., average)
     public Bitmap consolidateBurstImages(List<Bitmap> burstBitmaps) {
-        if (burstBitmaps.isEmpty()) {
-            return null;
+        if (burstBitmaps == null || burstBitmaps.isEmpty()) {
+            return null; // Handle empty or null list
         }
 
-        int width = burstBitmaps.get(0).getWidth();
-        int height = burstBitmaps.get(0).getHeight();
-
-        // Create a new bitmap for consolidation
-        Bitmap consolidatedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-
-        // Initialize an empty canvas
-        Canvas canvas = new Canvas(consolidatedBitmap);
-
-        // Initialize Paint object for drawing
-        Paint paint = new Paint();
-
-        // Loop through each bitmap in the burst and draw it on the canvas
-        for (Bitmap bitmap : burstBitmaps) {
-            canvas.drawBitmap(bitmap, 0, 0, paint);
-        }
-
-        // Divide each pixel value by the number of bitmaps for averaging
-        int bitmapCount = burstBitmaps.size();
-        consolidatedBitmap = Bitmap.createBitmap(consolidatedBitmap, 0, 0, width, height);
-        consolidatedBitmap = Bitmap.createScaledBitmap(consolidatedBitmap, width, height, true);
-
-        // Display the consolidated bitmap in the testImageView
-        testImageView.setImageBitmap(consolidatedBitmap);
-
-        return consolidatedBitmap;
+        // Implement your logic to consolidate burst images (e.g., averaging)
+        ImageStacker imageStacker = new ImageStacker();
+        return imageStacker.averagePixelValues(burstBitmaps);
     }
 
 
@@ -264,29 +247,6 @@ public class FragmentAnalyze extends Fragment {
         // Make the previewView invisible and imageViewCamera visible
         previewView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
-    }
-
-
-    //for testing, only called in AndroidTest environment
-    public void displayConsolidatedImage() {
-        // Number of photos to capture in the burst
-        int burstCount = 6; // You can adjust this based on your requirements
-
-        // List to store the captured bitmaps
-        List<Bitmap> burstBitmaps = new ArrayList<>();
-
-        // Capture a series of photos in succession
-        for (int i = 0; i < burstCount; i++) {
-            mainViewModel.takePhoto();
-            mainViewModel.retrieveAnalysisBitmapFromCamera();
-            burstBitmaps.add(mainViewModel.getAnalysisBitmap());
-        }
-
-        // Use some function to consolidate the captured images (e.g., average)
-        Bitmap consolidatedBitmap = consolidateBurstImages(burstBitmaps);
-
-        // Display the consolidated bitmap in the imageView
-        imageView.setImageBitmap(consolidatedBitmap);
     }
 
     private void updateAnalyzeUI() {

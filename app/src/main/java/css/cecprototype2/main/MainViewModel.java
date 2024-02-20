@@ -28,7 +28,7 @@ public class MainViewModel extends AndroidViewModel {
     List<Region> regions;
     public List<Double> calibrationIntensities;
     public List<Double> analysisIntensities;
-
+    private ImageStacker imageStacker;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
@@ -52,6 +52,10 @@ public class MainViewModel extends AndroidViewModel {
         calibrationBitMap = cam.currentBitmap;
         return this.calibrationBitMap;
     }
+    public void setImageStacker(ImageStacker inImageStacker)
+    {
+        this.imageStacker = inImageStacker;
+    }
 
     public void doCalibration(){
         //calibrationBitMap = cam.currentBitmap;
@@ -68,7 +72,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void doAnalysis(){
         if (chemicalAnalysis.calibrateCompleted) {
-            //analysisBitMap = cam.currentBitmap;;
+
             setupStandardRegions();
             Log.i("MainViewModel", ".doAnalysis(): Analysis Bitmap H: " + analysisBitMap.getHeight() + " | Analysis Bitmap W: " + analysisBitMap.getWidth());
             analysisIntensities = chemicalAnalysis.Analyze(regionFinder, sheetWriter, analysisBitMap);
@@ -97,17 +101,15 @@ public class MainViewModel extends AndroidViewModel {
     public void setCameraPreview(PreviewView preview) {
         Log.i("CIS4444","MainViewModel --- setCameraPreview cam = "+cam.toString());
         cam.previewView = preview;
-        //cam.startCameraProvider();
+
         cam.updateCameraPreview(preview);
     }
 
     public void takePhoto() {
         Log.i("CIS4444","MainViewModel --- takePhoto");
-        //commented out for testing -- use a bitmap of sample_image_a instead of capturing an image
+
         cam.capturePhotoBitmap();
-        //Bitmap bitmap = BitmapFactory.decodeResource(application.getResources(), R.drawable.sample_image_a);
-        //Log.i("MainViewModel", ".takePhoto(): Standard Bitmap H: " + bitmap.getHeight() + " | Standard Bitmap W: " + bitmap.getWidth());
-        //return bitmap;
+
     }
 
     public void setCalibrationBitMap(Bitmap sampleBitmap) {
