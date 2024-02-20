@@ -25,11 +25,14 @@ import java.util.Map;
 public class SheetWriter {
 
     Context context;        // we need the app context to write the Volley HTTP post
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now;
+    String formattedDateTime;
 
     public SheetWriter(Context context) {
         this.context = context;
+        now = LocalDateTime.now();
+        formattedDateTime = DTF.format(now);
     }
 
     public void writeCalibrationToSheets(ArrayList<Double> calibrateValues) {
@@ -45,7 +48,7 @@ public class SheetWriter {
                 Log.d("CIS 4444", "Params being set");
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "calibrate");
-                params.put("date", "today");
+                params.put("date", formattedDateTime);
                 params.put("c1", calibrateValues.get(0).toString());
                 params.put("c2", calibrateValues.get(1).toString());
                 params.put("c3", calibrateValues.get(2).toString());
@@ -62,7 +65,6 @@ public class SheetWriter {
         requestQueue.add(stringRequest);
     }
 
-    // TODO: Add method to post Analysis data to Google sheet.
     public void writeAnalysisToSheets(ArrayList<Double> analyzeValues) {
         // The Google Sheets URL is stored in the strings.xml file
         String urlAnalyze = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_analysis", "string", context.getPackageName()));
@@ -76,8 +78,7 @@ public class SheetWriter {
                 //Log.d("CIS 4444", "Params being set");
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "analysis");
-                now = LocalDateTime.now();
-                params.put("date", String.valueOf(now));
+                params.put("date", formattedDateTime);
                 params.put("a1", analyzeValues.get(0).toString());
                 params.put("a2", analyzeValues.get(1).toString());
                 params.put("a3", analyzeValues.get(2).toString());
