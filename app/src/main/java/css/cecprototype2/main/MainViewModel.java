@@ -19,7 +19,7 @@ import css.cecprototype2.region_logic.RegionFinder;
 
 public class MainViewModel extends AndroidViewModel {
 
-    private SensorCamera cam;
+    public SensorCamera cam;
     public Bitmap calibrationBitMap, analysisBitMap;
     Application application;
     RegionFinder regionFinder;

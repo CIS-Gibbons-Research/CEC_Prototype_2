@@ -47,7 +47,6 @@ public class FragmentAnalyze extends Fragment {
         this.testImageView = testImageView;
     }
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Use the shared ViewModel
@@ -70,13 +69,7 @@ public class FragmentAnalyze extends Fragment {
         setupButtons();
         setupLiveDataObservers();
 
-
         return root;
-    }
-
-    public ImageView getImageView()
-    {
-        return this.imageView;
     }
 
     public void setMainViewModel(MainViewModel vm)
@@ -188,7 +181,6 @@ public class FragmentAnalyze extends Fragment {
         ImageStacker imageStacker = new ImageStacker();
         return imageStacker.averagePixelValues(burstBitmaps);
     }
-
 
     private void readingsAvailableUpdateUI() {
         Log.i("CIS4444", "Fragment Analysis --- LiveData --- bitmap Available");

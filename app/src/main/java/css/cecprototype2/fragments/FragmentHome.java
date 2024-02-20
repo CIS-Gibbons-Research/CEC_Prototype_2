@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,26 +27,18 @@ import css.cecprototype2.databinding.FragmentHomeBinding;
 public class FragmentHome extends Fragment {
 
     private FragmentHomeBinding binding;
-    //private MainViewModel viewModel;
-    private Button buttonCalibrate;
-    private Button buttonAnalyze;
+    private Button buttonCalibrate, buttonAnalyze;
+    private EditText etISO, etFocalLength, etAperture;
+    private MainViewModel mainViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        //HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        // Use the shared ViewModel
-        //viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         setupButtons();
-
-        final TextView textView = binding.textHome;
-        //viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        setUpEditTexts();
         return root;
     }
-
 
     private void setupButtons() {
         // This app uses the new bindings instead of the old findViewById
@@ -71,7 +64,23 @@ public class FragmentHome extends Fragment {
         });
     }
 
+    private void setUpEditTexts()
+    {
+        etISO = binding.etISO;
+        etFocalLength = binding.etFocalLength;
+        etAperture = binding.etAperture;
 
+        if (mainViewModel != null && mainViewModel.cam != null)
+        {
+            mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
+            mainViewModel.cam.setFocalLength(Integer.parseInt(etFocalLength.getText().toString()));
+            mainViewModel.cam.setAperture(Integer.parseInt(etAperture.getText().toString()));
+
+            Log.d("HomeFragment", "Cam ISO set to: " +  etISO.getText().toString());
+            Log.d("HomeFragment", "Cam Focal Length set to: " +  etFocalLength.getText().toString());
+            Log.d("HomeFragment", "Cam Aperture set to: " +  etAperture.getText().toString());
+        }
+    }
 
     @Override
     public void onDestroyView() {
