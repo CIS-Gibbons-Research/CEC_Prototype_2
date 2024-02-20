@@ -61,9 +61,7 @@ public class SensorCamera {
     Preview imagePreview;                   // CameraX preview object
     private Executor executor = Executors.newSingleThreadExecutor();    // thread to run CameraX
     Bitmap currentBitmap;      // Bitmap from the image proxy
-    int iso;
-    int focalLength;
-    int aperture;
+    float iso, focalLength, aperture;
 
     // Constructor: initialize camera
     public SensorCamera(Activity mainActivity, LifecycleOwner  lifecycleOwner) {
@@ -103,17 +101,17 @@ public class SensorCamera {
         return bitmapAvailableLiveData;
     }
 
-    public void setISO(int iso)
+    public void setISO(float iso)
     {
         this.iso = iso;
     }
 
-    public void setFocalLength(int focalLength)
+    public void setFocalLength(float focalLength)
     {
         this.focalLength = focalLength;
     }
 
-    public void setAperture(int aperture)
+    public void setAperture(float aperture)
     {
         this.aperture = aperture;
     }
