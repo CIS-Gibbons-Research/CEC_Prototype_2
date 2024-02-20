@@ -101,19 +101,35 @@ public class SensorCamera {
         return bitmapAvailableLiveData;
     }
 
-    public void setISO(float iso)
-    {
+    public void setISO(float iso) {
         this.iso = iso;
+        updateCameraParameters();
     }
 
-    public void setFocalLength(float focalLength)
-    {
+    public void setFocalLength(float focalLength) {
         this.focalLength = focalLength;
+        updateCameraParameters();
     }
 
-    public void setAperture(float aperture)
-    {
+    public void setAperture(float aperture) {
         this.aperture = aperture;
+        updateCameraParameters();
+    }
+
+    private void updateCameraParameters() {
+
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
+
+        if (imageCapture != null) {
+            // Update ImageCapture configuration directly
+            imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
+            imageCapture.setTargetRotation(Surface.ROTATION_0);
+
+            // Bind the updated configuration to the camera
+            cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imagePreview);
+        }
     }
 
     private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView){
