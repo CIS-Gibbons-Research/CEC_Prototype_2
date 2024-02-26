@@ -127,9 +127,9 @@ public class SensorCamera {
         }
 
         private Long exposureTime;
-        public Long setExposureTime(int milSec){
+        public Long setExposureTime(long milSec){
             // range of
-            exposureTime = Long.parseLong(String.valueOf(milSec * 1000000));
+            exposureTime = milSec;
             Log.d(TAG, "exposureTime set to "+exposureTime);
             return exposureTime ;
         }
