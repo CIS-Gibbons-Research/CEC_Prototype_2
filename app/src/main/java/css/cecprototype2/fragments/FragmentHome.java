@@ -27,13 +27,14 @@ import css.cecprototype2.databinding.FragmentHomeBinding;
 public class FragmentHome extends Fragment {
 
     private FragmentHomeBinding binding;
-    private Button buttonCalibrate, buttonAnalyze;
+    private Button buttonCalibrate, buttonAnalyze, buttonSubmitCamSettings;
     private EditText etISO, etFocus, etExposureTime;
     private MainViewModel mainViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         setupButtons();
         setUpEditTexts();
@@ -62,6 +63,38 @@ public class FragmentHome extends Fragment {
                 navController.navigate(R.id.action_navigation_home_to_navigation_analyze);
             }
         });
+
+        buttonSubmitCamSettings = binding.buttonSubmitSettings;
+        buttonSubmitCamSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("FragmentHome", "Submit Camera Settings Clicked...");   // log button click for debugging
+                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+                navController.navigate(R.id.action_navigation_home_to_navigation_analyze);
+
+//                if (mainViewModel != null)
+//                {
+                    Log.w("FragmentHome", "Submit Camera Settings Clicked...");
+                    //ISO: 100-1000
+                    // FOCUS: 0-200
+                    //EXPOSURE: 0.12 - 100 milliseconds or 120 - 100,000 input
+
+                    if (Integer.parseInt(etISO.getText().toString()) < 1000 && Integer.parseInt(etISO.getText().toString()) > 99)
+                        mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
+
+                    if (Integer.parseInt(etFocus.getText().toString()) < 201 && Integer.parseInt(etISO.getText().toString()) > -1)
+                    mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
+
+                    if (Integer.parseInt(etFocus.getText().toString()) < 100000 && Integer.parseInt(etISO.getText().toString()) > 119)
+                        mainViewModel.cam.setExposureTime(Integer.parseInt(etExposureTime.getText().toString()));
+
+                    Log.d("HomeFragment", "Cam ISO set to: " +  etISO.getText().toString());
+                    Log.d("HomeFragment", "Cam Focal Length set to: " +  etFocus.getText().toString());
+                    Log.d("HomeFragment", "Cam Exposure Time set to: " +  etExposureTime.getText().toString());
+//                }
+
+            }
+        });
     }
 
     private void setUpEditTexts()
@@ -69,17 +102,6 @@ public class FragmentHome extends Fragment {
         etISO = binding.etISO;
         etFocus = binding.etFocus;
         etExposureTime = binding.etExposureTime;
-
-        if (mainViewModel != null && mainViewModel.cam != null)
-        {
-            mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
-            mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
-            mainViewModel.cam.setExposureTime(Integer.parseInt(etExposureTime.getText().toString()));
-
-            Log.d("HomeFragment", "Cam ISO set to: " +  etISO.getText().toString());
-            Log.d("HomeFragment", "Cam Focal Length set to: " +  etFocus.getText().toString());
-            Log.d("HomeFragment", "Cam Exposure Time set to: " +  etExposureTime.getText().toString());
-        }
     }
 
     @Override

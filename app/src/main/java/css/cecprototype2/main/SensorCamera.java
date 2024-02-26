@@ -60,7 +60,7 @@ public class SensorCamera {
         TextureView textureView;
         private String cameraId;
         protected CameraDevice cameraDevice;
-        private static final String TAG = "CIS4444 SensorCamera";
+        private static final String TAG = "SensorCamera";
         private Handler mBackgroundHandler;
         private HandlerThread mBackgroundThread;
         protected CameraCaptureSession cameraCaptureSessions;
@@ -98,7 +98,7 @@ public class SensorCamera {
         }
 
         public void startCameraProvider() {
-            Log.i("CIS4444","startCameraProvider ");
+            Log.i(TAG,"startCameraProvider ");
             cameraProviderFuture = ProcessCameraProvider.getInstance(context);
             cameraProviderFuture.addListener(() -> {
                 try {
@@ -106,7 +106,7 @@ public class SensorCamera {
                 } catch (ExecutionException | InterruptedException e) {
                     // No errors need to be handled for this Future.
                     // This should never be reached.
-                    Log.e(TAG,"startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
+                    Log.e("SensorCam","startCameraProvider --- cameraProviderFuture ERROR " + e.getMessage());
                 }
             }, ContextCompat.getMainExecutor(context));
         }
@@ -114,7 +114,7 @@ public class SensorCamera {
         private float focus;
         public float setFocus(int newFocus){
             focus = newFocus;
-            Log.d("CIS4444", "focus distance set to "+focus);
+            Log.d(TAG, "focus distance set to "+focus);
             return focus;
         }
 
@@ -122,16 +122,16 @@ public class SensorCamera {
         public Integer setISO(int newIso){
             // range of 100 to 1000
             iso = newIso;
-            Log.d("CIS4444", "ISO set to "+iso);
+            Log.d(TAG, "ISO set to "+iso);
             return iso;
         }
 
         private Long exposureTime;
         public Long setExposureTime(int milSec){
             // range of
-            exposureTime = 100_000L *milSec + 20_000L;
-            Log.d("CIS4444", "exposureTime set to "+exposureTime);
-            return  exposureTime;
+            exposureTime = Long.parseLong(String.valueOf(milSec * 1000000));
+            Log.d(TAG, "exposureTime set to "+exposureTime);
+            return exposureTime ;
         }
 
         private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
@@ -175,7 +175,7 @@ public class SensorCamera {
         imagePreview.setSurfaceProvider(previewView.getSurfaceProvider());
         imagePreview.setTargetRotation(Surface.ROTATION_0); // Set the desired rotation to Surface.ROTATION_0
 
-        Log.i("CIS4444", "startCameraX creating new imageCapture");
+        Log.i(TAG, "startCameraX creating new imageCapture");
 
         // Create ImageCapture builder and set manual camera settings
         imageCapture = new ImageCapture.Builder()
@@ -186,7 +186,7 @@ public class SensorCamera {
 
         cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, imageCapture, imagePreview);
 
-        Log.i("CIS4444", "startCameraX bindToLifecycle done");
+        Log.i(TAG, "startCameraX bindToLifecycle done");
     }
 
 
