@@ -83,7 +83,7 @@ public class FragmentHome extends Fragment {
                         mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
 
                     if (Integer.parseInt(etFocus.getText().toString()) < 201 && Integer.parseInt(etISO.getText().toString()) > -1)
-                    mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
+                        mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
 
                     if (Integer.parseInt(etFocus.getText().toString()) < 100000 && Integer.parseInt(etISO.getText().toString()) > 119)
                         mainViewModel.cam.setExposureTime(Integer.parseInt(etExposureTime.getText().toString()));
