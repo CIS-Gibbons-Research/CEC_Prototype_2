@@ -124,4 +124,9 @@ public class MainViewModel extends AndroidViewModel {
         return cam.getAvailableLiveData();
     }
 
+    public String getAnalysisIntensityAt(int index)
+    {
+        return analysisIntensities.get(index).toString();
+    }
+
 }

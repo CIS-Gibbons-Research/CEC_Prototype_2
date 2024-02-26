@@ -221,7 +221,7 @@ public class SensorCamera {
                 captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);                       // set flash off
                 captureBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, 0);                              //set to manual focus
                 captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);              // set manual focus
-                captureBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, focus);                                      // set focal distance
+                captureBuilder.set(CaptureRequest.LENS_FOCAL_LENGTH, focus);                                         // set focal distance
                 captureBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);                                         // set ISO sensitivity                 // 66600000 nanoseconds is 1/15sec
                 captureBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exposureTime);
 
