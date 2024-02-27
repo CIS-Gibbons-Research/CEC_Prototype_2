@@ -67,7 +67,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvISO" />
+        app:layout_constraintTop_toBottomOf="@+id/tvISO"
+        tools:text="200" />
 
     <EditText
         android:id="@+id/etFocus"
@@ -81,7 +82,8 @@
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFocalLength"
-        app:layout_constraintVertical_bias="0.003" />
+        app:layout_constraintVertical_bias="0.003"
+        tools:text="100" />
 
     <EditText
         android:id="@+id/etExposureTime"
@@ -96,7 +98,8 @@
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvExposureTime"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="10000" />
 
     <TextView
         android:id="@+id/tvFocalLength"

@@ -60,7 +60,7 @@ public class FragmentHome extends Fragment {
             public void onClick(View v) {
                 Log.d("CIS 4444", "Goto Analyze button clicked");   // log button click for debugging
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
-                navController.navigate(R.id.action_navigation_home_to_navigation_analyze);
+                navController.navigate(R.id.action_navigation_home_to_navigation_calibrate);
             }
         });
 
