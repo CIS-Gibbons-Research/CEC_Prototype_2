@@ -124,6 +124,16 @@ public class MainViewModel extends AndroidViewModel {
         return cam.getAvailableLiveData();
     }
 
+    public double getCalibrationRSq()
+    {
+        return chemicalAnalysis.getRSq();
+    }
+
+    public double getCalibrationSlope()
+    {
+        return chemicalAnalysis.getSlope();
+    }
+
     public String getAnalysisIntensityAt(int index)
     {
         return analysisIntensities.get(index).toString();

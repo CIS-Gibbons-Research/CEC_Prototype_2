@@ -33,7 +33,7 @@ public class FragmentCalibrate extends Fragment {
     ImageView imageView;
     PreviewView previewView;
     Bitmap calibrationBitMap;
-    TextView tvStatus;
+    TextView tvStatus, tvSlope, tvRSq;
     TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5, tvCalibrate6;
 
 
@@ -54,6 +54,8 @@ public class FragmentCalibrate extends Fragment {
         tvCalibrate4 = binding.textViewCalibrate4;
         tvCalibrate5 = binding.textViewCalibrate5;
         tvCalibrate6 = binding.textViewCalibrate6;
+        tvSlope = binding.textViewCalibrateSlope;
+        tvRSq = binding.textViewCalibrateRSq;
 
         setupCameraPreview();
         setupButtons();
@@ -180,6 +182,9 @@ public class FragmentCalibrate extends Fragment {
         tvCalibrate4.setText(mainViewModel.calibrationIntensities.get(3).toString());
         tvCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
         tvCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
+        tvSlope.setText(String.valueOf(mainViewModel.getCalibrationSlope()));
+        tvRSq.setText(String.valueOf(mainViewModel.getCalibrationRSq()));
+
         // Change the button text and disable it
         buttonCalibrate.setText("Reset Calibration?");
         buttonCalibrate.setEnabled(true);

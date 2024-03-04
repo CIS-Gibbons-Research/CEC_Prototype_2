@@ -122,4 +122,14 @@ public class ChemicalAnalysis {
         sheetWriter.writeAnalysisToSheets(analysisConcentrations);
         return analysisConcentrations;
     }
+
+    public double getSlope()
+    {
+        return linearRegressionModel.m_slope;
+    }
+
+    public double getRSq()
+    {
+        return linearRegressionModel.regression.getRSquare();
+    }
 }
