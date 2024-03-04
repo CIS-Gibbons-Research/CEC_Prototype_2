@@ -20,6 +20,12 @@ public class RegionIntensityExtractor {
      * @return average intensity of RGB pixels for the given region.
      */
     public Double getRegionIntensity(Region inRegion, Bitmap bitMap) {
+        if (bitMap == null) {
+            Log.e("RegionIntensityExtractor", "getRegionIntensity: Bitmap is null");
+            return 0.0; // or handle the case appropriately
+        }
+
+
         int sumIntensity = 0;
         int numPixels = 0;
 
@@ -46,13 +52,9 @@ public class RegionIntensityExtractor {
             // Calculate and return the average intensity, testing the values also
             double averageIntensity = (double) sumIntensity / numPixels;
             double result = averageIntensity;
-            //Log.d("RegionIntensityExtractor", "getRegionIntensity: Result = " + result);
-            //Log.d("RegionIntensityExtractor", "getRegionIntensity: sumIntensity = " + sumIntensity);
-            //Log.d("RegionIntensityExtractor", "getRegionIntensity: numPixels = " + numPixels);
+
             return result + 0.0;
         } else {
-            // No pixels in the region, return a default value
-            //Log.d("RegionIntensityExtractor", "getRegionIntensity: No pixels in the region, returning 0.0");
             return 0.0;
         }
     }

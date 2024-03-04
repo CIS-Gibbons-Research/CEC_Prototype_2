@@ -59,10 +59,11 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void doCalibration(){
-        //calibrationBitMap = cam.currentBitmap;
+        calibrationBitMap = cam.currentBitmap;
         setupStandardRegions();
-        Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + calibrationBitMap.getHeight() + " | Calibration Bitmap W: " + calibrationBitMap.getWidth());
-        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, calibrationBitMap);
+
+        //Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + getCalibrationBitmap().getHeight() + " | Calibration Bitmap W: " + getCalibrationBitmap().getWidth());
+        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, getCalibrationBitmap());
     }
 
     public Bitmap retrieveAnalysisBitmapFromCamera()
@@ -107,8 +108,21 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void takePhoto() {
-        Log.i("CIS4444","MainViewModel --- takePhoto");
-        cam.takePicture();
+        Log.i("CIS4444", "MainViewModel --- takePhoto");
+
+        // Ensure cam is not null
+        if (cam != null) {
+            cam.takePicture();
+
+            // Ensure cam.currentBitmap is not null before assigning to calibrationBitMap
+            if (cam.currentBitmap != null) {
+                this.calibrationBitMap = cam.currentBitmap;
+            } else {
+                Log.e("CIS4444", "MainViewModel --- takePhoto - cam.currentBitmap is null");
+            }
+        } else {
+            Log.e("CIS4444", "MainViewModel --- takePhoto - cam is null");
+        }
     }
 
     public void setCalibrationBitMap(Bitmap sampleBitmap) {

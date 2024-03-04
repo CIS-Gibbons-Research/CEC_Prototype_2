@@ -57,8 +57,8 @@ public class Region
         //width and height of bitmap is 2 * radius
         int xWidth = Math.min(2 * rad, wholeImageBitmap.getWidth() - xUpperLeft);
         int yHeight = Math.min(2 * rad, wholeImageBitmap.getHeight() - yUpperLeft);
-        //Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);
         // Ensure that the indices are within valid range
+        Log.d("Region", "xUL, yUL, xWid, yHeight, rad: " + xUpperLeft + ", " + yUpperLeft + ", "+ xWidth + ", "+ yHeight + ", " + rad);
         if (x >= 0 && y >= 0 && rad > 0) {
             // Convert circle dimensions to square shape
             return Bitmap.createBitmap(wholeImageBitmap, xUpperLeft, yUpperLeft, xWidth, yHeight);

@@ -45,6 +45,8 @@ public class FragmentCalibrate extends Fragment {
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        //initializeCamera();
+
         imageView = binding.imageViewCalibrate;
         previewView = binding.previewViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
@@ -135,10 +137,15 @@ public class FragmentCalibrate extends Fragment {
         if (isPreviewVisible) {
             mainViewModel.takePhoto();
 
+            calibrationBitMap = mainViewModel.getCalibrationBitmap();
+            mainViewModel.doCalibration();
+
 
             // Change the button text and disable it
             buttonCalibrate.setText("Processing");
             buttonCalibrate.setEnabled(false);
+
+            imageView.setImageBitmap(calibrationBitMap);
 
             // Make the previewView invisible and imageViewCamera visible
             previewView.setVisibility(View.INVISIBLE);
