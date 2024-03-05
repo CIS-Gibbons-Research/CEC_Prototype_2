@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <resources>
+        <string-array name="concentration_options">
+            <item>Micro</item>
+            <item>Pico</item>
+            <item>Nano</item>
+            <item>Milli</item>
+        </string-array>
+    </resources>

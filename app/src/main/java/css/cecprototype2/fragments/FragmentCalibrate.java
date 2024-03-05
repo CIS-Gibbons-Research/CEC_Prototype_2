@@ -7,8 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -36,6 +39,8 @@ public class FragmentCalibrate extends Fragment {
     TextView tvStatus, tvSlope, tvRSq;
     TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5, tvCalibrate6;
 
+    Spinner concentrationSpinner;
+    String selectedConcentration;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +49,6 @@ public class FragmentCalibrate extends Fragment {
 
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-        //initializeCamera();
 
         imageView = binding.imageViewCalibrate;
         previewView = binding.previewViewCalibrate;
@@ -58,6 +61,9 @@ public class FragmentCalibrate extends Fragment {
         tvCalibrate6 = binding.textViewCalibrate6;
         tvSlope = binding.textViewCalibrateSlope;
         tvRSq = binding.textViewCalibrateRSq;
+
+        concentrationSpinner = binding.concentrationSpinner;
+        setupConcentrationSpinner();
 
         setupCameraPreview();
         setupButtons();
@@ -73,35 +79,31 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void setupButtons() {
-        // This app uses the new bindings instead of the old findViewById
         buttonCalibrate = binding.buttonCalibrate;
         buttonCalibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Run calibration logic when taking the first photo
-                Log.d("CIS 4444", "Calibrate button clicked");   // log button click for debugging
+                Log.d("CIS 4444", "Calibrate button clicked");
                 calibrateFromPhoto();
             }
         });
 
-        // This app uses the new bindings instead of the old findViewById
         buttonCalibrateSample = binding.buttonCalibrateSample;
         buttonCalibrateSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 4444", "Calibrate with Samples button clicked");   // log button click for debugging
+                Log.d("CIS 4444", "Calibrate with Samples button clicked");
                 calibrateFromSampleImage();
             }
         });
-    }  // end SetupButtons
+    }
 
     private void setupCameraPreview() {
-        Log.i("CIS4444", "Fragment Calibrarte --- setupCameraPreview");
+        Log.i("CIS4444", "Fragment Calibrate --- setupCameraPreview");
         mainViewModel.setCameraPreview(previewView);
     }
 
     private void setupLiveDataObservers() {
-        // Observe the LiveData for bitmapAvailable
         mainViewModel.getBitmapAvailableLiveData().observe(getActivity(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean isAvailable) {
@@ -109,7 +111,7 @@ public class FragmentCalibrate extends Fragment {
                 if (bitmapAvailable) {
                     readingsAvailableUpdateUI();
                 } else {
-                    Log.i("CIS4444", "Fragment Calibrarte --- LiveData --- bitmap NOT Available");
+                    Log.i("CIS4444", "Fragment Calibrate --- LiveData --- bitmap NOT Available");
                     tvStatus.setText("Bitmap not available");
                 }
             }
@@ -117,18 +119,14 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void readingsAvailableUpdateUI() {
-        Log.i("CIS4444", "Fragment Calibrarte --- LiveData --- bitmap Available");
-        // Run calibration logic when taking the first photo
+        Log.i("CIS4444", "Fragment Calibrate --- LiveData --- bitmap Available");
         mainViewModel.retrieveCalibrationBitmapFromCamera();
         mainViewModel.doCalibration();
-        // Get the bitmap from the ViewModel
         calibrationBitMap = mainViewModel.getCalibrationBitmap();
         if (calibrationBitMap == null) {
-            Log.i("CIS4444", "Fragment Calibrarte --- calibrationBitMap still NULL");
+            Log.i("CIS4444", "Fragment Calibrate --- calibrationBitMap still NULL");
         } else {
-            // Display the photo bitmap in the imageView
             imageView.setImageBitmap(calibrationBitMap);
-            // Update the UI with new calibration readings
             updateCalibrateUI();
         }
     }
@@ -136,29 +134,22 @@ public class FragmentCalibrate extends Fragment {
     private void calibrateFromPhoto() {
         if (isPreviewVisible) {
             mainViewModel.takePhoto();
-
             calibrationBitMap = mainViewModel.getCalibrationBitmap();
             mainViewModel.doCalibration();
 
-
-            // Change the button text and disable it
             buttonCalibrate.setText("Processing");
             buttonCalibrate.setEnabled(false);
 
             imageView.setImageBitmap(calibrationBitMap);
 
-            // Make the previewView invisible and imageViewCamera visible
             previewView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
 
             isPreviewVisible = false;
         } else {
-            // When "Next Reading" is clicked
-            // Make the previewView visible and imageViewCamera invisible
             previewView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
 
-            // Change the button text back to "Take Photo" and enable it
             buttonCalibrate.setText("Calibrate");
             buttonCalibrate.setEnabled(true);
 
@@ -167,22 +158,17 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void calibrateFromSampleImage() {
-        // Use the resource identifier to load the sample image
         calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
         Log.i("CIS4444", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
         mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration();
-        // Display the photo bitmap in the imageView
         imageView.setImageBitmap(calibrationBitMap);
-        // Update the UI with new calibration readings
         updateCalibrateUI();
-        // Make the previewView invisible and imageViewCamera visible
         previewView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
     }
 
     private void updateCalibrateUI() {
-        // TODO: The textviews should be in a list and this should be a loop
         tvCalibrate1.setText(mainViewModel.calibrationIntensities.get(0).toString());
         tvCalibrate2.setText(mainViewModel.calibrationIntensities.get(1).toString());
         tvCalibrate3.setText(mainViewModel.calibrationIntensities.get(2).toString());
@@ -192,9 +178,30 @@ public class FragmentCalibrate extends Fragment {
         tvSlope.setText(String.valueOf(mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.valueOf(mainViewModel.getCalibrationRSq()));
 
-        // Change the button text and disable it
         buttonCalibrate.setText("Reset Calibration?");
         buttonCalibrate.setEnabled(true);
     }
 
+    private void setupConcentrationSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.concentration_options,
+                android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        concentrationSpinner.setAdapter(adapter);
+
+        concentrationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedConcentration = parentView.getItemAtPosition(position).toString();
+                // Handle actions based on the selected concentration if needed
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing here
+            }
+        });
+    }
 }

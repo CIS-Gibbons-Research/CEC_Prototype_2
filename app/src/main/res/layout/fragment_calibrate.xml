@@ -224,4 +224,13 @@
         app:layout_constraintStart_toEndOf="@+id/textViewCalibrate4"
         app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateSlope"
         app:layout_constraintVertical_bias="0.259" />
+
+    <Spinner
+        android:id="@+id/concentrationSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:entries="@array/concentration_options"
+        android:prompt="@string/select_concentration" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
