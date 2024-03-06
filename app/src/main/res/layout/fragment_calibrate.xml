@@ -206,9 +206,10 @@
         android:id="@+id/textViewCalibrateSlope"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="136dp"
         android:text="Slope"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.209"
         app:layout_constraintStart_toEndOf="@+id/textViewCalibrate3"
         app:layout_constraintTop_toBottomOf="@+id/imageViewCalibrate" />
 
@@ -220,17 +221,23 @@
         android:text="RSquared"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.576"
+        app:layout_constraintHorizontal_bias="0.241"
         app:layout_constraintStart_toEndOf="@+id/textViewCalibrate4"
         app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateSlope"
-        app:layout_constraintVertical_bias="0.259" />
+        app:layout_constraintVertical_bias="0.151" />
 
     <Spinner
         android:id="@+id/concentrationSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginBottom="56dp"
         android:entries="@array/concentration_options"
-        android:prompt="@string/select_concentration" />
+        android:prompt="@string/select_concentration"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.754"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateRSq"
+        app:layout_constraintVertical_bias="0.388" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
