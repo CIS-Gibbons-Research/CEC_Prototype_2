@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,13 +32,12 @@ public class FragmentCalibrate extends Fragment {
     private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
 
-    Button buttonCalibrate;
-    Button buttonCalibrateSample;
+    Button buttonCalibrate, buttonCalibrateSample, buttonSubmitCalibrationChanges;
     ImageView imageView;
     PreviewView previewView;
     Bitmap calibrationBitMap;
     TextView tvStatus, tvSlope, tvRSq;
-    TextView tvCalibrate1, tvCalibrate2, tvCalibrate3, tvCalibrate4, tvCalibrate5, tvCalibrate6;
+    EditText etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6;
 
     Spinner concentrationSpinner;
     String selectedConcentration;
@@ -53,12 +53,13 @@ public class FragmentCalibrate extends Fragment {
         imageView = binding.imageViewCalibrate;
         previewView = binding.previewViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
-        tvCalibrate1 = binding.textViewCalibrate1;
-        tvCalibrate2 = binding.textViewCalibrate2;
-        tvCalibrate3 = binding.textViewCalibrate3;
-        tvCalibrate4 = binding.textViewCalibrate4;
-        tvCalibrate5 = binding.textViewCalibrate5;
-        tvCalibrate6 = binding.textViewCalibrate6;
+        etCalibrate1 = binding.editTextCalibration1;
+        etCalibrate2 = binding.editTextCalibration2;
+        etCalibrate3 = binding.editTextCalibration3;
+        etCalibrate4 = binding.editTextCalibration4;
+        etCalibrate5 = binding.editTextCalibration5;
+        etCalibrate6 = binding.editTextCalibration6;
+
         tvSlope = binding.textViewCalibrateSlope;
         tvRSq = binding.textViewCalibrateRSq;
 
@@ -83,7 +84,7 @@ public class FragmentCalibrate extends Fragment {
         buttonCalibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 4444", "Calibrate button clicked");
+                Log.d("CalibrationFragment", "Calibrate button clicked");
                 calibrateFromPhoto();
             }
         });
@@ -92,14 +93,22 @@ public class FragmentCalibrate extends Fragment {
         buttonCalibrateSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("CIS 4444", "Calibrate with Samples button clicked");
+                Log.d("CalibrationFragment", "Calibrate with Samples button clicked");
                 calibrateFromSampleImage();
+            }
+        });
+
+        buttonSubmitCalibrationChanges = binding.buttonSubmitCalibrationChanges;
+        buttonSubmitCalibrationChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("CalibrationFragment", "Changes Submitted in Calibration Fragment");
             }
         });
     }
 
     private void setupCameraPreview() {
-        Log.i("CIS4444", "Fragment Calibrate --- setupCameraPreview");
+        Log.i("CalibrationFragment", "Fragment Calibrate --- setupCameraPreview");
         mainViewModel.setCameraPreview(previewView);
     }
 
@@ -111,7 +120,7 @@ public class FragmentCalibrate extends Fragment {
                 if (bitmapAvailable) {
                     readingsAvailableUpdateUI();
                 } else {
-                    Log.i("CIS4444", "Fragment Calibrate --- LiveData --- bitmap NOT Available");
+                    Log.i("CalibrationFragment", "Fragment Calibrate --- LiveData --- bitmap NOT Available");
                     tvStatus.setText("Bitmap not available");
                 }
             }
@@ -119,12 +128,12 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void readingsAvailableUpdateUI() {
-        Log.i("CIS4444", "Fragment Calibrate --- LiveData --- bitmap Available");
+        Log.i("CalibrationFragment", "Fragment Calibrate --- LiveData --- bitmap Available");
         mainViewModel.retrieveCalibrationBitmapFromCamera();
         mainViewModel.doCalibration();
         calibrationBitMap = mainViewModel.getCalibrationBitmap();
         if (calibrationBitMap == null) {
-            Log.i("CIS4444", "Fragment Calibrate --- calibrationBitMap still NULL");
+            Log.i("CalibrationFragment", "Fragment Calibrate --- calibrationBitMap still NULL");
         } else {
             imageView.setImageBitmap(calibrationBitMap);
             updateCalibrateUI();
@@ -159,7 +168,7 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromSampleImage() {
         calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
-        Log.i("CIS4444", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
+        Log.i("CalibrationFragment", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
         mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration();
         imageView.setImageBitmap(calibrationBitMap);
@@ -169,12 +178,12 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void updateCalibrateUI() {
-        tvCalibrate1.setText(mainViewModel.calibrationIntensities.get(0).toString());
-        tvCalibrate2.setText(mainViewModel.calibrationIntensities.get(1).toString());
-        tvCalibrate3.setText(mainViewModel.calibrationIntensities.get(2).toString());
-        tvCalibrate4.setText(mainViewModel.calibrationIntensities.get(3).toString());
-        tvCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
-        tvCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
+        etCalibrate1.setText(mainViewModel.calibrationIntensities.get(0).toString());
+        etCalibrate2.setText(mainViewModel.calibrationIntensities.get(1).toString());
+        etCalibrate3.setText(mainViewModel.calibrationIntensities.get(2).toString());
+        etCalibrate4.setText(mainViewModel.calibrationIntensities.get(3).toString());
+        etCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
+        etCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
         tvSlope.setText(String.valueOf(mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.valueOf(mainViewModel.getCalibrationRSq()));
 
