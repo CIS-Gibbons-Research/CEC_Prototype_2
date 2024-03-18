@@ -3,6 +3,8 @@ package css.cecprototype2.fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +71,7 @@ public class FragmentCalibrate extends Fragment {
         setupCameraPreview();
         setupButtons();
         setupLiveDataObservers();
+        setupEditTextListeners();
 
         return root;
     }
@@ -77,6 +80,42 @@ public class FragmentCalibrate extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setupEditTextListeners()
+    {
+        EditText[] concentrationEditTexts = new EditText[]{etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6};
+        for (EditText e : concentrationEditTexts)
+        {
+            e.addTextChangedListener(new TextWatcher(){
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                validateAndSaveEditTextValue(e);
+                }
+            });
+        }
+    }
+
+    private void validateAndSaveEditTextValue(EditText editText) {
+        String valueStr = editText.getText().toString().trim();
+        if (!valueStr.isEmpty()) {
+            try {
+                double value = Double.parseDouble(valueStr);
+                int index = Integer.parseInt(editText.getTag().toString());
+                mainViewModel.calibrationIntensities.set(index, value);
+            } catch (NumberFormatException e) {
+                // Invalid input, handle accordingly (e.g., show error message)
+                editText.setError("Invalid input");
+            }
+        }
     }
 
     private void setupButtons() {
@@ -125,6 +164,7 @@ public class FragmentCalibrate extends Fragment {
                 }
             }
         });
+
     }
 
     private void readingsAvailableUpdateUI() {
