@@ -34,7 +34,7 @@ public class FragmentCalibrate extends Fragment {
     private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
 
-    Button buttonCalibrate, buttonCalibrateSample, buttonSubmitCalibrationChanges;
+    Button buttonCalibrate, buttonCalibrateSample;
     ImageView imageView;
     PreviewView previewView;
     Bitmap calibrationBitMap;
@@ -98,7 +98,8 @@ public class FragmentCalibrate extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                validateAndSaveEditTextValue(e);
+                    if (!e.getText().equals(""))
+                        validateAndSaveEditTextValue(e);
                 }
             });
         }
@@ -134,14 +135,6 @@ public class FragmentCalibrate extends Fragment {
             public void onClick(View v) {
                 Log.d("CalibrationFragment", "Calibrate with Samples button clicked");
                 calibrateFromSampleImage();
-            }
-        });
-
-        buttonSubmitCalibrationChanges = binding.buttonSubmitCalibrationChanges;
-        buttonSubmitCalibrationChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("CalibrationFragment", "Changes Submitted in Calibration Fragment");
             }
         });
     }

@@ -269,12 +269,4 @@
         app:layout_constraintTop_toTopOf="@+id/textViewLabel1"
         app:layout_constraintVertical_bias="0.047" />
 
-    <Button
-        android:id="@+id/buttonSubmitCalibrationChanges"
-        android:layout_width="177dp"
-        android:layout_height="44dp"
-        android:text="Submit Changes"
-        tools:layout_editor_absoluteX="191dp"
-        tools:layout_editor_absoluteY="640dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
