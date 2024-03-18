@@ -23,6 +23,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.R;
 import css.cecprototype2.databinding.FragmentCalibrateBinding;
@@ -43,6 +46,8 @@ public class FragmentCalibrate extends Fragment {
 
     Spinner concentrationSpinner;
     String selectedConcentration;
+
+    EditText[] concentrationEditTexts;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -73,6 +78,8 @@ public class FragmentCalibrate extends Fragment {
         setupLiveDataObservers();
         setupEditTextListeners();
 
+        concentrationEditTexts = new EditText[]{etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6};
+
         return root;
     }
 
@@ -82,24 +89,20 @@ public class FragmentCalibrate extends Fragment {
         binding = null;
     }
 
-    private void setupEditTextListeners()
-    {
-        EditText[] concentrationEditTexts = new EditText[]{etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6};
-        for (EditText e : concentrationEditTexts)
-        {
-            e.addTextChangedListener(new TextWatcher(){
+    private void setupEditTextListeners() {
+        for (final EditText e : concentrationEditTexts) {
+            e.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (!e.getText().equals(""))
+                    if (!s.toString().isEmpty()) {
                         validateAndSaveEditTextValue(e);
+                    }
                 }
             });
         }
@@ -107,16 +110,28 @@ public class FragmentCalibrate extends Fragment {
 
     private void validateAndSaveEditTextValue(EditText editText) {
         String valueStr = editText.getText().toString().trim();
-        if (!valueStr.isEmpty()) {
-            try {
-                double value = Double.parseDouble(valueStr);
-                int index = Integer.parseInt(editText.getTag().toString());
+        try {
+            double value = Double.parseDouble(valueStr);
+            int index = getETIndex(editText);
+            if (index != -1) {
                 mainViewModel.calibrationIntensities.set(index, value);
-            } catch (NumberFormatException e) {
-                // Invalid input, handle accordingly (e.g., show error message)
-                editText.setError("Invalid input");
+            } else {
+                Log.e("FragmentCalibrate", "EditText index not found.");
+            }
+        } catch (NumberFormatException e) {
+            // Invalid input, handle accordingly (e.g., show error message)
+            editText.setError("Invalid input");
+        }
+    }
+
+    // Helper method to get the index of the EditText in the concentrationEditTexts list
+    private int getETIndex(EditText editText) {
+        for (int i = 0; i < concentrationEditTexts.length; i++) {
+            if (editText.equals(concentrationEditTexts[i])) {
+                return i;
             }
         }
+        return -1; // If index is not found
     }
 
     private void setupButtons() {
@@ -211,12 +226,13 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void updateCalibrateUI() {
-        etCalibrate1.setText(mainViewModel.calibrationIntensities.get(0).toString());
-        etCalibrate2.setText(mainViewModel.calibrationIntensities.get(1).toString());
-        etCalibrate3.setText(mainViewModel.calibrationIntensities.get(2).toString());
-        etCalibrate4.setText(mainViewModel.calibrationIntensities.get(3).toString());
-        etCalibrate5.setText(mainViewModel.calibrationIntensities.get(4).toString());
-        etCalibrate6.setText(mainViewModel.calibrationIntensities.get(5).toString());
+        List<Double> calibrationIntensities = mainViewModel.calibrationIntensities;
+        etCalibrate1.setText(String.valueOf(calibrationIntensities.get(0)));
+        etCalibrate2.setText(String.valueOf(calibrationIntensities.get(1)));
+        etCalibrate3.setText(String.valueOf(calibrationIntensities.get(2)));
+        etCalibrate4.setText(String.valueOf(calibrationIntensities.get(3)));
+        etCalibrate5.setText(String.valueOf(calibrationIntensities.get(4)));
+        etCalibrate6.setText(String.valueOf(calibrationIntensities.get(5)));
         tvSlope.setText(String.valueOf(mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.valueOf(mainViewModel.getCalibrationRSq()));
 
