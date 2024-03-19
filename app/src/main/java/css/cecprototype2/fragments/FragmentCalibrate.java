@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import css.cecprototype2.main.MainViewModel;
@@ -48,20 +49,21 @@ public class FragmentCalibrate extends Fragment {
     String selectedConcentration;
 
     List<EditText> concentrationEditTexts;
-    List<Double> newConcentrationValues;
+    ArrayList<Double> newConcentrationValues;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Use the shared ViewModel
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
+
+
         View root = binding.getRoot();
         setUpBindings();
         setupConcentrationSpinner();
         setupCameraPreview();
         setupButtons();
         setupLiveDataObservers();
-        setupEditTextListeners();
         return root;
     }
 
@@ -73,12 +75,19 @@ public class FragmentCalibrate extends Fragment {
         previewView = binding.previewViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
 
+        concentrationEditTexts = new ArrayList<>();
         etCalibrate1 = binding.editTextCalibration1;
+        concentrationEditTexts.add(etCalibrate1);
         etCalibrate2 = binding.editTextCalibration2;
+        concentrationEditTexts.add(etCalibrate2);
         etCalibrate3 = binding.editTextCalibration3;
+        concentrationEditTexts.add(etCalibrate3);
         etCalibrate4 = binding.editTextCalibration4;
+        concentrationEditTexts.add(etCalibrate4);
         etCalibrate5 = binding.editTextCalibration5;
+        concentrationEditTexts.add(etCalibrate5);
         etCalibrate6 = binding.editTextCalibration6;
+        concentrationEditTexts.add(etCalibrate6);
 
         tvSlope = binding.textViewCalibrateSlope;
         tvRSq = binding.textViewCalibrateRSq;
@@ -94,31 +103,6 @@ public class FragmentCalibrate extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void setupEditTextListeners() {
-        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
-        newConcentrationValues = new ArrayList<>();
-
-        for (final EditText e : concentrationEditTexts) {
-            e.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (!s.toString().isEmpty()) {
-                        saveEditTextValue(e);
-                        Log.d("CalibrationFragment","Value Saved: " + e.getText().toString().trim());
-                    }
-                }
-            });
-            try{newConcentrationValues.add(Double.parseDouble(e.getText().toString().trim()));}
-            catch (Exception ex){newConcentrationValues.add(0.0);}
-
-        }
-
     }
 
     private void saveEditTextValue(EditText editText) {
@@ -160,14 +144,26 @@ public class FragmentCalibrate extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("CalibrationFragment", "Submit Calibration Changes button clicked");
-                Log.d("CalibrationFragment", "Old Values: " + mainViewModel.calibrationIntensities);
-                newConcentrationValues = mainViewModel.calibrationIntensities;
-                Log.d("CalibrationFragment", "New Values: " + newConcentrationValues);
-                mainViewModel.setCalibrationIntensities(newConcentrationValues);
+                handleSubmitCalibrationChange();
             }
         });
-
     }
+    private void handleSubmitCalibrationChange()
+    {
+        newConcentrationValues = new ArrayList<>();
+        for (int i = 0; i< concentrationEditTexts.size() - 1; i++)
+        {
+            newConcentrationValues.add(null);
+            String newValue = concentrationEditTexts.get(i).getText().toString();
+                if (newValue == null || newValue.equals(""))
+                        newValue = "0";
+                newConcentrationValues.set(i, Double.parseDouble(newValue));
+        }
+        Log.d("CalibrationFragment", "new nCV: " + newConcentrationValues);
+        mainViewModel.calibrationIntensities = newConcentrationValues;
+    }
+
+
 
     private void setupCameraPreview() {
         Log.i("CalibrationFragment", "Fragment Calibrate --- setupCameraPreview");
@@ -199,7 +195,7 @@ public class FragmentCalibrate extends Fragment {
             Log.i("CalibrationFragment", "Fragment Calibrate --- calibrationBitMap still NULL");
         } else {
             imageView.setImageBitmap(calibrationBitMap);
-            updateCalibrateUI();
+            updateCalibrateUI(mainViewModel.calibrationIntensities);
         }
     }
 
@@ -214,7 +210,7 @@ public class FragmentCalibrate extends Fragment {
 
             imageView.setImageBitmap(calibrationBitMap);
 
-            updateCalibrateUI();
+            updateCalibrateUI(mainViewModel.calibrationIntensities);
 
             previewView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
@@ -239,13 +235,12 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration();
         imageView.setImageBitmap(calibrationBitMap);
-        updateCalibrateUI();
+        updateCalibrateUI(mainViewModel.calibrationIntensities);
         previewView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
     }
 
-    private void updateCalibrateUI() {
-        List<Double> calibrationIntensities = mainViewModel.calibrationIntensities;
+    private void updateCalibrateUI(List<Double> calibrationIntensities) {
         etCalibrate1.setText(String.valueOf(calibrationIntensities.get(0)));
         etCalibrate2.setText(String.valueOf(calibrationIntensities.get(1)));
         etCalibrate3.setText(String.valueOf(calibrationIntensities.get(2)));
@@ -272,13 +267,10 @@ public class FragmentCalibrate extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedConcentration = parentView.getItemAtPosition(position).toString();
-                // Handle actions based on the selected concentration if needed
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing here
-            }
+            public void onNothingSelected(AdapterView<?> parentView) {}
         });
     }
 }
