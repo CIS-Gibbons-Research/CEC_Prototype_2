@@ -163,8 +163,6 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel.calibrationIntensities = newConcentrationValues;
     }
 
-
-
     private void setupCameraPreview() {
         Log.i("CalibrationFragment", "Fragment Calibrate --- setupCameraPreview");
         mainViewModel.setCameraPreview(previewView);
