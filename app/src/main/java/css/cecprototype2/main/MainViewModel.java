@@ -59,11 +59,14 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void doCalibration(){
-        calibrationBitMap = cam.currentBitmap;
-        setupStandardRegions();
+        if (getCalibrationBitmap() != null)
+        {
+            setupStandardRegions();
+            setChemAnalysisCalibrationIntensities(calibrationIntensities);
 
-        //Log.i("MainViewModel", ".doCalibration(): Calibration Bitmap H: " + getCalibrationBitmap().getHeight() + " | Calibration Bitmap W: " + getCalibrationBitmap().getWidth());
-        calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, getCalibrationBitmap());
+            calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, getCalibrationBitmap());
+        }
+        else Log.e("MainViewModel", "doCalibration() received a null bitmap");
     }
 
     public Bitmap retrieveAnalysisBitmapFromCamera()
@@ -72,7 +75,7 @@ public class MainViewModel extends AndroidViewModel {
         return this.analysisBitMap;
     }
 
-    public void setCalibrationIntensities(List<Double> intensities)
+    public void setChemAnalysisCalibrationIntensities(List<Double> intensities)
     {
         chemicalAnalysis.setCalibrationIntensities((ArrayList<Double>) intensities);
     }
