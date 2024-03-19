@@ -54,7 +54,7 @@ public class FragmentCalibrate extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         // Use the shared ViewModel
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-
+        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
@@ -79,7 +79,6 @@ public class FragmentCalibrate extends Fragment {
         setupLiveDataObservers();
         setupEditTextListeners();
 
-        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
 
         return root;
     }
