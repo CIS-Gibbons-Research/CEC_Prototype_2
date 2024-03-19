@@ -6,83 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FragmentCalibrate">
 
-    <EditText
-        android:id="@+id/editTextCalibration6"
-        android:layout_width="83dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration5"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewLabel6"
-        app:layout_constraintTop_toTopOf="@+id/textViewLabel6"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/editTextCalibration5"
-        android:layout_width="83dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="22dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration6"
-        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration4"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewLabel5"
-        app:layout_constraintTop_toTopOf="@+id/textViewLabel5"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/editTextCalibration4"
-        android:layout_width="83dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration5"
-        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration3"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewLabel4"
-        app:layout_constraintTop_toTopOf="@+id/textViewLabel4"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/editTextCalibration3"
-        android:layout_width="83dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration4"
-        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration2"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewLabel3"
-        app:layout_constraintTop_toTopOf="@+id/textViewLabel3"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/editTextCalibration2"
-        android:layout_width="83dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="22dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration3"
-        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration1"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textViewLabel2"
-        app:layout_constraintTop_toTopOf="@+id/textViewLabel2"
-        app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/textViewCalibrateRSq2"
         android:layout_width="wrap_content"
@@ -128,61 +51,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewCalibrate"
         app:rippleColor="@color/purple_200" />
-
-    <TextView
-        android:id="@+id/textViewLabel1"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="72dp"
-        android:text="A-"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewCalibrate" />
-
-    <TextView
-        android:id="@+id/textViewLabel2"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:text="B-"
-        app:layout_constraintStart_toStartOf="@+id/textViewLabel1"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabel1" />
-
-    <TextView
-        android:id="@+id/textViewLabel3"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:text="C-"
-        app:layout_constraintStart_toStartOf="@+id/textViewLabel2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabel2" />
-
-    <TextView
-        android:id="@+id/textViewLabel4"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:text="D-"
-        app:layout_constraintStart_toStartOf="@+id/textViewLabel3"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabel3" />
-
-    <TextView
-        android:id="@+id/textViewLabel5"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:text="E-"
-        app:layout_constraintStart_toStartOf="@+id/textViewLabel4"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabel4" />
-
-    <TextView
-        android:id="@+id/textViewLabel6"
-        android:layout_width="40dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:text="F-"
-        app:layout_constraintStart_toStartOf="@+id/textViewLabel5"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabel5" />
 
     <ImageView
         android:id="@+id/imageViewCalibrate"
@@ -271,9 +139,141 @@
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/editTextCalibration2"
         app:layout_constraintEnd_toEndOf="@+id/buttonCalibrate"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toEndOf="@+id/textViewLabel1"
         app:layout_constraintTop_toTopOf="@+id/textViewLabel1"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textViewLabel5"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="12dp"
+        android:text="E-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel4"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel4" />
+
+    <EditText
+        android:id="@+id/editTextCalibration3"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration4"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration2"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel3"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel3"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textViewLabel3"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="12dp"
+        android:text="C-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel2"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel2" />
+
+    <TextView
+        android:id="@+id/textViewLabel4"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="28dp"
+        android:text="D-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel3" />
+
+    <EditText
+        android:id="@+id/editTextCalibration2"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="22dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration3"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration1"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel2"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel2"
+        app:layout_constraintVertical_bias="0.275" />
+
+    <TextView
+        android:id="@+id/textViewLabel6"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="24dp"
+        android:text="F-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel5"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel5" />
+
+    <TextView
+        android:id="@+id/textViewLabel1"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="60dp"
+        android:text="A-"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewCalibrate" />
+
+    <TextView
+        android:id="@+id/textViewLabel2"
+        android:layout_width="40dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="28dp"
+        android:text="B-"
+        app:layout_constraintStart_toStartOf="@+id/textViewLabel1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabel1" />
+
+    <EditText
+        android:id="@+id/editTextCalibration5"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="22dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration6"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration4"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel5"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel5"
+        app:layout_constraintVertical_bias="0.055" />
+
+    <EditText
+        android:id="@+id/editTextCalibration6"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration5"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel6"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel6"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/editTextCalibration4"
+        android:layout_width="83dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextCalibration5"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCalibration3"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabel4"
+        app:layout_constraintTop_toTopOf="@+id/textViewLabel4"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
