@@ -56,20 +56,17 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         setUpBindings();
         setupConcentrationSpinner();
         setupCameraPreview();
         setupButtons();
         setupLiveDataObservers();
         setupEditTextListeners();
-
         return root;
     }
 
     private void setUpBindings()
     {
-        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
         concentrationSpinner = binding.concentrationSpinner;
 
         imageView = binding.imageViewCalibrate;
@@ -89,6 +86,8 @@ public class FragmentCalibrate extends Fragment {
         buttonCalibrate = binding.buttonCalibrate;
         buttonCalibrateSample = binding.buttonCalibrateSample;
         buttonSubmitCalibrationChanges = binding.buttonSubmitCalibrationChanges;
+
+
     }
 
     @Override
@@ -98,6 +97,9 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void setupEditTextListeners() {
+        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
+        newConcentrationValues = new ArrayList<>();
+
         for (final EditText e : concentrationEditTexts) {
             e.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -108,10 +110,15 @@ public class FragmentCalibrate extends Fragment {
                 public void afterTextChanged(Editable s) {
                     if (!s.toString().isEmpty()) {
                         saveEditTextValue(e);
+                        Log.d("CalibrationFragment","Value Saved: " + e.getText().toString().trim());
                     }
                 }
             });
+            try{newConcentrationValues.add(Double.parseDouble(e.getText().toString().trim()));}
+            catch (Exception ex){newConcentrationValues.add(0.0);}
+
         }
+
     }
 
     private void saveEditTextValue(EditText editText) {
@@ -153,7 +160,9 @@ public class FragmentCalibrate extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("CalibrationFragment", "Submit Calibration Changes button clicked");
+                Log.d("CalibrationFragment", "Old Values: " + mainViewModel.calibrationIntensities);
                 newConcentrationValues = mainViewModel.calibrationIntensities;
+                Log.d("CalibrationFragment", "New Values: " + newConcentrationValues);
                 mainViewModel.setCalibrationIntensities(newConcentrationValues);
             }
         });
