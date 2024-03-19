@@ -24,6 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import css.cecprototype2.main.MainViewModel;
@@ -47,7 +48,7 @@ public class FragmentCalibrate extends Fragment {
     Spinner concentrationSpinner;
     String selectedConcentration;
 
-    EditText[] concentrationEditTexts;
+    List<EditText> concentrationEditTexts;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class FragmentCalibrate extends Fragment {
         setupLiveDataObservers();
         setupEditTextListeners();
 
-        concentrationEditTexts = new EditText[]{etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6};
+        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
 
         return root;
     }
@@ -112,7 +113,7 @@ public class FragmentCalibrate extends Fragment {
         String valueStr = editText.getText().toString().trim();
         try {
             double value = Double.parseDouble(valueStr);
-            int index = getETIndex(editText);
+            int index = concentrationEditTexts.indexOf(editText);
             if (index != -1) {
                 mainViewModel.calibrationIntensities.set(index, value);
             } else {
@@ -122,16 +123,6 @@ public class FragmentCalibrate extends Fragment {
             // Invalid input, handle accordingly (e.g., show error message)
             editText.setError("Invalid input");
         }
-    }
-
-    // Helper method to get the index of the EditText in the concentrationEditTexts list
-    private int getETIndex(EditText editText) {
-        for (int i = 0; i < concentrationEditTexts.length; i++) {
-            if (editText.equals(concentrationEditTexts[i])) {
-                return i;
-            }
-        }
-        return -1; // If index is not found
     }
 
     private void setupButtons() {
