@@ -37,8 +37,7 @@ public class FragmentCalibrate extends Fragment {
     private MainViewModel mainViewModel;
     private boolean bitmapAvailable;
     private boolean isPreviewVisible = true;
-
-    Button buttonCalibrate, buttonCalibrateSample;
+    Button buttonCalibrate, buttonCalibrateSample, buttonSubmitCalibrationChanges;
     ImageView imageView;
     PreviewView previewView;
     Bitmap calibrationBitMap;
@@ -49,6 +48,7 @@ public class FragmentCalibrate extends Fragment {
     String selectedConcentration;
 
     List<EditText> concentrationEditTexts;
+    List<Double> newConcentrationValues;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,9 +57,25 @@ public class FragmentCalibrate extends Fragment {
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        setUpBindings();
+        setupConcentrationSpinner();
+        setupCameraPreview();
+        setupButtons();
+        setupLiveDataObservers();
+        setupEditTextListeners();
+
+        return root;
+    }
+
+    private void setUpBindings()
+    {
+        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
+        concentrationSpinner = binding.concentrationSpinner;
+
         imageView = binding.imageViewCalibrate;
         previewView = binding.previewViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
+
         etCalibrate1 = binding.editTextCalibration1;
         etCalibrate2 = binding.editTextCalibration2;
         etCalibrate3 = binding.editTextCalibration3;
@@ -70,19 +86,9 @@ public class FragmentCalibrate extends Fragment {
         tvSlope = binding.textViewCalibrateSlope;
         tvRSq = binding.textViewCalibrateRSq;
 
-        concentrationSpinner = binding.concentrationSpinner;
-        setupConcentrationSpinner();
-
-        setupCameraPreview();
-        setupButtons();
-        setupLiveDataObservers();
-
-        concentrationEditTexts = new ArrayList(Arrays.asList(etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6));
-
-        setupEditTextListeners();
-
-
-        return root;
+        buttonCalibrate = binding.buttonCalibrate;
+        buttonCalibrateSample = binding.buttonCalibrateSample;
+        buttonSubmitCalibrationChanges = binding.buttonSubmitCalibrationChanges;
     }
 
     @Override
@@ -96,29 +102,27 @@ public class FragmentCalibrate extends Fragment {
             e.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (!s.toString().isEmpty()) {
-                        validateAndSaveEditTextValue(e);
+                        saveEditTextValue(e);
                     }
                 }
             });
         }
     }
 
-    private void validateAndSaveEditTextValue(EditText editText) {
+    private void saveEditTextValue(EditText editText) {
         String valueStr = editText.getText().toString().trim();
         try {
             double value = Double.parseDouble(valueStr);
             int index = concentrationEditTexts.indexOf(editText);
             if (index != -1) {
-                mainViewModel.calibrationIntensities.set(index, value);
+                newConcentrationValues.set(index, value);
             } else {
-                Log.e("FragmentCalibrate", "EditText index not found.");
+                Log.e("CalibrationFragment", "EditText index not found.");
             }
         } catch (NumberFormatException e) {
             // Invalid input, handle accordingly (e.g., show error message)
@@ -127,7 +131,7 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void setupButtons() {
-        buttonCalibrate = binding.buttonCalibrate;
+
         buttonCalibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +140,7 @@ public class FragmentCalibrate extends Fragment {
             }
         });
 
-        buttonCalibrateSample = binding.buttonCalibrateSample;
+
         buttonCalibrateSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +148,16 @@ public class FragmentCalibrate extends Fragment {
                 calibrateFromSampleImage();
             }
         });
+
+        buttonSubmitCalibrationChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("CalibrationFragment", "Submit Calibration Changes button clicked");
+                newConcentrationValues = mainViewModel.calibrationIntensities;
+                mainViewModel.setCalibrationIntensities(newConcentrationValues);
+            }
+        });
+
     }
 
     private void setupCameraPreview() {
@@ -191,10 +205,14 @@ public class FragmentCalibrate extends Fragment {
 
             imageView.setImageBitmap(calibrationBitMap);
 
+            updateCalibrateUI();
+
             previewView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
 
             isPreviewVisible = false;
+
+
         } else {
             previewView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);

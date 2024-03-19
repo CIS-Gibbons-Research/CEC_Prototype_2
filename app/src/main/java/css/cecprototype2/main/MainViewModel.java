@@ -72,6 +72,11 @@ public class MainViewModel extends AndroidViewModel {
         return this.analysisBitMap;
     }
 
+    public void setCalibrationIntensities(List<Double> intensities)
+    {
+        chemicalAnalysis.setCalibrationIntensities((ArrayList<Double>) intensities);
+    }
+
     public void doAnalysis(){
         if (chemicalAnalysis.calibrateCompleted) {
 
