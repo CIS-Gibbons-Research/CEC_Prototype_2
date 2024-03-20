@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.List;
 
 import css.cecprototype2.main.MainViewModel;
@@ -245,8 +246,9 @@ public class FragmentCalibrate extends Fragment {
         etCalibrate4.setText(String.valueOf(calibrationIntensities.get(3)));
         etCalibrate5.setText(String.valueOf(calibrationIntensities.get(4)));
         etCalibrate6.setText(String.valueOf(calibrationIntensities.get(5)));
-        tvSlope.setText(String.valueOf(mainViewModel.getCalibrationSlope()));
-        tvRSq.setText(String.valueOf(mainViewModel.getCalibrationRSq()));
+
+        tvSlope.setText(String.format("%.5f", mainViewModel.getCalibrationSlope()));
+        tvRSq.setText(String.format("%.5f", mainViewModel.getCalibrationRSq()));
 
         buttonCalibrate.setText("Reset Calibration?");
         buttonCalibrate.setEnabled(true);
