@@ -243,12 +243,12 @@ public class FragmentAnalyze extends Fragment {
 
     private void updateAnalyzeUI() {
         // TODO: The textviews should be in a list and this should be a loop
-        tvAnalyze1.setText(mainViewModel.getAnalysisIntensityAt(0));
-        tvAnalyze2.setText(mainViewModel.getAnalysisIntensityAt(1));
-        tvAnalyze3.setText(mainViewModel.getAnalysisIntensityAt(2));
-        tvAnalyze4.setText(mainViewModel.getAnalysisIntensityAt(3));
-        tvAnalyze5.setText(mainViewModel.getAnalysisIntensityAt(4));
-        tvAnalyze6.setText(mainViewModel.getAnalysisIntensityAt(5));
+        tvAnalyze1.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(0)));
+        tvAnalyze2.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(1)));
+        tvAnalyze3.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(2)));
+        tvAnalyze4.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(3)));
+        tvAnalyze5.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(4)));
+        tvAnalyze6.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(5)));
         // Change the button text and disable it
         buttonAnalyze.setText("Reset Analysis?");
         buttonAnalyze.setEnabled(true);

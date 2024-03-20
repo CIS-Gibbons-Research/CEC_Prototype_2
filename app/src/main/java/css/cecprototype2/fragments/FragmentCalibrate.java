@@ -240,12 +240,12 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void updateCalibrateUI(List<Double> calibrationIntensities) {
-        etCalibrate1.setText(String.valueOf(calibrationIntensities.get(0)));
-        etCalibrate2.setText(String.valueOf(calibrationIntensities.get(1)));
-        etCalibrate3.setText(String.valueOf(calibrationIntensities.get(2)));
-        etCalibrate4.setText(String.valueOf(calibrationIntensities.get(3)));
-        etCalibrate5.setText(String.valueOf(calibrationIntensities.get(4)));
-        etCalibrate6.setText(String.valueOf(calibrationIntensities.get(5)));
+        etCalibrate1.setText(String.format("%.3f", calibrationIntensities.get(0)));
+        etCalibrate2.setText(String.format("%.3f", calibrationIntensities.get(1)));
+        etCalibrate3.setText(String.format("%.3f", calibrationIntensities.get(2)));
+        etCalibrate4.setText(String.format("%.3f", calibrationIntensities.get(3)));
+        etCalibrate5.setText(String.format("%.3f", calibrationIntensities.get(4)));
+        etCalibrate6.setText(String.format("%.3f", calibrationIntensities.get(5)));
 
         tvSlope.setText(String.format("%.5f", mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.format("%.5f", mainViewModel.getCalibrationRSq()));
