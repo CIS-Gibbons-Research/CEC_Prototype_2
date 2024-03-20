@@ -41,6 +41,7 @@ public class FragmentAnalyze extends Fragment {
     Button buttonAnalyzeSample;
     Button buttonAnalyzeBurst;
     TextView tvAnalyze1, tvAnalyze2, tvAnalyze3, tvAnalyze4, tvAnalyze5, tvAnalyze6;
+    ArrayList<TextView> textViews;
     private ImageView testImageView;
 
     public void setTestImageView(ImageView testImageView) {
@@ -58,12 +59,19 @@ public class FragmentAnalyze extends Fragment {
         imageView = binding.imageViewAnalyze;
         previewView = binding.previewViewAnalyze;
         tvStatus = binding.textViewAnalyzeStatus;
+        textViews = new ArrayList<>();
         tvAnalyze1 = binding.textViewAnalyze1;
+        textViews.add(tvAnalyze1);
         tvAnalyze2 = binding.textViewAnalyze2;
+        textViews.add(tvAnalyze2);
         tvAnalyze3 = binding.textViewAnalyze3;
+        textViews.add(tvAnalyze3);
         tvAnalyze4 = binding.textViewAnalyze4;
+        textViews.add(tvAnalyze4);
         tvAnalyze5 = binding.textViewAnalyze5;
+        textViews.add(tvAnalyze5);
         tvAnalyze6 = binding.textViewAnalyze6;
+        textViews.add(tvAnalyze6);
 
         setupCameraPreview();
         setupButtons();
@@ -242,13 +250,10 @@ public class FragmentAnalyze extends Fragment {
     }
 
     private void updateAnalyzeUI() {
-        // TODO: The textviews should be in a list and this should be a loop
-        tvAnalyze1.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(0)));
-        tvAnalyze2.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(1)));
-        tvAnalyze3.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(2)));
-        tvAnalyze4.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(3)));
-        tvAnalyze5.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(4)));
-        tvAnalyze6.setText(String.format("%.5f", mainViewModel.getAnalysisIntensityAt(5)));
+        for (int i = 0; i < textViews.size(); i++)
+        {
+            textViews.get(i).setText(String.format("%.5f", mainViewModel.analysisIntensities.get(i)));
+        }
         // Change the button text and disable it
         buttonAnalyze.setText("Reset Analysis?");
         buttonAnalyze.setEnabled(true);
