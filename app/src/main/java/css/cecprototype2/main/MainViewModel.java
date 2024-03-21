@@ -69,6 +69,16 @@ public class MainViewModel extends AndroidViewModel {
         else Log.e("MainViewModel", "doCalibration() received a null bitmap");
     }
 
+    public void doCalibrationFromValues(ArrayList <Double> inConcentrationValues)
+    {
+        if (getCalibrationBitmap() != null)
+        {
+            setupStandardRegions();
+            calibrationIntensities = chemicalAnalysis.CalibrateWithValues(regionFinder, getCalibrationBitmap(), inConcentrationValues);
+            setChemAnalysisCalibrationIntensities(calibrationIntensities);
+        }
+    }
+
     public Bitmap retrieveAnalysisBitmapFromCamera()
     {
         analysisBitMap = cam.currentBitmap;

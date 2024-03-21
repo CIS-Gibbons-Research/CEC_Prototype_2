@@ -87,10 +87,27 @@ public class ChemicalAnalysis {
 
     public ChemicalAnalysis(SheetWriter sheetWriter) {
         //calibration concentrations provided by user, can be changed or placed in values.xml
-        this.sheetWriter = sheetWriter;
+        setSheetWriter(sheetWriter);
         calibrationConcentrations = new ArrayList<>(Arrays.asList(0.1, 0.3, 0.5, 0.7, 0.9, 1.1));
         Log.d("ChemicalAnalysis", "Calibration Concentrations Size: " + calibrationConcentrations.size());
         intensityExtractor = new RegionIntensityExtractor();
+    }
+
+    public List<Double> CalibrateWithValues(RegionFinder regionFinder, Bitmap fullCalibrationImage, ArrayList<Double> inCalibrationConcentrations)
+    {
+        calibrationIntensities = new ArrayList<>();
+        int index = 0;
+        for (Region region: regionFinder.getStandardRegions())
+        {
+            Double intensityFromValue = intensityExtractor.getRegionIntensityFromValues(region, fullCalibrationImage, inCalibrationConcentrations.get(index));
+            calibrationIntensities.add(intensityFromValue);
+            index++;
+        }
+        Log.d("ChemicalAnalysis", "Calibration Intensities From Values Size: " + calibrationIntensities.size());
+        linearRegressionModel = new LinearRegression(calibrationIntensities, inCalibrationConcentrations);
+        sheetWriter.writeCalibrationToSheets(calibrationIntensities);
+        calibrateCompleted = true;
+        return calibrationIntensities;
     }
 
     public List<Double> Calibrate(RegionFinder regionsFinder, Bitmap fullCalibrationImage) {

@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class RegionIntensityExtractor {
 
     /**
@@ -24,7 +26,6 @@ public class RegionIntensityExtractor {
             Log.e("RegionIntensityExtractor", "getRegionIntensity: Bitmap is null");
             return 0.0; // or handle the case appropriately
         }
-
 
         int sumIntensity = 0;
         int numPixels = 0;
@@ -57,6 +58,12 @@ public class RegionIntensityExtractor {
         } else {
             return 0.0;
         }
+    }
+
+    //FIXME: Implement Actual Functionality
+    public Double getRegionIntensityFromValues(Region inRegion, Bitmap inBitMap, Double concentration)
+    {
+        return getRegionIntensity(inRegion, inBitMap) * concentration;
     }
 
     public Double getAlternateRegionIntensity(Region inRegion, Bitmap bitMap) {
