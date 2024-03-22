@@ -99,11 +99,11 @@
 
     <Button
         android:id="@+id/buttonCalibrateSample"
-        android:layout_width="181dp"
-        android:layout_height="62dp"
+        android:layout_width="199dp"
+        android:layout_height="51dp"
         android:text="Calibrate with Sample"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.68"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toEndOf="@+id/buttonCalibrate"
         app:layout_constraintTop_toTopOf="@+id/buttonCalibrate" />
 
@@ -125,9 +125,9 @@
         android:prompt="@string/select_concentration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.078"
+        app:layout_constraintHorizontal_bias="0.948"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextCalibration6"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSubmitCalibrationChanges"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
@@ -232,7 +232,7 @@
         android:layout_width="40dp"
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="B-"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewLabel1" />
@@ -298,15 +298,17 @@
         android:id="@+id/textViewCalibrationIntensity1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="212dp"
         android:text="TextView"
-        app:layout_constraintTop_toTopOf="@+id/editTextCalibration1"
-        tools:layout_editor_absoluteX="141dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextCalibration1" />
 
     <TextView
         android:id="@+id/textViewCalibrationIntensity2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/textViewCalibrationIntensity1"
         app:layout_constraintTop_toTopOf="@+id/editTextCalibration2" />
