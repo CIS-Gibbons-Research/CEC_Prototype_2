@@ -47,7 +47,7 @@ public class FragmentCalibrate extends Fragment {
     EditText etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6;
     TextView tvCalibrateIntensity1, tvCalibrateIntensity2, tvCalibrateIntensity3,tvCalibrateIntensity4,tvCalibrateIntensity5,tvCalibrateIntensity6;
 
-    Spinner concentrationSpinner;
+    Spinner unitSpinner;
     String selectedConcentration;
 
     List<EditText> concentrationEditTexts;
@@ -63,7 +63,7 @@ public class FragmentCalibrate extends Fragment {
 
         View root = binding.getRoot();
         setUpBindings();
-        setupConcentrationSpinner();
+        setupUnitsSpinner();
         setupCameraPreview();
         setupButtons();
         setupLiveDataObservers();
@@ -73,7 +73,7 @@ public class FragmentCalibrate extends Fragment {
     private void setUpBindings()
     {
         //spinner
-        concentrationSpinner = binding.concentrationSpinner;
+        unitSpinner = binding.unitsSpinner;
 
         //camera and images
         imageView = binding.imageViewCalibrate;
@@ -263,16 +263,16 @@ public class FragmentCalibrate extends Fragment {
         buttonCalibrate.setEnabled(true);
     }
 
-    private void setupConcentrationSpinner() {
+    private void setupUnitsSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.concentration_options,
                 android.R.layout.simple_spinner_item
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        concentrationSpinner.setAdapter(adapter);
+        unitSpinner.setAdapter(adapter);
 
-        concentrationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        unitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedConcentration = parentView.getItemAtPosition(position).toString();
