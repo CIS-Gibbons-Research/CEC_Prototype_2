@@ -252,6 +252,7 @@ public class FragmentCalibrate extends Fragment {
         for (TextView tv : calibrationIntensityTextViews)
         {
             tv.setText(String.format("%.3f", calibrationIntensities.get(index)));
+            index++;
         }
 
 

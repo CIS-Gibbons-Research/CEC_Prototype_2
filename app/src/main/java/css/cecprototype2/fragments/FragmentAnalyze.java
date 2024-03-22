@@ -254,6 +254,7 @@ public class FragmentAnalyze extends Fragment {
         for (TextView tv: textViews)
         {
             tv.setText(String.format("%.5f", mainViewModel.analysisIntensities.get(index)));
+            index++;
         }
         // Change the button text and disable it
         buttonAnalyze.setText("Reset Analysis?");
