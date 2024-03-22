@@ -45,12 +45,14 @@ public class FragmentCalibrate extends Fragment {
     Bitmap calibrationBitMap;
     TextView tvStatus, tvSlope, tvRSq;
     EditText etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6;
+    TextView tvCalibrateIntensity1, tvCalibrateIntensity2, tvCalibrateIntensity3,tvCalibrateIntensity4,tvCalibrateIntensity5,tvCalibrateIntensity6;
 
     Spinner concentrationSpinner;
     String selectedConcentration;
 
     List<EditText> concentrationEditTexts;
     ArrayList<Double> newConcentrationValues;
+    List<TextView> calibrationIntensityTextViews;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -70,12 +72,16 @@ public class FragmentCalibrate extends Fragment {
 
     private void setUpBindings()
     {
+        //spinner
         concentrationSpinner = binding.concentrationSpinner;
 
+        //camera and images
         imageView = binding.imageViewCalibrate;
         previewView = binding.previewViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
 
+
+        //concentration EditTexts
         concentrationEditTexts = new ArrayList<>();
         etCalibrate1 = binding.editTextCalibration1;
         concentrationEditTexts.add(etCalibrate1);
@@ -90,12 +96,29 @@ public class FragmentCalibrate extends Fragment {
         etCalibrate6 = binding.editTextCalibration6;
         concentrationEditTexts.add(etCalibrate6);
 
+        //linear regression info TextViews
         tvSlope = binding.textViewCalibrateSlope;
         tvRSq = binding.textViewCalibrateRSq;
 
+        //buttons
         buttonCalibrate = binding.buttonCalibrate;
         buttonCalibrateSample = binding.buttonCalibrateSample;
         buttonSubmitCalibrationChanges = binding.buttonSubmitCalibrationChanges;
+
+        //calibration intensity TextViews
+        calibrationIntensityTextViews = new ArrayList<>();
+        tvCalibrateIntensity1 = binding.textViewCalibrationIntensity1;
+        calibrationIntensityTextViews.add(tvCalibrateIntensity1);
+        tvCalibrateIntensity2 = binding.textViewCalibrationIntensity2;
+        calibrationIntensityTextViews.add(tvCalibrateIntensity2);
+        tvCalibrateIntensity3 = binding.textViewCalibrationIntensity3;
+        calibrationIntensityTextViews.add(tvCalibrateIntensity3);
+        tvCalibrateIntensity4 = binding.textViewCalibrationIntensity4;
+        calibrationIntensityTextViews.add(tvCalibrateIntensity4);
+        tvCalibrateIntensity5 = binding.textViewCalibrationIntensity5;
+        calibrationIntensityTextViews.add(tvCalibrateIntensity5);
+        tvCalibrateIntensity6 = binding.textViewCalibrationIntensity6;
+        calibrationIntensityTextViews.add(tvCalibrateIntensity6);
 
 
     }
@@ -104,22 +127,6 @@ public class FragmentCalibrate extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    private void saveEditTextValue(EditText editText) {
-        String valueStr = editText.getText().toString().trim();
-        try {
-            double value = Double.parseDouble(valueStr);
-            int index = concentrationEditTexts.indexOf(editText);
-            if (index != -1) {
-                newConcentrationValues.set(index, value);
-            } else {
-                Log.e("CalibrationFragment", "EditText index not found.");
-            }
-        } catch (NumberFormatException e) {
-            // Invalid input, handle accordingly (e.g., show error message)
-            editText.setError("Invalid input");
-        }
     }
 
     private void setupButtons() {
@@ -152,16 +159,16 @@ public class FragmentCalibrate extends Fragment {
     private void handleSubmitCalibrationChange()
     {
         newConcentrationValues = new ArrayList<>();
-        for (int i = 0; i< concentrationEditTexts.size() - 1; i++)
+        for (int i = 0; i < 6; i++)
         {
-            newConcentrationValues.add(null);
             String newValue = concentrationEditTexts.get(i).getText().toString();
                 if (newValue == null || newValue.equals(""))
                         newValue = "0";
-                newConcentrationValues.set(i, Double.parseDouble(newValue));
+                newConcentrationValues.add(Double.parseDouble(newValue));
         }
         Log.d("CalibrationFragment", "new nCV: " + newConcentrationValues);
         mainViewModel.calibrationIntensities = newConcentrationValues;
+        updateCalibrateUI(newConcentrationValues);
     }
 
     private void setupCameraPreview() {
@@ -240,12 +247,14 @@ public class FragmentCalibrate extends Fragment {
     }
 
     private void updateCalibrateUI(List<Double> calibrationIntensities) {
-        etCalibrate1.setText(String.format("%.3f", calibrationIntensities.get(0)));
-        etCalibrate2.setText(String.format("%.3f", calibrationIntensities.get(1)));
-        etCalibrate3.setText(String.format("%.3f", calibrationIntensities.get(2)));
-        etCalibrate4.setText(String.format("%.3f", calibrationIntensities.get(3)));
-        etCalibrate5.setText(String.format("%.3f", calibrationIntensities.get(4)));
-        etCalibrate6.setText(String.format("%.3f", calibrationIntensities.get(5)));
+
+        tvCalibrateIntensity1.setText(String.format("%.3f", calibrationIntensities.get(0)));
+        tvCalibrateIntensity2.setText(String.format("%.3f", calibrationIntensities.get(1)));
+        tvCalibrateIntensity3.setText(String.format("%.3f", calibrationIntensities.get(2)));
+        tvCalibrateIntensity4.setText(String.format("%.3f", calibrationIntensities.get(3)));
+        tvCalibrateIntensity5.setText(String.format("%.3f", calibrationIntensities.get(4)));
+        tvCalibrateIntensity6.setText(String.format("%.3f", calibrationIntensities.get(5)));
+
 
         tvSlope.setText(String.format("%.5f", mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.format("%.5f", mainViewModel.getCalibrationRSq()));
