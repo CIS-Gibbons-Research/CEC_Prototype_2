@@ -120,7 +120,6 @@ public class ChemicalAnalysis {
             calibrationIntensities.add(currentCalibrationReading);
         }
         Log.d("ChemicalAnalysis", "Calibration Intensities Size: " + calibrationIntensities.size());
-        //FIXME: calibration readings are all 0.0, so intensityExtractor isn't working -- possibly wrong values for locations
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
         sheetWriter.writeCalibrationToSheets(calibrationIntensities);
         calibrateCompleted = true;          // turn on flag that calibration is done and analysis can be performed.
