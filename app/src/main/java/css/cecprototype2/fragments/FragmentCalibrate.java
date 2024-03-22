@@ -248,12 +248,11 @@ public class FragmentCalibrate extends Fragment {
 
     private void updateCalibrateUI(List<Double> calibrationIntensities) {
 
-        tvCalibrateIntensity1.setText(String.format("%.3f", calibrationIntensities.get(0)));
-        tvCalibrateIntensity2.setText(String.format("%.3f", calibrationIntensities.get(1)));
-        tvCalibrateIntensity3.setText(String.format("%.3f", calibrationIntensities.get(2)));
-        tvCalibrateIntensity4.setText(String.format("%.3f", calibrationIntensities.get(3)));
-        tvCalibrateIntensity5.setText(String.format("%.3f", calibrationIntensities.get(4)));
-        tvCalibrateIntensity6.setText(String.format("%.3f", calibrationIntensities.get(5)));
+        int index = 0;
+        for (TextView tv : calibrationIntensityTextViews)
+        {
+            tv.setText(String.format("%.3f", calibrationIntensities.get(index)));
+        }
 
 
         tvSlope.setText(String.format("%.5f", mainViewModel.getCalibrationSlope()));
