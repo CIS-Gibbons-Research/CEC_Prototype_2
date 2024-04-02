@@ -145,6 +145,7 @@ public class FragmentAnalyze extends Fragment {
     }
 
     public void analyzeFromBurst() {
+        // Encountering issues on my device running this block, look at later possibly
         // Number of photos to capture in the burst
         int burstCount = 6;
 
@@ -237,6 +238,7 @@ public class FragmentAnalyze extends Fragment {
     private void analyzeFromSampleImage() {
         // Use the resource identifier to load the sample image
         analysisBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
+        // The app has been crashing on my end at this code block
         Log.i("CIS4444", "Sample image size width="+analysisBitMap.getWidth()+ " and height="+analysisBitMap.getHeight());
         mainViewModel.setAnalysisBitMap(analysisBitMap);
         mainViewModel.doAnalysis();
