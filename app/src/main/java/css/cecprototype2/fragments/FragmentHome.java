@@ -79,13 +79,18 @@ public class FragmentHome extends Fragment {
                     // FOCUS: 0-200
                     //EXPOSURE: 0.12 - 100 milliseconds or 120 - 100,000 input
 
-                    if (Integer.parseInt(etISO.getText().toString()) < 1000 && Integer.parseInt(etISO.getText().toString()) > 99 && etISO.getText().toString()!=null)
-                        mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
+                if (etISO.getText().toString().equals("")) etISO.setText(0);
+                if (etFocus.getText().toString().equals("")) etFocus.setText(0);
+                if (etExposureTime.getText().toString().equals("")) etExposureTime.setText(0);
 
-                    if (Integer.parseInt(etFocus.getText().toString()) < 201 && Integer.parseInt(etISO.getText().toString()) > -1 && etFocus.getText().toString()!=null)
+                if (Integer.parseInt(etISO.getText().toString()) < 1000 && Integer.parseInt(etISO.getText().toString()) > 99 && etISO.getText().toString()!=null) {
+                    mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
+                }
+
+                    if (Integer.parseInt(etFocus.getText().toString()) < 201 && Integer.parseInt(etFocus.getText().toString()) > -1 && etFocus.getText().toString()!=null)
                         mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
 
-                    if (Integer.parseInt(etExposureTime.getText().toString()) < 100000 && Integer.parseInt(etISO.getText().toString()) > 119 && etExposureTime.getText().toString()!=null)
+                    if (Integer.parseInt(etExposureTime.getText().toString()) < 100000 && Integer.parseInt(etExposureTime.getText().toString()) > 119 && etExposureTime.getText().toString()!=null)
                         mainViewModel.cam.setExposureTime(Long.parseLong(etExposureTime.getText().toString()) * 1000000);
 
                     Log.d("HomeFragment", "Cam ISO set to: " +  etISO.getText().toString());

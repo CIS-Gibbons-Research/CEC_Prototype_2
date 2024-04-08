@@ -23,11 +23,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.R;
@@ -119,8 +123,6 @@ public class FragmentCalibrate extends Fragment {
         calibrationIntensityTextViews.add(tvCalibrateIntensity5);
         tvCalibrateIntensity6 = binding.textViewCalibrationIntensity6;
         calibrationIntensityTextViews.add(tvCalibrateIntensity6);
-
-
     }
 
     @Override
@@ -158,14 +160,7 @@ public class FragmentCalibrate extends Fragment {
     }
     private void handleSubmitCalibrationChange()
     {
-        newConcentrationValues = new ArrayList<>();
-        for (int i = 0; i < 6; i++)
-        {
-            String newValue = concentrationEditTexts.get(i).getText().toString();
-                if (newValue == null || newValue.equals(""))
-                        newValue = "0";
-                newConcentrationValues.add(Double.parseDouble(newValue));
-        }
+        newConcentrationValues = getValuesForCalibration(concentrationEditTexts);
         Log.d("CalibrationFragment", "new nCV: " + newConcentrationValues);
         mainViewModel.calibrationIntensities = newConcentrationValues;
         updateCalibrateUI(newConcentrationValues);
@@ -214,6 +209,7 @@ public class FragmentCalibrate extends Fragment {
             buttonCalibrate.setText("Processing");
             buttonCalibrate.setEnabled(false);
 
+            mainViewModel.setCalibrationBitMap(calibrationBitMap);
             imageView.setImageBitmap(calibrationBitMap);
 
             updateCalibrateUI(mainViewModel.calibrationIntensities);
@@ -281,5 +277,18 @@ public class FragmentCalibrate extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {}
         });
+    }
+
+    private ArrayList<Double> getValuesForCalibration(List<EditText> inCalibrationEditTexts)
+    {
+        ArrayList<Double> outConcentrationValues = new ArrayList<>();
+        for (EditText et : inCalibrationEditTexts)
+        {
+            String newValue = et.getText().toString();
+            if (newValue == null || newValue.equals(""))
+                newValue = "0";
+            newConcentrationValues.add(Double.parseDouble(newValue));
+        }
+        return outConcentrationValues;
     }
 }
