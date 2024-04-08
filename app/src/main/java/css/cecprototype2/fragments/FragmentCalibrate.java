@@ -247,7 +247,9 @@ public class FragmentCalibrate extends Fragment {
         int index = 0;
         for (TextView tv : calibrationIntensityTextViews)
         {
-            tv.setText(String.format("%.3f", calibrationIntensities.get(index)));
+            if (calibrationIntensities.get(index) != null)
+                tv.setText(String.format("%.3f", calibrationIntensities.get(index)));
+            else tv.setText(String.format("%.3f", "0.0"));
             index++;
         }
 
@@ -255,8 +257,8 @@ public class FragmentCalibrate extends Fragment {
         tvSlope.setText(String.format("%.5f", mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.format("%.5f", mainViewModel.getCalibrationRSq()));
 
-        buttonCalibrate.setText("Reset Calibration?");
-        buttonCalibrate.setEnabled(true);
+//        buttonCalibrate.setText("Reset Calibration?");
+//        buttonCalibrate.setEnabled(true);
     }
 
     private void setupUnitsSpinner() {
