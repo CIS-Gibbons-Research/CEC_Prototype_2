@@ -79,9 +79,9 @@ public class FragmentHome extends Fragment {
                     // FOCUS: 0-200
                     //EXPOSURE: 0.12 - 100 milliseconds or 120 - 100,000 input
 
-                if (etISO.getText().toString().equals("")) etISO.setText(0);
-                if (etFocus.getText().toString().equals("")) etFocus.setText(0);
-                if (etExposureTime.getText().toString().equals("")) etExposureTime.setText(0);
+                if (etISO.getText().toString().equals("")) etISO.setText("0");
+                if (etFocus.getText().toString().equals("")) etFocus.setText("0");
+                if (etExposureTime.getText().toString().equals("")) etExposureTime.setText("0");
 
                 if (Integer.parseInt(etISO.getText().toString()) < 1000 && Integer.parseInt(etISO.getText().toString()) > 99 && etISO.getText().toString()!=null) {
                     mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
