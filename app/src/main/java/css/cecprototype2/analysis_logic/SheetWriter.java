@@ -64,6 +64,7 @@ public class SheetWriter {
         requestQueue.add(stringRequest);
     }
 
+    //TODO: MOVE TO SEPERATE COLUMN IN SHEET TO DIFFERENTIATE AVERAGES AND SUMS OR TAG WITH "AVERAGES"
     public void writeCalibrationAveragesToSheets(ArrayList<Double> calibrationIntensityAverages)
     {
         // The Google Sheets URL is stored in the strings.xml file
@@ -78,12 +79,13 @@ public class SheetWriter {
                 Log.d("CIS 4444", "Params being set");
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "calibrateFromAverage");
-                params.put("d1", calibrationIntensityAverages.get(0).toString());
-                params.put("d2", calibrationIntensityAverages.get(1).toString());
-                params.put("d3", calibrationIntensityAverages.get(2).toString());
-                params.put("d4", calibrationIntensityAverages.get(3).toString());
-                params.put("d5", calibrationIntensityAverages.get(4).toString());
-                params.put("d6", calibrationIntensityAverages.get(5).toString());
+                params.put("date", formattedDateTime);
+                params.put("c1", calibrationIntensityAverages.get(0).toString());
+                params.put("c2", calibrationIntensityAverages.get(1).toString());
+                params.put("c3", calibrationIntensityAverages.get(2).toString());
+                params.put("c4", calibrationIntensityAverages.get(3).toString());
+                params.put("c5", calibrationIntensityAverages.get(4).toString());
+                params.put("c6", calibrationIntensityAverages.get(5).toString());
                 return params;
             }
         };
