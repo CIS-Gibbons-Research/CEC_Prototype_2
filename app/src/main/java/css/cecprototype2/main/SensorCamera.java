@@ -75,9 +75,9 @@ public class SensorCamera {
 
     private static final int REQUEST_CAMERA_PERMISSION = 200;
 
-    private static final int SENSOR_SENSITIVITY_DEFAULT = 100;
-    private static final long EXPOSURE_TIME_DEFAULT = 66600000L; // 1/15 sec
-    private static final int FOCUS_DISTANCE_DEFAULT = 0;
+    private static final int SENSOR_SENSITIVITY_DEFAULT = 100; //ISO
+    private static final long EXPOSURE_TIME_DEFAULT = 66600000L; // 1/15 sec -- ET
+    private static final int FOCUS_DISTANCE_DEFAULT = 0; //FOCAL LENGTH
 
     public SensorCamera(AppCompatActivity appContext, TextureView textureView, LifecycleOwner lifecycleOwner) {
         this.context = appContext;
