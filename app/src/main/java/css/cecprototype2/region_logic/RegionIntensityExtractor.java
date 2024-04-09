@@ -51,8 +51,8 @@ public class RegionIntensityExtractor {
 
         if (numPixels > 0) {
             // Calculate and return the average intensity, testing the values also
-            double averageIntensity = (double) sumIntensity / numPixels;
-            double result = averageIntensity;
+
+            double result = sumIntensity;
 
             return result + 0.0;
         } else {

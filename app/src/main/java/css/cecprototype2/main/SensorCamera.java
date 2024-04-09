@@ -127,7 +127,6 @@ public class SensorCamera {
         } else {
             Log.e(TAG, "CameraX Update Failed - CameraProvider is Null");
         }
-
     }
 
     public void takePicture() {
@@ -162,7 +161,6 @@ public class SensorCamera {
             captureBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exposureTime);
 
             Log.d(TAG, "takePicture --- done setting up camera attributes");
-
 
             File dcimFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             File chemTestFolder = new File(dcimFolder, "ChemTest");
