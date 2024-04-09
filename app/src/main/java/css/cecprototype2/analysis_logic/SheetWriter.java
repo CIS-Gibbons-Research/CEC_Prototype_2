@@ -10,7 +10,6 @@ import com.android.volley.toolbox.Volley;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +54,36 @@ public class SheetWriter {
                 params.put("c4", calibrateValues.get(3).toString());
                 params.put("c5", calibrateValues.get(4).toString());
                 params.put("c6", calibrateValues.get(5).toString());
+                return params;
+            }
+        };
+
+        // Instantiate the RequestQueue.
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        // Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
+    }
+
+    public void writeCalibrationAveragesToSheets(ArrayList<Double> calibrationIntensityAverages)
+    {
+        // The Google Sheets URL is stored in the strings.xml file
+        String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "string", context.getPackageName()));
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalibrate,
+                response -> {},//Log.d("CIS 4444", "HTTP Response Received: " + response),
+                error -> {}// Log.d("CIS 4444", "HTTP Error Received: " + error)
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Log.d("CIS 4444", "Params being set");
+                Map<String, String> params = new HashMap<>();
+                params.put("action", "calibrateFromAverage");
+                params.put("d1", calibrationIntensityAverages.get(0).toString());
+                params.put("d2", calibrationIntensityAverages.get(1).toString());
+                params.put("d3", calibrationIntensityAverages.get(2).toString());
+                params.put("d4", calibrationIntensityAverages.get(3).toString());
+                params.put("d5", calibrationIntensityAverages.get(4).toString());
+                params.put("d6", calibrationIntensityAverages.get(5).toString());
                 return params;
             }
         };
