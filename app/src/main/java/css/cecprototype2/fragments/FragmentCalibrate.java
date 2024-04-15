@@ -3,10 +3,9 @@ package css.cecprototype2.fragments;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,20 +17,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.camera.view.PreviewView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.R;
@@ -45,7 +36,7 @@ public class FragmentCalibrate extends Fragment {
     private boolean isPreviewVisible = true;
     Button buttonCalibrate, buttonCalibrateSample, buttonSubmitCalibrationChanges;
     ImageView imageView;
-    PreviewView previewView;
+    TextureView textureView;
     Bitmap calibrationBitMap;
     TextView tvStatus, tvSlope, tvRSq;
     EditText etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6;
@@ -64,6 +55,7 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
 
+        Log.d("CalibrationFragment", "onCreateView");
 
         View root = binding.getRoot();
         setUpBindings();
@@ -81,7 +73,7 @@ public class FragmentCalibrate extends Fragment {
 
         //camera and images
         imageView = binding.imageViewCalibrate;
-        previewView = binding.previewViewCalibrate;
+        textureView = binding.textureViewCalibrate;
         tvStatus = binding.textViewCalibrateStatus;
 
 
@@ -168,7 +160,7 @@ public class FragmentCalibrate extends Fragment {
 
     private void setupCameraPreview() {
         Log.i("CalibrationFragment", "Fragment Calibrate --- setupCameraPreview");
-        mainViewModel.setCameraPreview(previewView);
+        mainViewModel.setCameraPreview(textureView);
     }
 
     private void setupLiveDataObservers() {
@@ -202,9 +194,10 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromPhoto() {
         if (isPreviewVisible) {
+            Log.i("CalibrationFragment", "calibrateFromPhoto --- isPreviewVisible TRUE");
             mainViewModel.takePhoto();
             calibrationBitMap = mainViewModel.getCalibrationBitmap();
-            mainViewModel.doCalibration();
+            //mainViewModel.doCalibration();   // do this when livedata shows image is ready
 
             buttonCalibrate.setText("Processing");
             buttonCalibrate.setEnabled(false);
@@ -214,14 +207,15 @@ public class FragmentCalibrate extends Fragment {
 
             updateCalibrateUI(mainViewModel.calibrationIntensities);
 
-            previewView.setVisibility(View.INVISIBLE);
+            textureView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
 
             isPreviewVisible = false;
 
 
         } else {
-            previewView.setVisibility(View.VISIBLE);
+            Log.i("CalibrationFragment", "calibrateFromPhoto --- isPreviewVisible FALSE");
+            textureView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
 
             buttonCalibrate.setText("Calibrate");
@@ -238,7 +232,7 @@ public class FragmentCalibrate extends Fragment {
         mainViewModel.doCalibration();
         imageView.setImageBitmap(calibrationBitMap);
         updateCalibrateUI(mainViewModel.calibrationIntensities);
-        previewView.setVisibility(View.INVISIBLE);
+        textureView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
     }
 

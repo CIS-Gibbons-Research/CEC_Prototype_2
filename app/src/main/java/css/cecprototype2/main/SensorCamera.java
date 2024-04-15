@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -67,23 +68,30 @@ public class SensorCamera {
     private Size imageDimension;
     private ImageReader imageReader;
     private MutableLiveData<Boolean> bitmapAvailableLiveData;
-    PreviewView previewView;
+    //TextureView previewView;
     LifecycleOwner lifecycleOwner;
     ImageCapture imageCapture;
-    Preview imagePreview;
+    //Preview imagePreview;
     Bitmap currentBitmap;
 
+    //private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    //ProcessCameraProvider cameraProvider;
+    private final int photoWidth = 1920;
+    private final int photoHeight = 1440;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
-
     private static final int SENSOR_SENSITIVITY_DEFAULT = 100; //ISO
     private static final long EXPOSURE_TIME_DEFAULT = 66600000L; // 1/15 sec -- ET
     private static final int FOCUS_DISTANCE_DEFAULT = 0; //FOCAL LENGTH
 
-    public SensorCamera(AppCompatActivity appContext, TextureView textureView, LifecycleOwner lifecycleOwner) {
+    //public SensorCamera(AppCompatActivity appContext, TextureView textureView, LifecycleOwner lifecycleOwner) {
+    public SensorCamera(AppCompatActivity appContext, LifecycleOwner lifecycleOwner) {
+
         this.context = appContext;
-        this.textureView = textureView;
+        //this.textureView = textureView;
         bitmapAvailableLiveData = new MutableLiveData<>();
+        bitmapAvailableLiveData.postValue(false);   // initially, not bitmap or photo availalbe
         this.lifecycleOwner = lifecycleOwner;
+        /*
         startCameraProvider();
         try {
             this.cameraProvider = cameraProviderFuture.get();
@@ -91,7 +99,8 @@ public class SensorCamera {
             // Handle exception or log an error
             e.printStackTrace();
         }
-        openCamera();
+        */
+        //openCamera();
     }
 
     private float focus = FOCUS_DISTANCE_DEFAULT;
@@ -119,15 +128,21 @@ public class SensorCamera {
         return bitmapAvailableLiveData;
     }
 
-    public void updateCameraPreview(PreviewView previewView) {
-        this.previewView = previewView;
+
+    public void updateCameraPreview(TextureView textureView) {
+        this.textureView = textureView;
+        Log.d(TAG, "Camera textureView Updated, openCamera now");
+        openCamera();
+        /*
         if (cameraProvider != null) {
             startCameraX(cameraProvider, previewView);
             Log.d(TAG, "CameraX Preview Updating...");
         } else {
             Log.e(TAG, "CameraX Update Failed - CameraProvider is Null");
         }
+         */
     }
+
 
     public void takePicture() {
         if (null == cameraDevice || null == textureView.getSurfaceTexture()) {
@@ -181,19 +196,6 @@ public class SensorCamera {
                     mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), file));
                 }
 
-                private void save(byte[] bytes) throws IOException {
-                    Log.d(TAG, "takePicture --- save");
-
-                    OutputStream output = null;
-                    try {
-                        output = new FileOutputStream(file);
-                        output.write(bytes);
-                    } finally {
-                        if (null != output) {
-                            output.close();
-                        }
-                    }
-                }
             };
             Log.d(TAG, "takePicture --- setting up setOnImageAvailableListener");
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
@@ -220,6 +222,7 @@ public class SensorCamera {
 
                 @Override
                 public void onConfigureFailed(CameraCaptureSession session) {
+                    Log.d(TAG, "takePicture --- onConfigureFailed");
                 }
             }, mBackgroundHandler);
         } catch (CameraAccessException e) {
@@ -230,7 +233,7 @@ public class SensorCamera {
     /**
      * Saves a JPEG {@link Image} into the specified {@link File}.
      */
-    private static class ImageSaver implements Runnable {
+    private class ImageSaver implements Runnable {
 
         /**
          * The JPEG image
@@ -252,6 +255,11 @@ public class SensorCamera {
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
+
+            Log.d(TAG, "ImageSaver --- updating currentBitmap");
+            currentBitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+            bitmapAvailableLiveData.postValue(true);   // bitmap or photo availalbe now
+
             FileOutputStream output = null;
             try {
                 output = new FileOutputStream(mFile);
@@ -262,6 +270,7 @@ public class SensorCamera {
                 mImage.close();
                 if (null != output) {
                     try {
+                        //bitmapAvailableLiveData.postValue(true);   // bitmap or photo availalbe now
                         output.close();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -306,7 +315,7 @@ public class SensorCamera {
             e.printStackTrace();
         }
     }
-
+/*
     private void startCameraProvider() {
         Log.i(TAG, "startCameraProvider ");
         cameraProviderFuture = ProcessCameraProvider.getInstance(context);
@@ -319,7 +328,7 @@ public class SensorCamera {
         }, ContextCompat.getMainExecutor(context));
     }
 
-    private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, PreviewView previewView) {
+    private void startCameraX(@NonNull ProcessCameraProvider cameraProvider, TextureView previewView) {
 
         cameraProvider.unbindAll();
         CameraSelector cameraSelector = new CameraSelector.Builder()
@@ -350,6 +359,8 @@ public class SensorCamera {
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
+    */
+
 
     private void openCamera() {
         CameraManager manager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
@@ -395,6 +406,7 @@ public class SensorCamera {
 
         @Override
         public void onDisconnected(CameraDevice camera) {
+            Log.e(TAG, "onDisconnected");
             cameraDevice.close();
         }
 
@@ -405,8 +417,5 @@ public class SensorCamera {
         }
     };
 
-    private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-    ProcessCameraProvider cameraProvider;
-    private final int photoWidth = 1920;
-    private final int photoHeight = 1440;
+
 }

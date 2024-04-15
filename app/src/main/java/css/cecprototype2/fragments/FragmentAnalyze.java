@@ -2,11 +2,10 @@ package css.cecprototype2.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.camera.view.PreviewView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,7 +33,7 @@ public class FragmentAnalyze extends Fragment {
     private boolean isPreviewVisible = true;
     TextView tvStatus;
     ImageView imageView;
-    PreviewView previewView;
+    TextureView textureView;
     Bitmap analysisBitMap;
     Button buttonAnalyze;
     Button buttonAnalyzeSample;
@@ -57,7 +55,7 @@ public class FragmentAnalyze extends Fragment {
         View root = binding.getRoot();
 
         imageView = binding.imageViewAnalyze;
-        previewView = binding.previewViewAnalyze;
+        textureView = binding.textureViewAnalyze;
         tvStatus = binding.textViewAnalyzeStatus;
         textViews = new ArrayList<>();
         tvAnalyze1 = binding.textViewAnalyze1;
@@ -125,7 +123,7 @@ public class FragmentAnalyze extends Fragment {
 
     private void setupCameraPreview() {
         Log.i("CIS4444", "Fragment Analysis --- setupCameraPreview");
-        mainViewModel.setCameraPreview(previewView);
+        mainViewModel.setCameraPreview(textureView);
     }
 
     private void setupLiveDataObservers() {
@@ -217,14 +215,14 @@ public class FragmentAnalyze extends Fragment {
             buttonAnalyze.setEnabled(false);
 
             // Make the previewView invisible and imageViewCamera visible
-            previewView.setVisibility(View.INVISIBLE);
+            textureView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
 
             isPreviewVisible = false;
         } else {
             // When "Next Reading" is clicked
             // Make the previewView visible and imageViewCamera invisible
-            previewView.setVisibility(View.VISIBLE);
+            textureView.setVisibility(View.VISIBLE);
             imageView.setVisibility(View.INVISIBLE);
 
             // Change the button text back to "Take Photo" and enable it
@@ -247,7 +245,7 @@ public class FragmentAnalyze extends Fragment {
         // Update the UI with new calibration readings
         updateAnalyzeUI();
         // Make the previewView invisible and imageViewCamera visible
-        previewView.setVisibility(View.INVISIBLE);
+        textureView.setVisibility(View.INVISIBLE);
         imageView.setVisibility(View.VISIBLE);
     }
 

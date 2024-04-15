@@ -3,6 +3,7 @@ package css.cecprototype2.main;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.TextureView;
 
 import androidx.annotation.NonNull;
 import androidx.camera.view.PreviewView;
@@ -118,11 +119,10 @@ public class MainViewModel extends AndroidViewModel {
         cam = sensorCamera;
     }
 
-    public void setCameraPreview(PreviewView preview) {
+    public void setCameraPreview(TextureView textureView) {
         Log.i("CIS4444","MainViewModel --- setCameraPreview cam = "+cam.toString());
-        cam.previewView = preview;
-
-        cam.updateCameraPreview(preview);
+        cam.textureView = textureView;
+        cam.updateCameraPreview(textureView);
     }
 
     public void takePhoto() {
@@ -130,6 +130,8 @@ public class MainViewModel extends AndroidViewModel {
 
         // Ensure cam is not null
         if (cam != null) {
+            Log.e("CIS4444", "MainViewModel --- calling cam.takePicture");
+
             cam.takePicture();
 
             // Ensure cam.currentBitmap is not null before assigning to calibrationBitMap

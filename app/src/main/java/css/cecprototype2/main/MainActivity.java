@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupCamera() {
         Log.i("CIS4444", "Main Activity --- setupCamera");
-        cam = new SensorCamera(this, new TextureView(context), this);
+        //cam = new SensorCamera(this, new TextureView(context), this);   // TextureView must come from the Fragment
+        cam = new SensorCamera(this, this);
+
         mainViewModel.initializeCamera(cam);
     }
 
