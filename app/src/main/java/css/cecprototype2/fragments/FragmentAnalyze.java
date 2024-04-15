@@ -193,17 +193,23 @@ public class FragmentAnalyze extends Fragment {
         Log.i("CIS4444", "Fragment Analysis --- LiveData --- bitmap Available");
         // Run Analysis logic when taking the first photo
         mainViewModel.retrieveAnalysisBitmapFromCamera();
-        mainViewModel.doAnalysis();
-        // Get the bitmap from the ViewModel
-        analysisBitMap = mainViewModel.getAnalysisBitmap();
-        if (analysisBitMap == null) {
-            Log.i("CIS4444", "Fragment Analysis --- analysisBitMap still NULL");
-        } else {
-            // Display the photo bitmap in the imageView
-            imageView.setImageBitmap(analysisBitMap);
-            // Update the UI with new analysis readings
-            updateAnalyzeUI();
-        }
+        if (mainViewModel.doAnalysis()) {
+            // only proceed if analysis suceeds
+            // Get the bitmap from the ViewModel
+            analysisBitMap = mainViewModel.getAnalysisBitmap();
+            if (analysisBitMap == null) {
+                Log.i("CIS4444", "Fragment Analysis --- analysisBitMap still NULL");
+            } else {
+                // Display the photo bitmap in the imageView
+                imageView.setImageBitmap(analysisBitMap);
+                // Update the UI with new analysis readings
+                updateAnalyzeUI();
+            }
+        };
+        // Change the button text and disable it
+        buttonAnalyze.setText("Reset Analysis?");
+        buttonAnalyze.setEnabled(true);
+
     }
 
     private void analyzeFromPhoto() {
@@ -256,9 +262,7 @@ public class FragmentAnalyze extends Fragment {
             tv.setText(String.format("%.5f", mainViewModel.analysisIntensities.get(index)));
             index++;
         }
-        // Change the button text and disable it
-        buttonAnalyze.setText("Reset Analysis?");
-        buttonAnalyze.setEnabled(true);
+
     }
 
 

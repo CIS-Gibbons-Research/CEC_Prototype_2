@@ -205,7 +205,7 @@ public class FragmentCalibrate extends Fragment {
             mainViewModel.setCalibrationBitMap(calibrationBitMap);
             imageView.setImageBitmap(calibrationBitMap);
 
-            updateCalibrateUI(mainViewModel.calibrationIntensities);
+            //updateCalibrateUI(mainViewModel.calibrationIntensities);
 
             textureView.setVisibility(View.INVISIBLE);
             imageView.setVisibility(View.VISIBLE);
@@ -251,8 +251,8 @@ public class FragmentCalibrate extends Fragment {
         tvSlope.setText(String.format("%.5f", mainViewModel.getCalibrationSlope()));
         tvRSq.setText(String.format("%.5f", mainViewModel.getCalibrationRSq()));
 
-//        buttonCalibrate.setText("Reset Calibration?");
-//        buttonCalibrate.setEnabled(true);
+        buttonCalibrate.setText("Rerun Calibration?");
+        buttonCalibrate.setEnabled(true);
     }
 
     private void setupUnitsSpinner() {

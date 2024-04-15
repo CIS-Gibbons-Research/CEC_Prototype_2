@@ -91,14 +91,16 @@ public class MainViewModel extends AndroidViewModel {
         chemicalAnalysis.setCalibrationIntensities((ArrayList<Double>) intensities);
     }
 
-    public void doAnalysis(){
+    public boolean doAnalysis(){
         if (chemicalAnalysis.calibrateCompleted) {
 
             setupStandardRegions();
             Log.i("MainViewModel", ".doAnalysis(): Analysis Bitmap H: " + analysisBitMap.getHeight() + " | Analysis Bitmap W: " + analysisBitMap.getWidth());
             analysisIntensities = chemicalAnalysis.Analyze(regionFinder, sheetWriter, analysisBitMap);
+            return true;
         } else {
             Log.i("MainViewModel", "Must do calibration before analsysis");
+            return false;
         }
     }
 
@@ -135,11 +137,14 @@ public class MainViewModel extends AndroidViewModel {
             cam.takePicture();
 
             // Ensure cam.currentBitmap is not null before assigning to calibrationBitMap
+            /*  this will always be null because the camera takes photos asynch
             if (cam.currentBitmap != null) {
                 this.calibrationBitMap = cam.currentBitmap;
             } else {
                 Log.e("CIS4444", "MainViewModel --- takePhoto - cam.currentBitmap is null");
             }
+            */
+
         } else {
             Log.e("CIS4444", "MainViewModel --- takePhoto - cam is null");
         }

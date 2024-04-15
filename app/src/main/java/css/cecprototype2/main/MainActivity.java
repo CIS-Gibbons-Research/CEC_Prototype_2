@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     public SensorCamera cam;
     MainViewModel mainViewModel;        // View model shared with fragments
     Context context;
-
+    private static final String TAG = "AndroidCameraApi";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,5 +62,33 @@ public class MainActivity extends AppCompatActivity {
 
         //Test Update Austin
     }
+
+
+    /* going to try this in SensorCamer
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "MainActivity onResume");
+        //cam3.startBackgroundThread();;
+        cam.startBackgroundThread();
+        if (textureView.isAvailable()) {
+            cam2.openCamera();
+            //cam3.openCamera(textureView.getWidth(), textureView.getHeight());
+
+        } else {
+            textureView.setSurfaceTextureListener(textureListener);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        Log.e(TAG, "onPause");
+        //closeCamera();
+        cam.stopBackgroundThread();
+        //cam3.onPause();
+        super.onPause();
+    }
+    */
+
 
 }

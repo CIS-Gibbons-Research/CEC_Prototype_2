@@ -73,6 +73,7 @@ public class SensorCamera {
     ImageCapture imageCapture;
     //Preview imagePreview;
     Bitmap currentBitmap;
+    ImageSaver imageSaver;
 
     //private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     //ProcessCameraProvider cameraProvider;
@@ -132,6 +133,7 @@ public class SensorCamera {
     public void updateCameraPreview(TextureView textureView) {
         this.textureView = textureView;
         Log.d(TAG, "Camera textureView Updated, openCamera now");
+        startBackgroundThread();
         openCamera();
         /*
         if (cameraProvider != null) {
@@ -153,9 +155,13 @@ public class SensorCamera {
         try {
             ImageReader reader = ImageReader.newInstance(photoWidth, photoHeight, ImageFormat.JPEG, 1);
             List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+            outputSurfaces.add(reader.getSurface());
+            outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
 
             // Ensure textureView.getSurfaceTexture() is not null before creating the Surface
+            /*
             SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
+
             if (surfaceTexture != null) {
                 outputSurfaces.add(new Surface(surfaceTexture));
             } else {
@@ -164,6 +170,7 @@ public class SensorCamera {
             }
             outputSurfaces.add(reader.getSurface());
             outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
+             */
             Log.d(TAG, "takePicture --- creating captureBuilder");
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
@@ -193,7 +200,10 @@ public class SensorCamera {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
                     Log.d(TAG, "takePicture --- onImageAvailable");
-                    mBackgroundHandler.post(new ImageSaver(reader.acquireNextImage(), file));
+                    imageSaver = new ImageSaver(reader.acquireNextImage(), file);
+                    Log.d(TAG, "takePicture --- imageSaver created");
+                    mBackgroundHandler.post(imageSaver);
+                    Log.d(TAG, "takePicture --- imageSaver posted");
                 }
 
             };
@@ -245,6 +255,7 @@ public class SensorCamera {
         private final File mFile;
 
         ImageSaver(Image image, File file) {
+            Log.d(TAG, "ImageSaver --- constructor");
             mImage = image;
             mFile = file;
         }
@@ -353,13 +364,24 @@ public class SensorCamera {
 
         Log.i(TAG, "startCameraX bindToLifecycle done");
     }
+    */
 
     private void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("CameraBackground");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
-    */
+
+    protected void stopBackgroundThread() {
+        mBackgroundThread.quitSafely();
+        try {
+            mBackgroundThread.join();
+            mBackgroundThread = null;
+            mBackgroundHandler = null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private void openCamera() {
