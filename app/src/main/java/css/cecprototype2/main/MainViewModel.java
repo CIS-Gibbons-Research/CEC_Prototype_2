@@ -27,7 +27,9 @@ public class MainViewModel extends AndroidViewModel {
     SheetWriter sheetWriter;
     ChemicalAnalysis chemicalAnalysis;
     List<Region> regions;
+    public List<Double> calibrationConcentraions;
     public List<Double> calibrationIntensities;
+
     public List<Double> analysisIntensities;
     private ImageStacker imageStacker;
 
@@ -59,26 +61,27 @@ public class MainViewModel extends AndroidViewModel {
         this.imageStacker = inImageStacker;
     }
 
-    public void doCalibration(){
+    public void doCalibration(String userNotes){
+       Log.e("MainViewModel", "doCalibration() being called");
         if (getCalibrationBitmap() != null)
         {
             setupStandardRegions();
 
-            calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, getCalibrationBitmap());
+            calibrationIntensities = chemicalAnalysis.Calibrate(regionFinder, cam.imageFilename, userNotes, getCalibrationBitmap());
             setChemAnalysisCalibrationIntensities(calibrationIntensities);
         }
         else Log.e("MainViewModel", "doCalibration() received a null bitmap");
     }
 
-    public void doCalibrationFromValues(ArrayList <Double> inConcentrationValues)
-    {
-        if (getCalibrationBitmap() != null)
-        {
-            setupStandardRegions();
-            calibrationIntensities = chemicalAnalysis.CalibrateWithValues(regionFinder, getCalibrationBitmap(), inConcentrationValues);
-            setChemAnalysisCalibrationIntensities(calibrationIntensities);
-        }
-    }
+//    public void doCalibrationFromValues(ArrayList <Double> inConcentrationValues)
+//    {
+//        if (getCalibrationBitmap() != null)
+//        {
+//            setupStandardRegions();
+//            calibrationIntensities = chemicalAnalysis.CalibrateWithValues(regionFinder, getCalibrationBitmap(), inConcentrationValues);
+//            setChemAnalysisCalibrationIntensities(calibrationIntensities);
+//        }
+//    }
 
     public Bitmap retrieveAnalysisBitmapFromCamera()
     {
@@ -89,6 +92,11 @@ public class MainViewModel extends AndroidViewModel {
     public void setChemAnalysisCalibrationIntensities(List<Double> intensities)
     {
         chemicalAnalysis.setCalibrationIntensities((ArrayList<Double>) intensities);
+    }
+
+    public void setChemAnalysisCalibrationConcentraions(List<Double> concentraions)
+    {
+        chemicalAnalysis.setCalibrationConcentrations((ArrayList<Double>) concentraions);
     }
 
     public boolean doAnalysis(){

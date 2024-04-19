@@ -94,27 +94,27 @@ public class ChemicalAnalysis {
         intensityExtractor = new RegionIntensityExtractor();
     }
 
-    public List<Double> CalibrateWithValues(RegionFinder regionFinder, Bitmap fullCalibrationImage, ArrayList<Double> inCalibrationConcentrations)
-    {
-        calibrationIntensities = new ArrayList<>();
-        calibrationIntensityAverages = new ArrayList<>();
-        int index = 0;
-        for (Region region: regionFinder.getStandardRegions())
-        {
-            Double intensityFromValue = intensityExtractor.getRegionIntensityFromValues(region, fullCalibrationImage, inCalibrationConcentrations.get(index));
-            calibrationIntensityAverages.add(intensityExtractor.getRegionIntensityAverageFromValues(region, fullCalibrationImage, inCalibrationConcentrations.get(index)));
-            calibrationIntensities.add(intensityFromValue);
-            index++;
-        }
-        Log.d("ChemicalAnalysis", "Calibration Intensities From Values Size: " + calibrationIntensities.size());
-        linearRegressionModel = new LinearRegression(calibrationIntensities, inCalibrationConcentrations);
-        sheetWriter.writeCalibrationToSheets(calibrationIntensities);
-        sheetWriter.writeCalibrationAveragesToSheets(calibrationIntensityAverages);
-        calibrateCompleted = true;
-        return calibrationIntensities;
-    }
+//    public List<Double> CalibrateWithValues(RegionFinder regionFinder, Bitmap fullCalibrationImage, ArrayList<Double> inCalibrationConcentrations)
+//    {
+//        calibrationIntensities = new ArrayList<>();
+//        calibrationIntensityAverages = new ArrayList<>();
+//        int index = 0;
+//        for (Region region: regionFinder.getStandardRegions())
+//        {
+//            Double intensityFromValue = intensityExtractor.getRegionIntensityFromValues(region, fullCalibrationImage, inCalibrationConcentrations.get(index));
+//            calibrationIntensityAverages.add(intensityExtractor.getRegionIntensityAverageFromValues(region, fullCalibrationImage, inCalibrationConcentrations.get(index)));
+//            calibrationIntensities.add(intensityFromValue);
+//            index++;
+//        }
+//        Log.d("ChemicalAnalysis", "Calibration Intensities From Values Size: " + calibrationIntensities.size());
+//        linearRegressionModel = new LinearRegression(calibrationIntensities, inCalibrationConcentrations);
+//        sheetWriter.writeCalibrationToSheets(calibrationIntensities);
+//        sheetWriter.writeCalibrationAveragesToSheets(calibrationIntensityAverages);
+//        calibrateCompleted = true;
+//        return calibrationIntensities;
+//    }
 
-    public List<Double> Calibrate(RegionFinder regionsFinder, Bitmap fullCalibrationImage) {
+    public List<Double> Calibrate(RegionFinder regionsFinder, String notes, String filename, Bitmap fullCalibrationImage) {
         calibrationIntensities = new ArrayList<>();
         calibrationIntensityAverages = new ArrayList<>();
         //for each region, get intensity of given region from fullCalibrationImage parameter and add to 'calibrationReadings' list.
@@ -127,8 +127,8 @@ public class ChemicalAnalysis {
         }
         Log.d("ChemicalAnalysis", "Calibration Intensities Size: " + calibrationIntensities.size());
         linearRegressionModel = new LinearRegression(calibrationIntensities, calibrationConcentrations);
-        sheetWriter.writeCalibrationToSheets(calibrationIntensities);
-        sheetWriter.writeCalibrationAveragesToSheets(calibrationIntensityAverages);
+        sheetWriter.writeCalibrationToSheets("Pixel Sums", notes, filename, calibrationIntensities, getSlope(), getRSq(), calibrationConcentrations );
+        sheetWriter.writeCalibrationAveragesToSheets("Pixel Averages", notes, filename, calibrationIntensityAverages, getSlope(), getRSq(), calibrationConcentrations);
         calibrateCompleted = true;          // turn on flag that calibration is done and analysis can be performed.
         return calibrationIntensities;
     }

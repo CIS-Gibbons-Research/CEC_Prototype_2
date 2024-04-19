@@ -13,19 +13,17 @@
         android:text="Slope"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.173"
         app:layout_constraintStart_toStartOf="@+id/buttonSubmitCalibrationChanges"
         app:layout_constraintTop_toBottomOf="@+id/imageViewCalibrate"
-        app:layout_constraintVertical_bias="0.272" />
+        app:layout_constraintVertical_bias="0.278" />
 
     <TextView
         android:id="@+id/textViewCalibrateSlope"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:text="Slope"
-        app:layout_constraintEnd_toEndOf="@+id/textViewCalibrateSlope2"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textViewCalibrateSlope2"
         app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateSlope2" />
 
@@ -33,25 +31,19 @@
         android:id="@+id/textViewCalibrateRSq2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="8dp"
         android:text="RSquared"
-        app:layout_constraintBottom_toTopOf="@+id/textViewCalibrateRSq"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/buttonSubmitCalibrationChanges" />
+        app:layout_constraintStart_toStartOf="@+id/textViewCalibrateSlope"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateSlope" />
 
     <TextView
         android:id="@+id/textViewCalibrateRSq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="12dp"
         android:text="RSquared"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/textViewCalibrateRSq2"
-        app:layout_constraintHorizontal_bias="0.065"
         app:layout_constraintStart_toStartOf="@+id/textViewCalibrateRSq2"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateSlope"
-        app:layout_constraintVertical_bias="0.087" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateRSq2" />
 
     <TextView
         android:id="@+id/textViewCalibrateTitle"
@@ -125,10 +117,10 @@
         android:prompt="@string/select_concentration"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
+        app:layout_constraintHorizontal_bias="0.829"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonSubmitCalibrationChanges"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.135" />
 
     <EditText
         android:id="@+id/editTextCalibration1"
@@ -343,5 +335,15 @@
         app:layout_constraintHorizontal_bias="0.079"
         app:layout_constraintStart_toEndOf="@+id/editTextCalibration1"
         app:layout_constraintTop_toTopOf="@+id/editTextCalibration1" />
+
+    <EditText
+        android:id="@+id/editTextNotes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Notes"
+        app:layout_constraintStart_toStartOf="@+id/buttonCalibrateSample"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCalibrateSample" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

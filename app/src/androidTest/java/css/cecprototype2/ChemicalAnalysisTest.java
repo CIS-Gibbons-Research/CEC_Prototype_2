@@ -83,7 +83,7 @@ public class ChemicalAnalysisTest {
         ArrayList<Double> mockConcentrationValues = new ArrayList<>(Arrays.asList(mockPredictedConcentration, 0.0, 0.0, 0.0, 0.0, 0.0));
 
         // Perform calibration
-        chemicalAnalysis.Calibrate(regionFinder, mockCalibrationImage);
+        chemicalAnalysis.Calibrate(regionFinder, "test notes", "test filename", mockCalibrationImage);
 
         // Verify that linearRegressionModel is initialized
         LinearRegression linearRegressionModel = chemicalAnalysis.getLinearRegressionModel();

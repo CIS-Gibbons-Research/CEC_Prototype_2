@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,7 @@ import css.cecprototype2.R;
 import css.cecprototype2.databinding.ActivityMainBinding;
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.databinding.FragmentHomeBinding;
+import css.cecprototype2.main.SensorCamera;
 
 public class FragmentHome extends Fragment {
 
@@ -69,8 +71,8 @@ public class FragmentHome extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.i("FragmentHome", "Submit Camera Settings Clicked...");   // log button click for debugging
-                NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
-                navController.navigate(R.id.action_navigation_home_to_navigation_analyze);
+                //NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
+                //navController.navigate(R.id.action_navigation_home_to_navigation_analyze);
 
                 Log.w("FragmentHome", "Submit Camera Settings Clicked...");
                 //ISO: 100-1000
@@ -80,18 +82,21 @@ public class FragmentHome extends Fragment {
                 //if (etISO.getText().toString().equals("")) etISO.setText("0");
                 //if (etFocus.getText().toString().equals("")) etFocus.setText("0");
                 //if (etExposureTime.getText().toString().equals("")) etExposureTime.setText("0");
-                Integer iso = Integer.parseInt(etISO.getText().toString());
+
+                Integer iso = Integer.parseInt(verifyInput(etISO.getText().toString(), Integer.toString(SensorCamera.SENSOR_SENSITIVITY_DEFAULT)));
                 if (iso < 1000 && iso > 99 ) {
                     mainViewModel.cam.setISO(iso);
                     Log.d("FragmentHome", "Setting ISO to "+iso);
                 }
-                Integer focus = Integer.parseInt(etFocus.getText().toString());
+                Integer focus = Integer.parseInt(verifyInput(etFocus.getText().toString(), Integer.toString(SensorCamera.FOCUS_DISTANCE_DEFAULT)));
                 if ( focus < 201 && focus > -1) {
                     mainViewModel.cam.setFocus(focus);
                     Log.d("FragmentHome", "Setting focus to " + focus);
                 }
 
-                Double exposure_seconds = Double.parseDouble(etExposureTime.getText().toString());
+                Double defaultExposure = (double) SensorCamera.EXPOSURE_TIME_DEFAULT / 1_000_000_000;
+
+                Double exposure_seconds = Double.parseDouble(verifyInput(etExposureTime.getText().toString(), Double.toString(defaultExposure)));
                 Long exposure_nanoSeconds = (long) (exposure_seconds * 1_000_000_000);  // convert to an integer
                 if (exposure_seconds < 100 && exposure_seconds > 0.000_000_001 ) {
                     mainViewModel.cam.setExposureTime(exposure_nanoSeconds);
@@ -101,9 +106,16 @@ public class FragmentHome extends Fragment {
                 Log.d("HomeFragment", "Cam ISO set to: " +  iso);
                 Log.d("HomeFragment", "Cam Focal Length set to: " +  focus);
                 Log.d("HomeFragment", "Cam Exposure Time set to: 1,000,000,000 * " +  exposure_seconds);
+                Toast.makeText(getContext(), "Camera Settings updated" , Toast.LENGTH_SHORT).show();
 
             }
         });
+    }
+
+    private String verifyInput(String newValue, String defaultValue) {
+        if (newValue == null || newValue.equals(""))
+            newValue = defaultValue;
+        return newValue;
     }
 
     private void setUpEditTexts()

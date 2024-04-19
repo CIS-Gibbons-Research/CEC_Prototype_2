@@ -40,6 +40,7 @@ public class FragmentCalibrate extends Fragment {
     Bitmap calibrationBitMap;
     TextView tvStatus, tvSlope, tvRSq;
     EditText etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6;
+    EditText etNotes;
     TextView tvCalibrateIntensity1, tvCalibrateIntensity2, tvCalibrateIntensity3,tvCalibrateIntensity4,tvCalibrateIntensity5,tvCalibrateIntensity6;
 
     Spinner unitSpinner;
@@ -56,6 +57,7 @@ public class FragmentCalibrate extends Fragment {
         binding = FragmentCalibrateBinding.inflate(inflater, container, false);
 
         Log.d("CalibrationFragment", "onCreateView");
+        newConcentrationValues = new ArrayList<>();
 
         View root = binding.getRoot();
         setUpBindings();
@@ -91,6 +93,8 @@ public class FragmentCalibrate extends Fragment {
         concentrationEditTexts.add(etCalibrate5);
         etCalibrate6 = binding.editTextCalibration6;
         concentrationEditTexts.add(etCalibrate6);
+
+        etNotes = binding.editTextNotes;
 
         //linear regression info TextViews
         tvSlope = binding.textViewCalibrateSlope;
@@ -154,8 +158,8 @@ public class FragmentCalibrate extends Fragment {
     {
         newConcentrationValues = getValuesForCalibration(concentrationEditTexts);
         Log.d("CalibrationFragment", "new nCV: " + newConcentrationValues);
-        mainViewModel.calibrationIntensities = newConcentrationValues;
-        updateCalibrateUI(newConcentrationValues);
+        mainViewModel.setChemAnalysisCalibrationConcentraions(newConcentrationValues);
+        //updateCalibrateUI(newConcentrationValues);
     }
 
     private void setupCameraPreview() {
@@ -182,7 +186,9 @@ public class FragmentCalibrate extends Fragment {
     private void readingsAvailableUpdateUI() {
         Log.i("CalibrationFragment", "Fragment Calibrate --- LiveData --- bitmap Available");
         mainViewModel.retrieveCalibrationBitmapFromCamera();
-        mainViewModel.doCalibration();
+        // Read concentration values and store in array
+        handleSubmitCalibrationChange();
+        mainViewModel.doCalibration(etNotes.getText().toString());
         calibrationBitMap = mainViewModel.getCalibrationBitmap();
         if (calibrationBitMap == null) {
             Log.i("CalibrationFragment", "Fragment Calibrate --- calibrationBitMap still NULL");
@@ -229,7 +235,7 @@ public class FragmentCalibrate extends Fragment {
         calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
         Log.i("CalibrationFragment", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
         mainViewModel.setCalibrationBitMap(calibrationBitMap);
-        mainViewModel.doCalibration();
+        mainViewModel.doCalibration(etNotes.getText().toString());
         imageView.setImageBitmap(calibrationBitMap);
         updateCalibrateUI(mainViewModel.calibrationIntensities);
         textureView.setVisibility(View.INVISIBLE);
@@ -242,8 +248,8 @@ public class FragmentCalibrate extends Fragment {
         for (TextView tv : calibrationIntensityTextViews)
         {
             if (calibrationIntensities.get(index) != null)
-                tv.setText(String.format("%.3f", calibrationIntensities.get(index)));
-            else tv.setText(String.format("%.3f", "0.0"));
+                tv.setText(String.format("%.1f", calibrationIntensities.get(index)));
+            else tv.setText(String.format("%.1f", "0.0"));
             index++;
         }
 
@@ -283,7 +289,7 @@ public class FragmentCalibrate extends Fragment {
             String newValue = et.getText().toString();
             if (newValue == null || newValue.equals(""))
                 newValue = "0";
-            newConcentrationValues.add(Double.parseDouble(newValue));
+            outConcentrationValues.add(Double.parseDouble(newValue));
         }
         return outConcentrationValues;
     }

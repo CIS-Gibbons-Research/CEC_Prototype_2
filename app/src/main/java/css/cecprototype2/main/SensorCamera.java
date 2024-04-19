@@ -74,15 +74,16 @@ public class SensorCamera {
     //Preview imagePreview;
     Bitmap currentBitmap;
     ImageSaver imageSaver;
+    public String imageFilename = "not set yet";        // file name for current bitmap saved file
 
     //private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     //ProcessCameraProvider cameraProvider;
     private final int photoWidth = 1920;
     private final int photoHeight = 1440;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private static final int SENSOR_SENSITIVITY_DEFAULT = 500; //ISO
-    private static final long EXPOSURE_TIME_DEFAULT = 50_000_000L; // 1/15 sec -- ET
-    private static final int FOCUS_DISTANCE_DEFAULT = 0; //FOCAL LENGTH
+    public static final int SENSOR_SENSITIVITY_DEFAULT = 500; //ISO
+    public static final long EXPOSURE_TIME_DEFAULT = 50_000_000L; // 1/15 sec -- ET
+    public static final int FOCUS_DISTANCE_DEFAULT = 0; //FOCAL LENGTH
 
     //public SensorCamera(AppCompatActivity appContext, TextureView textureView, LifecycleOwner lifecycleOwner) {
     public SensorCamera(AppCompatActivity appContext, LifecycleOwner lifecycleOwner) {
@@ -262,7 +263,9 @@ public class SensorCamera {
 
         @Override
         public void run() {
-            Log.d(TAG, "ImageSaver --- run()");
+
+            Log.d(TAG, "ImageSaver --- run() --- filename = "+mFile.getName());
+            imageFilename = mFile.getName();
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);

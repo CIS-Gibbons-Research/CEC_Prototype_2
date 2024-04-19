@@ -2,6 +2,8 @@ package css.cecprototype2.analysis_logic;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -34,14 +36,15 @@ public class SheetWriter {
         formattedDateTime = DTF.format(now);
     }
 
-    public void writeCalibrationToSheets(ArrayList<Double> calibrateValues) {
+    public void writeCalibrationToSheets(String description, String notes, String filename, ArrayList<Double> calibrateValues, Double slope, Double rSquared, ArrayList<Double> concentrations) {
+        Log.d("CIS 4444", "SheetWriter --- writeCalibrationToSheets ");
         formattedDateTime = DTF.format(now);
         // The Google Sheets URL is stored in the strings.xml file
         String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "string", context.getPackageName()));
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalibrate,
-                response -> {},//Log.d("CIS 4444", "HTTP Response Received: " + response),
-                error -> {}// Log.d("CIS 4444", "HTTP Error Received: " + error)
+                response -> {Log.d("CIS 4444", "SheetWriter --- HTTP Response Received: " + response);},
+                error -> {Log.d("CIS 4444", "SheetWriter --- HTTP Error Received: " + error);}
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -49,16 +52,33 @@ public class SheetWriter {
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "calibrate");
                 params.put("date", formattedDateTime);
+                params.put("description", description);
+                params.put("notes", notes);
+                params.put("filename", filename);
+                params.put("slope", slope.toString());
+                params.put("rsquared", rSquared.toString());
                 params.put("c1", calibrateValues.get(0).toString());
                 params.put("c2", calibrateValues.get(1).toString());
                 params.put("c3", calibrateValues.get(2).toString());
                 params.put("c4", calibrateValues.get(3).toString());
                 params.put("c5", calibrateValues.get(4).toString());
                 params.put("c6", calibrateValues.get(5).toString());
+
+                params.put("concentration1", concentrations.get(0).toString());
+                params.put("concentration2", concentrations.get(1).toString());
+                params.put("concentration3", concentrations.get(2).toString());
+                params.put("concentration4", concentrations.get(3).toString());
+                params.put("concentration5", concentrations.get(4).toString());
+                params.put("concentration6", concentrations.get(5).toString());
                 return params;
             }
         };
-
+        // Set a longer timeout for request
+        int TIME_OUT = 2000; //use 5 sec it will work fine with it..
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                TIME_OUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // Instantiate the RequestQueue.
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         // Add the request to the RequestQueue.
@@ -66,34 +86,53 @@ public class SheetWriter {
     }
 
     //TODO: MOVE TO SEPERATE COLUMN IN SHEET TO DIFFERENTIATE AVERAGES AND SUMS OR TAG WITH "AVERAGES"
-    public void writeCalibrationAveragesToSheets(ArrayList<Double> calibrationIntensityAverages)
+    public void writeCalibrationAveragesToSheets(String description, String notes, String filename, ArrayList<Double> calibrationIntensityAverages, Double slope, Double rSquared, ArrayList<Double> concentrations)
     {
+        Log.d("CIS 4444", "SheetWriter --- writeCalibrationAveragesToSheets ");
         formattedDateTime = DTF.format(now);
         // The Google Sheets URL is stored in the strings.xml file
         String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "string", context.getPackageName()));
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalibrate,
-                response -> {},//Log.d("CIS 4444", "HTTP Response Received: " + response),
-                error -> {}// Log.d("CIS 4444", "HTTP Error Received: " + error)
+                response -> {Log.d("CIS 4444", "SheetWriter --- HTTP Response Received: " + response);},
+                error -> {Log.d("CIS 4444", "SheetWriter --- HTTP Error Received: " + error);}
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Log.d("CIS 4444", "Params being set");
+                //Log.d("CIS 4444", "Params being set");
                 Map<String, String> params = new HashMap<>();
                 params.put("action", "calibrateFromAverage");
                 params.put("date", formattedDateTime);
+                params.put("description", description);
+                params.put("notes", notes);
+                params.put("filename", filename);
+                params.put("slope", slope.toString());
+                params.put("rsquared", rSquared.toString());
                 params.put("c1", calibrationIntensityAverages.get(0).toString());
                 params.put("c2", calibrationIntensityAverages.get(1).toString());
                 params.put("c3", calibrationIntensityAverages.get(2).toString());
                 params.put("c4", calibrationIntensityAverages.get(3).toString());
                 params.put("c5", calibrationIntensityAverages.get(4).toString());
                 params.put("c6", calibrationIntensityAverages.get(5).toString());
+
+                params.put("concentration1", concentrations.get(0).toString());
+                params.put("concentration2", concentrations.get(1).toString());
+                params.put("concentration3", concentrations.get(2).toString());
+                params.put("concentration4", concentrations.get(3).toString());
+                params.put("concentration5", concentrations.get(4).toString());
+                params.put("concentration6", concentrations.get(5).toString());
                 return params;
             }
         };
 
         // Instantiate the RequestQueue.
         RequestQueue requestQueue = Volley.newRequestQueue(context);
+        // Set a longer timeout for request
+        int TIME_OUT = 2000; //use 5 sec it will work fine with it..
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                TIME_OUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // Add the request to the RequestQueue.
         requestQueue.add(stringRequest);
     }
