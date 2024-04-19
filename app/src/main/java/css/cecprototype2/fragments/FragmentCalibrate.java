@@ -45,6 +45,7 @@ public class FragmentCalibrate extends Fragment {
 
     Spinner unitSpinner;
     String selectedConcentration;
+    Double concentrationFactor;
 
     List<EditText> concentrationEditTexts;
     ArrayList<Double> newConcentrationValues;
@@ -274,6 +275,10 @@ public class FragmentCalibrate extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedConcentration = parentView.getItemAtPosition(position).toString();
+                concentrationFactor = 0.001;        // default value
+                if (selectedConcentration.equalsIgnoreCase("Micro")) concentrationFactor = 0.000_001;
+                if (selectedConcentration.equalsIgnoreCase("Nano")) concentrationFactor = 0.000_000_001;
+                if (selectedConcentration.equalsIgnoreCase("Pico")) concentrationFactor = 0.000_000_000_001;
             }
 
             @Override
@@ -284,12 +289,14 @@ public class FragmentCalibrate extends Fragment {
     private ArrayList<Double> getValuesForCalibration(List<EditText> inCalibrationEditTexts)
     {
         ArrayList<Double> outConcentrationValues = new ArrayList<>();
+        Double adjustedValue = 0.0;  // used to adjust for units
         for (EditText et : inCalibrationEditTexts)
         {
             String newValue = et.getText().toString();
             if (newValue == null || newValue.equals(""))
                 newValue = "0";
-            outConcentrationValues.add(Double.parseDouble(newValue));
+            adjustedValue = Double.parseDouble(newValue) * concentrationFactor;
+            outConcentrationValues.add(adjustedValue);
         }
         return outConcentrationValues;
     }
