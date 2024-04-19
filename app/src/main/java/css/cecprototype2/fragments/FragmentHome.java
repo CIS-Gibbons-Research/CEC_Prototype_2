@@ -72,31 +72,35 @@ public class FragmentHome extends Fragment {
                 NavController navController = Navigation.findNavController(getActivity(), R.id.nav_host_fragment_activity_main);
                 navController.navigate(R.id.action_navigation_home_to_navigation_analyze);
 
-//                if (mainViewModel != null)
-//                {
-                    Log.w("FragmentHome", "Submit Camera Settings Clicked...");
-                    //ISO: 100-1000
-                    // FOCUS: 0-200
-                    //EXPOSURE: 0.12 - 100 milliseconds or 120 - 100,000 input
+                Log.w("FragmentHome", "Submit Camera Settings Clicked...");
+                //ISO: 100-1000
+                // FOCUS: 0-200
+                //EXPOSURE: 0.12 - 100 milliseconds or 120 - 100,000 input
 
-                if (etISO.getText().toString().equals("")) etISO.setText("0");
-                if (etFocus.getText().toString().equals("")) etFocus.setText("0");
-                if (etExposureTime.getText().toString().equals("")) etExposureTime.setText("0");
-
-                if (Integer.parseInt(etISO.getText().toString()) < 1000 && Integer.parseInt(etISO.getText().toString()) > 99 && etISO.getText().toString()!=null) {
-                    mainViewModel.cam.setISO(Integer.parseInt(etISO.getText().toString()));
+                //if (etISO.getText().toString().equals("")) etISO.setText("0");
+                //if (etFocus.getText().toString().equals("")) etFocus.setText("0");
+                //if (etExposureTime.getText().toString().equals("")) etExposureTime.setText("0");
+                Integer iso = Integer.parseInt(etISO.getText().toString());
+                if (iso < 1000 && iso > 99 ) {
+                    mainViewModel.cam.setISO(iso);
+                    Log.d("FragmentHome", "Setting ISO to "+iso);
+                }
+                Integer focus = Integer.parseInt(etFocus.getText().toString());
+                if ( focus < 201 && focus > -1) {
+                    mainViewModel.cam.setFocus(focus);
+                    Log.d("FragmentHome", "Setting focus to " + focus);
                 }
 
-                    if (Integer.parseInt(etFocus.getText().toString()) < 201 && Integer.parseInt(etFocus.getText().toString()) > -1 && etFocus.getText().toString()!=null)
-                        mainViewModel.cam.setFocus(Integer.parseInt(etFocus.getText().toString()));
+                Double exposure_seconds = Double.parseDouble(etExposureTime.getText().toString());
+                Long exposure_nanoSeconds = (long) (exposure_seconds * 1_000_000_000);  // convert to an integer
+                if (exposure_seconds < 100 && exposure_seconds > 0.000_000_001 ) {
+                    mainViewModel.cam.setExposureTime(exposure_nanoSeconds);
+                    Log.d("FragmentHome", "Setting exposure to " + exposure_seconds +" seconds or "+ exposure_nanoSeconds + "nano seconds" );
+                }
 
-                    if (Integer.parseInt(etExposureTime.getText().toString()) < 100000 && Integer.parseInt(etExposureTime.getText().toString()) > 119 && etExposureTime.getText().toString()!=null)
-                        mainViewModel.cam.setExposureTime(Long.parseLong(etExposureTime.getText().toString()) * 1000000);
-
-                    Log.d("HomeFragment", "Cam ISO set to: " +  etISO.getText().toString());
-                    Log.d("HomeFragment", "Cam Focal Length set to: " +  etFocus.getText().toString());
-                    Log.d("HomeFragment", "Cam Exposure Time set to: 1000000 * " +  etExposureTime.getText().toString());
-//                }
+                Log.d("HomeFragment", "Cam ISO set to: " +  iso);
+                Log.d("HomeFragment", "Cam Focal Length set to: " +  focus);
+                Log.d("HomeFragment", "Cam Exposure Time set to: 1,000,000,000 * " +  exposure_seconds);
 
             }
         });

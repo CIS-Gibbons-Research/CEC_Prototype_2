@@ -80,8 +80,8 @@ public class SensorCamera {
     private final int photoWidth = 1920;
     private final int photoHeight = 1440;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
-    private static final int SENSOR_SENSITIVITY_DEFAULT = 100; //ISO
-    private static final long EXPOSURE_TIME_DEFAULT = 66600000L; // 1/15 sec -- ET
+    private static final int SENSOR_SENSITIVITY_DEFAULT = 500; //ISO
+    private static final long EXPOSURE_TIME_DEFAULT = 50_000_000L; // 1/15 sec -- ET
     private static final int FOCUS_DISTANCE_DEFAULT = 0; //FOCAL LENGTH
 
     //public SensorCamera(AppCompatActivity appContext, TextureView textureView, LifecycleOwner lifecycleOwner) {
@@ -119,9 +119,9 @@ public class SensorCamera {
     }
 
     private Long exposureTime = EXPOSURE_TIME_DEFAULT;
-    public Long setExposureTime(long milSec) {
-        exposureTime = milSec;
-        Log.d(TAG, "exposureTime set to " + exposureTime);
+    public Long setExposureTime(long nanoSec) {
+        exposureTime = nanoSec;
+        Log.d(TAG, "exposureTime set to " + exposureTime +" nanoseconds or " + exposureTime/1_000_000_000 +" seconds");
         return exposureTime;
     }
 

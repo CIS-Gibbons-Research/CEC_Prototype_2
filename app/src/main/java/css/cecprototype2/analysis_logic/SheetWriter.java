@@ -35,6 +35,7 @@ public class SheetWriter {
     }
 
     public void writeCalibrationToSheets(ArrayList<Double> calibrateValues) {
+        formattedDateTime = DTF.format(now);
         // The Google Sheets URL is stored in the strings.xml file
         String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "string", context.getPackageName()));
         // Request a string response from the provided URL.
@@ -67,6 +68,7 @@ public class SheetWriter {
     //TODO: MOVE TO SEPERATE COLUMN IN SHEET TO DIFFERENTIATE AVERAGES AND SUMS OR TAG WITH "AVERAGES"
     public void writeCalibrationAveragesToSheets(ArrayList<Double> calibrationIntensityAverages)
     {
+        formattedDateTime = DTF.format(now);
         // The Google Sheets URL is stored in the strings.xml file
         String urlCalibrate = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_calibrate", "string", context.getPackageName()));
         // Request a string response from the provided URL.
@@ -97,6 +99,7 @@ public class SheetWriter {
     }
 
     public void writeAnalysisToSheets(ArrayList<Double> analyzeValues) {
+        formattedDateTime = DTF.format(now);
         // The Google Sheets URL is stored in the strings.xml file
         String urlAnalyze = context.getResources().getString(context.getResources().getIdentifier("google_sheets_url_analysis", "string", context.getPackageName()));
         // Request a string response from the provided URL.
