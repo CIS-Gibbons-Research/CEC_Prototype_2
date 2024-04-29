@@ -58,24 +58,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Changes to image size should also be made in RegionFinder.java -->
     <ImageView
         android:id="@+id/imageViewCalibrate"
-        android:layout_width="0dp"
-        android:layout_height="325dp"
+        android:layout_width="240dp"
+        android:layout_height="320dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateTitle" />
 
+    <!-- Changes to image size should also be made in RegionFinder.java -->
     <TextureView
         android:id="@+id/textureViewCalibrate"
-        android:layout_width="0dp"
-        android:layout_height="325dp"
+        android:layout_width="240dp"
+        android:layout_height="320dp"
         android:layout_marginTop="10dp"
         android:contentDescription="preview_area"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewCalibrateTitle" />
 

@@ -54,6 +54,8 @@ public class MainViewModel extends AndroidViewModel {
     public Bitmap retrieveCalibrationBitmapFromCamera()
     {
         calibrationBitMap = cam.currentBitmap;
+        Log.e("CIS4444", "retrieveCalibrationBitmapFromCamera width = "+calibrationBitMap.getWidth()+" height = "+calibrationBitMap.getHeight());
+
         return this.calibrationBitMap;
     }
     public void setImageStacker(ImageStacker inImageStacker)

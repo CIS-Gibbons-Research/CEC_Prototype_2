@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -72,14 +73,14 @@ public class SensorCamera {
     LifecycleOwner lifecycleOwner;
     ImageCapture imageCapture;
     //Preview imagePreview;
-    Bitmap currentBitmap;
+    public Bitmap currentBitmap;
     ImageSaver imageSaver;
     public String imageFilename = "not set yet";        // file name for current bitmap saved file
 
     //private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     //ProcessCameraProvider cameraProvider;
-    private final int photoWidth = 1920;
-    private final int photoHeight = 1440;
+    public final int photoWidth = 1920;
+    public final int photoHeight = 1440;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     public static final int SENSOR_SENSITIVITY_DEFAULT = 500; //ISO
     public static final long EXPOSURE_TIME_DEFAULT = 50_000_000L; // 1/15 sec -- ET
@@ -175,10 +176,13 @@ public class SensorCamera {
             Log.d(TAG, "takePicture --- creating captureBuilder");
             final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureBuilder.addTarget(reader.getSurface());
-            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);             // set to manual flash control
             captureBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF);                       // set flash off
             captureBuilder.set(CaptureRequest.CONTROL_AE_EXPOSURE_COMPENSATION, 0);                              // set to manual focus
-            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);              // set manual focus
+            captureBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_OFF);             // set to manual flash control
+            captureBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_OFF);             // set to manual focus control
+            captureBuilder.set(CaptureRequest.CONTROL_AWB_MODE, CaptureRequest.CONTROL_AWB_MODE_OFF);           // set to manual white balance
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, 90);                                            // set orientation
+
             captureBuilder.set(CaptureRequest.LENS_FOCUS_DISTANCE, focus);                                         // set focal distance
             captureBuilder.set(CaptureRequest.SENSOR_SENSITIVITY, iso);                                         // set ISO sensitivity                 // 66600000 nanoseconds is 1/15sec
             captureBuilder.set(CaptureRequest.SENSOR_EXPOSURE_TIME, exposureTime);
@@ -272,6 +276,12 @@ public class SensorCamera {
 
             Log.d(TAG, "ImageSaver --- updating currentBitmap");
             currentBitmap = BitmapFactory.decodeByteArray(bytes,0, bytes.length);
+
+            // rotate bitmap to match JPEG orientation
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            Bitmap rotatedImg = Bitmap.createBitmap(currentBitmap, 0, 0, currentBitmap.getWidth(), currentBitmap.getHeight(), matrix, true);
+            currentBitmap = rotatedImg;
             bitmapAvailableLiveData.postValue(true);   // bitmap or photo availalbe now
 
             FileOutputStream output = null;

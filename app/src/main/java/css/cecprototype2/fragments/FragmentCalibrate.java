@@ -27,6 +27,7 @@ import java.util.List;
 import css.cecprototype2.main.MainViewModel;
 import css.cecprototype2.R;
 import css.cecprototype2.databinding.FragmentCalibrateBinding;
+import css.cecprototype2.region_logic.Region;
 
 public class FragmentCalibrate extends Fragment {
 
@@ -41,7 +42,8 @@ public class FragmentCalibrate extends Fragment {
     TextView tvStatus, tvSlope, tvRSq;
     EditText etCalibrate1, etCalibrate2, etCalibrate3, etCalibrate4, etCalibrate5, etCalibrate6;
     EditText etNotes;
-    TextView tvCalibrateIntensity1, tvCalibrateIntensity2, tvCalibrateIntensity3,tvCalibrateIntensity4,tvCalibrateIntensity5,tvCalibrateIntensity6;
+    TextView tvCalibrateIntensity1, tvCalibrateIntensity2, tvCalibrateIntensity3, tvCalibrateIntensity4, tvCalibrateIntensity5, tvCalibrateIntensity6;
+    BoundingBoxOverlay wellBoxOverlay;
 
     Spinner unitSpinner;
     String selectedConcentration;
@@ -60,25 +62,27 @@ public class FragmentCalibrate extends Fragment {
         Log.d("CalibrationFragment", "onCreateView");
         newConcentrationValues = new ArrayList<>();
 
+        wellBoxOverlay = new BoundingBoxOverlay(mainViewModel);
+
         View root = binding.getRoot();
         setUpBindings();
         setupUnitsSpinner();
         setupCameraPreview();
         setupButtons();
         setupLiveDataObservers();
+        // Inflate the fragment's layout
         return root;
     }
 
-    private void setUpBindings()
-    {
+    private void setUpBindings() {
         //spinner
         unitSpinner = binding.unitsSpinner;
 
         //camera and images
         imageView = binding.imageViewCalibrate;
         textureView = binding.textureViewCalibrate;
+        //wellBoxOverlay = binding.boundingBoxOverlay;
         tvStatus = binding.textViewCalibrateStatus;
-
 
         //concentration EditTexts
         concentrationEditTexts = new ArrayList<>();
@@ -155,8 +159,8 @@ public class FragmentCalibrate extends Fragment {
             }
         });
     }
-    private void handleSubmitCalibrationChange()
-    {
+
+    private void handleSubmitCalibrationChange() {
         newConcentrationValues = getValuesForCalibration(concentrationEditTexts);
         Log.d("CalibrationFragment", "new nCV: " + newConcentrationValues);
         mainViewModel.setChemAnalysisCalibrationConcentraions(newConcentrationValues);
@@ -197,6 +201,8 @@ public class FragmentCalibrate extends Fragment {
             imageView.setImageBitmap(calibrationBitMap);
             updateCalibrateUI(mainViewModel.calibrationIntensities);
         }
+        calibrationBitMap = displayWellBoxes();
+        imageView.setImageBitmap(calibrationBitMap);
     }
 
     private void calibrateFromPhoto() {
@@ -234,7 +240,7 @@ public class FragmentCalibrate extends Fragment {
 
     private void calibrateFromSampleImage() {
         calibrationBitMap = BitmapFactory.decodeResource(getResources(), R.drawable.sample_a);
-        Log.i("CalibrationFragment", "Sample image size width="+calibrationBitMap.getWidth()+ " and height="+calibrationBitMap.getHeight());
+        Log.i("CalibrationFragment", "Sample image size width=" + calibrationBitMap.getWidth() + " and height=" + calibrationBitMap.getHeight());
         mainViewModel.setCalibrationBitMap(calibrationBitMap);
         mainViewModel.doCalibration(etNotes.getText().toString());
         imageView.setImageBitmap(calibrationBitMap);
@@ -246,8 +252,7 @@ public class FragmentCalibrate extends Fragment {
     private void updateCalibrateUI(List<Double> calibrationIntensities) {
 
         int index = 0;
-        for (TextView tv : calibrationIntensityTextViews)
-        {
+        for (TextView tv : calibrationIntensityTextViews) {
             if (calibrationIntensities.get(index) != null)
                 tv.setText(String.format("%.1f", calibrationIntensities.get(index)));
             else tv.setText(String.format("%.1f", "0.0"));
@@ -276,22 +281,24 @@ public class FragmentCalibrate extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 selectedConcentration = parentView.getItemAtPosition(position).toString();
                 concentrationFactor = 0.001;        // default value
-                if (selectedConcentration.equalsIgnoreCase("Micro")) concentrationFactor = 0.000_001;
-                if (selectedConcentration.equalsIgnoreCase("Nano")) concentrationFactor = 0.000_000_001;
-                if (selectedConcentration.equalsIgnoreCase("Pico")) concentrationFactor = 0.000_000_000_001;
+                if (selectedConcentration.equalsIgnoreCase("Micro"))
+                    concentrationFactor = 0.000_001;
+                if (selectedConcentration.equalsIgnoreCase("Nano"))
+                    concentrationFactor = 0.000_000_001;
+                if (selectedConcentration.equalsIgnoreCase("Pico"))
+                    concentrationFactor = 0.000_000_000_001;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {}
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
         });
     }
 
-    private ArrayList<Double> getValuesForCalibration(List<EditText> inCalibrationEditTexts)
-    {
+    private ArrayList<Double> getValuesForCalibration(List<EditText> inCalibrationEditTexts) {
         ArrayList<Double> outConcentrationValues = new ArrayList<>();
         Double adjustedValue = 0.0;  // used to adjust for units
-        for (EditText et : inCalibrationEditTexts)
-        {
+        for (EditText et : inCalibrationEditTexts) {
             String newValue = et.getText().toString();
             if (newValue == null || newValue.equals(""))
                 newValue = "0";
@@ -300,4 +307,12 @@ public class FragmentCalibrate extends Fragment {
         }
         return outConcentrationValues;
     }
+
+    private Bitmap displayWellBoxes() {
+        Log.i("CIS4444", "CalibrationFragment - displayWellBoxes=" );
+        List<Region> regions = mainViewModel.setupStandardRegions();
+        //imageView.setImageBitmap(wellBoxOverlay.drawBoundingBoxes(regions, imageView));
+        return wellBoxOverlay.drawBoundingBoxes(regions, imageView);
+    }
+
 }
