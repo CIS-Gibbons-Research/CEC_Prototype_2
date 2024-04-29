@@ -17,6 +17,9 @@ public class BoundingBoxOverlay {
     private Paint paint;
     private Canvas canvas;
 
+    private final int LINE_WIDTH = 10;
+    private final int FONT_SIZE = 100;
+
     MainViewModel mainViewModel;
     Bitmap bitmapDrawing;           // bitmap copy for drawing bounding boxes
     Bitmap currentBitmap;          // original bitmap to draw over
@@ -38,8 +41,8 @@ public class BoundingBoxOverlay {
         paint = new Paint();
         paint.setColor(Color.RED);  // Set the color to red
         paint.setStyle(Paint.Style.STROKE);  // Set the style to stroke
-        paint.setStrokeWidth(10);  // Set the stroke width to 5 pixels
-        paint.setTextSize(100);
+        paint.setStrokeWidth(LINE_WIDTH);  // Set the stroke width to 5 pixels
+        paint.setTextSize(FONT_SIZE);
 
 
         // Step 4: Create a new Bitmap to draw on
@@ -63,7 +66,8 @@ public class BoundingBoxOverlay {
             //Log.i("CIS4444", "Box converted "+ conv_xUp+" , "+conv_yLeft+" , "+conv_xDown+" , "+conv_yRight);
             paint.setColor(Color.RED);  // Set the color to red
             canvas.drawRect(reg.xUpperLeft, reg.yUpperLeft, reg.xLowerRight, reg.yLowerRight, paint);
-            canvas.drawText(reg.tag, reg.getxCenter(), reg.getyCenter(), paint);
+            // Write tags onto regions adjusting center for font size
+            canvas.drawText(reg.tag, reg.getxCenter()-FONT_SIZE/2, reg.getyCenter()-FONT_SIZE/2, paint);
 
         }
 

@@ -340,11 +340,12 @@
 
     <EditText
         android:id="@+id/editTextNotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="161dp"
+        android:layout_height="45dp"
         android:ems="10"
         android:inputType="text"
         android:text="Notes"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/buttonCalibrateSample"
         app:layout_constraintTop_toBottomOf="@+id/buttonCalibrateSample" />
 

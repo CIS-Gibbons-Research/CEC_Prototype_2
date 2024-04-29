@@ -254,8 +254,8 @@ public class FragmentCalibrate extends Fragment {
         int index = 0;
         for (TextView tv : calibrationIntensityTextViews) {
             if (calibrationIntensities.get(index) != null)
-                tv.setText(String.format("%.1f", calibrationIntensities.get(index)));
-            else tv.setText(String.format("%.1f", "0.0"));
+                tv.setText(String.format("%,.0f", calibrationIntensities.get(index)));
+            else tv.setText(String.format("%.1f", "0"));
             index++;
         }
 
